@@ -1,0 +1,66 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="${masterPage}" CodeFile="${aspxFileName}.aspx.cs" Inherits="Ei_admin_${aspxFileName}" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+<asp:content id="Content2" contentplaceholderid="head" runat="Server">
+</asp:content>
+<asp:content id="Content1" contentplaceholderid="ContentPlaceHolder1" runat="Server">
+    <asp:Panel ID="Panel_Sold" runat="server">
+        <asp:Panel ID="Panel_ToolBox" CssClass="Panel_ToolBox" runat="server">
+            <h4>
+                <asp:Label ID="Label_Page_Title" runat="server"></asp:Label></h4>
+        </asp:Panel>
+        <asp:Panel ID="Panel_Warning" CssClass="Warning" runat="server">
+            <asp:Label ID="Label_Warning" runat="server"></asp:Label>
+            <asp:Label ID="Label_Image" runat="server"></asp:Label>
+        </asp:Panel>
+            <ul class="htabs">
+                <li class="Tools">
+                <span>
+                    <asp:LinkButton ID="Button_Save" runat="server"  OnClick="Button_Save_Click" >${save}</asp:LinkButton>
+                    <asp:LinkButton ID="Button_Edit" runat="server" Visible="false"  OnClick="Button_Edit_Click" >${edit}</asp:LinkButton>
+                </span>
+                </li>
+            </ul>
+       
+         ${controls}
+       
+        <asp:Panel ID="Panel_GridButon" CssClass="GridTopButon" runat="server">
+            <span class="GridSec" id="sec">${tümü}</span> <span class="GridSec" id="birak">${hicbiri}</span>
+            <asp:LinkButton ID="LinkButton_Delete" runat="server" OnClick="LinkButton_Delete_Click">${sil}</asp:LinkButton>
+             <asp:DropDownList ID="DropDownList_State" runat="server">
+                                <asp:ListItem Text=${durum} Value="state"></asp:ListItem>
+                                <asp:ListItem Text=${resim} Value="image"></asp:ListItem>
+                                <asp:ListItem Text=${anaSayfa} Value="main"></asp:ListItem>
+            </asp:DropDownList>
+            <asp:LinkButton ID="LinkButton_StateOn" runat="server" OnClick="LinkButton_StateOn_Click"> ${yayınaAl}</asp:LinkButton>
+            <asp:LinkButton ID="LinkButton_StateOff" runat="server" OnClick="LinkButton_StateOff_Click">${yayınaKaldır} </asp:LinkButton>
+            <cc1:ConfirmButtonExtender ID="ConfirmButtonExtender1" runat="server" ConfirmText=""
+                TargetControlID="LinkButton_Delete" DisplayModalPopupID="ModalPopupExtender1">
+            </cc1:ConfirmButtonExtender>
+            <cc1:ModalPopupExtender  ID="ModalPopupExtender1" runat="server" BackgroundCssClass="modalBackground" TargetControlID="LinkButton_Delete" 
+                OkControlID="ButtonOK" CancelControlID="ButtonCancel" PopupControlID="popupPanel" />
+            <asp:Panel ID="popupPanel" runat="server" CssClass="Sil_Popup" Style="display: none;">
+                
+                ${onayMesaj}
+                <br />
+                <div style="text-align: right;">
+                    <asp:Button ID="ButtonOk" runat="server" Text="OK" />
+                    <asp:Button ID="ButtonCancel" runat="server" Text="Cancel" />
+                </div>
+            </asp:Panel>
+            <asp:LinkButton ID="LinkButton_Order" CssClass="siraButton" OnClick="LinkButton_Order_Click"
+                runat="server">${sira}</asp:LinkButton>
+                <div runat="server" id="SearchBox" style="display: inline;">
+                <asp:TextBox ID="TextBox_Search" runat="server" CssClass="textSearch" OnTextChanged="TextBox_Search_TextChanged"></asp:TextBox>
+                <cc1:TextBoxWatermarkExtender ID="TextBox_Search_TextBoxWatermarkExtender" runat="server"
+                    Enabled="True" WatermarkCssClass="searhGrid" WatermarkText=${aramaYapın} TargetControlID="TextBox_Search">
+                </cc1:TextBoxWatermarkExtender>
+                &nbsp;
+                <asp:LinkButton ID="Button_Search" runat="server" OnClick="Button_Search_Click" >${arama} </asp:LinkButton>
+            </div>
+        </asp:Panel>
+        <asp:Panel ID="Panel_Grid" CssClass="Ei_Grid" runat="server">
+            ${gridView}
+      </asp:Panel>
+    </asp:Panel>
+</asp:content>
