@@ -1253,7 +1253,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep19" runat="server" Title="Column Utilities">
+                        <asp:WizardStep ID="WizardStep19"  runat="server" Title="Column Utilities">
                             <table>
                                 <tr>
                                     <td>
@@ -1262,9 +1262,9 @@
                                         <asp:TextBox ID="TextBox_ColumnName" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:Button CssClass="button" ID="Button_Kolon_Ekle" runat="server" OnClick="Button_Kolon_Ekle_Click"
+                                        <asp:Button CssClass="button" Visible="False" ID="Button_Kolon_Ekle" runat="server" OnClick="Button_Kolon_Ekle_Click"
                                             Text="Kolon Ekle" />
-                                        <asp:Button CssClass="button" ID="Button_Kolon_Sil" runat="server" Text="Kolon Sil"
+                                        <asp:Button CssClass="button" Visible="False" ID="Button_Kolon_Sil" runat="server" Text="Kolon Sil"
                                             OnClick="Button_Kolon_Sil_Click" />
                                         <asp:CheckBox ID="CheckBox_NULL" Text="NULL Değil!" runat="server" />
                                     </td>

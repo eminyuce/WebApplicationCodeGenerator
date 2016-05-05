@@ -303,7 +303,7 @@ namespace WebApplicationDAO
                 k.dataType_MaxChar = k.dataType;
                 if (k.dataType.Contains("varchar"))
                 {
-                    k.maxChar = maxChar.Equals("-1") ? "1000" : maxChar;
+                    k.maxChar = maxChar.Equals("-1") ? "4000" : maxChar;
                     k.dataType_MaxChar = k.dataType + "(" + k.maxChar + ")";
                 }
                 k.order = Convert.ToInt32(order);
@@ -5639,22 +5639,45 @@ namespace WebApplicationDAO
             primaryKey = FirstCharacterToLower(primaryKey);
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
 
+
+            //var surveys = new List<NwmSurvey>();
+            //var key = "GetActiveNwmSurveys";
+            //surveys = (List<NwmSurvey>)MemoryCache.Default.Get(key);
+            //if (surveys == null)
+            //{
+            //    surveys = DBDirectory.GetNwmSurveys().Where(r => r.IsActive).OrderBy(r => r.DateSurveyStart).ToList();
+
+            //    CacheItemPolicy policy = null;
+            //    // CacheEntryRemovedCallback callback = null;
+
+            //    policy = new CacheItemPolicy();
+            //    policy.Priority = CacheItemPriority.Default;
+            //    policy.AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(Settings.CacheMediumSeconds);
+
+            //    MemoryCache.Default.Set(key, surveys, policy);
+            //}
+
+            //return surveys;
+
             method.AppendLine(String.Format("public class {0}Repository", modelName));
             method.AppendLine("{");
-            method.AppendLine("/*");
+            method.AppendLine("");
             method.AppendLine("public " + staticText + " List<" + modelName + "> Get" + modelName + "sFromCache()");
             method.AppendLine("{");
             method.AppendLine("string cacheKey = \"" + modelName + "Cache\";");
-            method.AppendLine("var items = (List<" + modelName + ">)HttpRuntime.Cache[cacheKey];");
+            method.AppendLine("var items = (List<" + modelName + ">)MemoryCache.Default.Get[cacheKey];");
             method.AppendLine("if (items == null)");
             method.AppendLine("{");
-            method.AppendLine("int cacheMinutes = Settings.GetWebConfigInt(\"" + modelName + "Key\", 60);");
             method.AppendLine("items = Get" + modelName + "s();");
-            method.AppendLine("HttpRuntime.Cache.Insert(cacheKey, items, null, Cache.NoAbsoluteExpiration,TimeSpan.FromMinutes(cacheMinutes));");
+            method.AppendLine(" CacheItemPolicy policy = null;");
+            method.AppendLine("policy = new CacheItemPolicy();");
+            method.AppendLine("policy.Priority = CacheItemPriority.Default;");
+            method.AppendLine(" policy.AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(Settings.CacheMediumSeconds);");
+            method.AppendLine("MemoryCache.Default.Set(cacheKey, items, policy);");
             method.AppendLine("}");
             method.AppendLine(" return items;");
             method.AppendLine("}");
-            method.AppendLine("*/");
+            method.AppendLine("");
             method.AppendLine("public " + staticText + " List<" + modelName + "> Get" + modelName + "s()");
             method.AppendLine("{");
             method.AppendLine("     return DBDirectory.Get" + modelName + "s();");
@@ -6032,7 +6055,7 @@ namespace WebApplicationDAO
             method.AppendLine("");
             foreach (Kontrol_Icerik item in kontrolList)
             {
-
+               
                 if (item.dataType.IndexOf("varchar") > -1)
                 {
                     // method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? \"\" : read[\"" + item.columnName + "\"].ToString();");
@@ -6045,8 +6068,20 @@ namespace WebApplicationDAO
                 }
                 else if (item.dataType.IndexOf("date") > -1)
                 {
+                    if (item.isNull.Equals("YES", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        method.AppendLine("if (dr[\"" + item.columnName + "\"] != DBNull.Value)");
+                        method.AppendLine("{");
+
+                    }
                     //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? DateTime.Now : DateTime.Parse(read[\"" + item.columnName + "\"].ToString());");
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToDateTime();");
+
+                    if (item.isNull.Equals("YES", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        method.AppendLine("}");
+                    }
+
                 }
                 else if (item.dataType.IndexOf("bit") > -1)
                 {
@@ -6058,6 +6093,8 @@ namespace WebApplicationDAO
                     //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : float.Parse(read[\"" + item.columnName + "\"].ToString());");
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToFloat();");
                 }
+
+                
             }
             method.AppendLine("return item;");
             method.AppendLine("}");
