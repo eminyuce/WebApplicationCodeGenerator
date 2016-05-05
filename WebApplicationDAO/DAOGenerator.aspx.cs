@@ -4097,9 +4097,9 @@ namespace WebApplicationDAO
                 method.AppendLine(String.Format("@model {0}", modelName));
                 method.AppendLine(" @using (Html.BeginForm()) {");
                 method.AppendLine(" @Html.AntiForgeryToken()");
-                method.AppendLine(" @Html.ValidationSummary(true)");
-                method.AppendLine(" <fieldset> ");
-                method.AppendLine("  <legend>" + GetEntityName() + "</legend>");
+                method.AppendLine(" @Html.ValidationSummary(true, \"\", new { @class = \"text-danger\" })");
+                method.AppendLine("  <div class=\"form-horizontal\"> ");
+                method.AppendLine("  <h4>" + GetEntityName() + "</h4>");
                 method.AppendLine(" ");
 
                 method.AppendLine(String.Format("@Html.HiddenFor(model => model.{0})  ", prKey.columnName));
@@ -4107,23 +4107,34 @@ namespace WebApplicationDAO
                 {
                     method.AppendLine(String.Format("@Html.HiddenFor(model => model.{0})  ", item.columnName));
                 }
-
+        
                 foreach (Kontrol_Icerik item in list)
                 {
                     method.AppendLine(" ");
-                    method.AppendLine("<div class=\"editor-label control-group\">");
-                    method.AppendLine(String.Format("    @Html.LabelFor(model => model.{0}, new {{ @class = \"control-label\" }})  ", item.columnName));
+                    method.AppendLine("<div class=\"form-group\">");
+                    method.AppendLine(String.Format("    @Html.LabelFor(model => model.{0}, new {{ @class = \"control-label  col-md-2\" }})  ", item.columnName));
+                    method.AppendLine("<div class=\"col-md-10\">");
+                    if (item.dataType.IndexOf("bit") > -1)
+                    {
+                        method.AppendLine("<div class=\"checkbox\"> ");
+                    }
+                    method.AppendLine(String.Format("    @Html.EditorFor(model => model.{0}, new {{ @class = \"form-control\" }})  ", item.columnName));
+                    method.AppendLine(String.Format("    @Html.ValidationMessageFor(model => model.{0}, new {{ @class = \"text-danger\" }})  ", item.columnName));
                     method.AppendLine("</div>");
-                    method.AppendLine("<div class=\"editor-field controls\">");
-                    method.AppendLine(String.Format("    @Html.EditorFor(model => model.{0}, new {{ @class = \"input-xlarge\" }})  ", item.columnName));
-                    method.AppendLine(String.Format("    @Html.ValidationMessageFor(model => model.{0})  ", item.columnName));
+                    if (item.dataType.IndexOf("bit") > -1)
+                    {
+                        method.AppendLine("  </div>");
+                    }
                     method.AppendLine("</div>");
                 }
                 method.AppendLine(" ");
-                method.AppendLine("<p>");
-                method.AppendLine("<input type=\"submit\" value=\"Create\" />");
-                method.AppendLine("</p>");
-                method.AppendLine("</fieldset>");
+                method.AppendLine("        <div class=\"form-group\"> ");
+                method.AppendLine("    <div class=\"col-md-offset-2 col-md-10\">");
+                method.AppendLine("<input type=\"submit\" value=\"Create\" class=\"btn btn-default\" />");
+                method.AppendLine("   </div>");
+                method.AppendLine("  </div>");
+
+                method.AppendLine("</div>");
                 method.AppendLine("}");
 
                 TextBox_AspMvcCreateOrEdit.Text = method.ToString();
@@ -6055,7 +6066,7 @@ namespace WebApplicationDAO
             method.AppendLine("");
             foreach (Kontrol_Icerik item in kontrolList)
             {
-               
+
                 if (item.dataType.IndexOf("varchar") > -1)
                 {
                     // method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? \"\" : read[\"" + item.columnName + "\"].ToString();");
@@ -6094,7 +6105,7 @@ namespace WebApplicationDAO
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToFloat();");
                 }
 
-                
+
             }
             method.AppendLine("return item;");
             method.AppendLine("}");
