@@ -5735,13 +5735,13 @@ namespace WebApplicationDAO
                 String modelName = getModelName();
                 String selectedTable = GetRealEntityName();
                 var method2 = new StringBuilder();
-                String pattern = String.Format("{0}", TextBox_StringPattern.Text);
+                String patternOriginal = String.Format("{0}", TextBox_StringPattern.Text);
                 foreach (Kontrol_Icerik item in linkedList)
                 {
-                    method.AppendLine(pattern.Replace("{0}", item.columnName));
+                    var pattern = patternOriginal.Replace("{1}", convertSqlDataTypeToCSharp(item.dataType));
+                    pattern = pattern.Replace("{0}", item.columnName);
+                    method.AppendLine(pattern);
                 }
-
-
 
             }
             catch (Exception ex)
@@ -6532,7 +6532,46 @@ namespace WebApplicationDAO
 
             TextBox_Infragistic_igGrid.Text = built.ToString();
         }
+        private String convertSqlDataTypeToCSharp(String key)
+        {
+            String result = "";
 
+            StringDictionary map = new StringDictionary();
+            map.Add("binary", "Byte[]");
+            map.Add("varbinary", "Byte[]");
+            map.Add("image", "None");
+            map.Add("varchar", "None");
+            map.Add("char", "None");
+            map.Add("nvarchar", "String");
+            map.Add("nchar", "String");
+            map.Add("text", "String");
+            map.Add("ntext", "String");
+            map.Add("uniqueidentifier", "Guid");
+            map.Add("rowversion", "Byte[]");
+            map.Add("bit", "Boolean");
+            map.Add("tinyint", "Byte");
+            map.Add("smallint", "int");
+            map.Add("int", "int");
+            map.Add("bigint", "int");
+            map.Add("smallmoney", "Decimal");
+            map.Add("money", "Decimal");
+            map.Add("numeric", "Decimal");
+            map.Add("decimal", "Decimal");
+            map.Add("real", "Single");
+            map.Add("float", "double");
+            map.Add("smalldatetime", "DateTime");
+            map.Add("datetime", "DateTime");
+            map.Add("timestamp", "DateTime");
+            map.Add("xml", "String");
+
+            if (map.ContainsKey(key))
+            {
+                return map[key];
+            }
+
+            return result;
+
+        }
         private String convertSqlDataTypeToInfragisticDataType(String key)
         {
             String result = "";

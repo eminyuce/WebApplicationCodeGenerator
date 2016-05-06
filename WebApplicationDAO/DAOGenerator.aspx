@@ -461,7 +461,7 @@
                             <asp:Label ID="Label21" CssClass="labelYazi" runat="server" Text="String Pattern"></asp:Label>
                         </td>
                         <td>
-                            <asp:TextBox ID="TextBox_StringPattern" runat="server" Width="698px"></asp:TextBox>
+                            <asp:TextBox ID="TextBox_StringPattern" Text="public {1} {0}  {get;set}" runat="server" Width="698px"></asp:TextBox>
                         </td>
                     </tr>
                         <tr>
