@@ -6566,7 +6566,7 @@ namespace WebApplicationDAO
 
             if (map.ContainsKey(key))
             {
-                return map[key];
+                return map[key.ToLower()];
             }
 
             return result;
