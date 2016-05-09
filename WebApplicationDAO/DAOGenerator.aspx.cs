@@ -1533,7 +1533,7 @@ namespace WebApplicationDAO
                 var method = new StringBuilder();
                 method.AppendLine(String.Format("@model List<{0}>", modelName));
                 method.AppendLine("  <p>");
-                method.AppendLine(String.Format("@Html.ActionLink(\"Create a new {0}\", \"SaveOrUpdate{0}\", new {1}   id=0 {2})  ", modelName, "{", "}"));
+                method.AppendLine(String.Format("@Html.ActionLink(\"Create a new {0}\", \"SaveOrUpdate{0}\", new {1}   id=0 {2}, new{3})  ", modelName, "{", "}", "{ @class=\"btn btn-default\"}"));
                 method.AppendLine("       </p>");
                 method.AppendLine(" @foreach (var item in Model) {");
                 method.AppendLine(String.Format("    @Html.DisplayFor(modelItem => item)  "));
@@ -4036,7 +4036,7 @@ namespace WebApplicationDAO
                 var method = new StringBuilder();
                 method.AppendLine(String.Format("@model {0}", modelName));
                 method.AppendLine("  <p>");
-                method.AppendLine(String.Format("@Html.ActionLink(\"Create a new {0}\", \"SaveOrUpdate{0}\", new {1}   id=0 {2}) | ", modelName, "{", "}"));
+                method.AppendLine(String.Format("@Html.ActionLink(\"Create a new {0}\", \"SaveOrUpdate{0}\", new {1}   id=0 {2}, new{3})  ", modelName, "{", "}", "{ @class=\"btn btn-default\"}"));
                 method.AppendLine("       </p>");
 
                 method.AppendLine(" <table class='table table-hover table-bordered table-striped'>");
@@ -4062,9 +4062,9 @@ namespace WebApplicationDAO
                     method.AppendLine(" ");
                 }
                 method.AppendLine("  <td>");
-                method.AppendLine(String.Format("@Html.ActionLink(\"Edit\", \"SaveOrUpdate{0}\", new {2}   id=item.{1} {3}) | ", modelName, primaryKey, "{", "}"));
-                method.AppendLine(String.Format("@Html.ActionLink(\"Detail\", \"{0}Detail\", new {2}   id=item.{1} {3}) | ", modelName, primaryKey, "{", "}"));
-                method.AppendLine(String.Format("@Html.ActionLink(\"Delete\", \"Delete{0}\", new {2}   id=item.{1} {3}) ", modelName, primaryKey, "{", "}"));
+                method.AppendLine(String.Format("@Html.ActionLink(\"Edit\", \"SaveOrUpdate{0}\", new {2}   id=item.{1} {3}, new {4}) | ", modelName, primaryKey, "{", "}", "{ @class=\"btn btn-primary\"}"));
+                method.AppendLine(String.Format("@Html.ActionLink(\"Detail\", \"{0}Detail\", new {2}   id=item.{1} {3}, new {4}) | ", modelName, primaryKey, "{", "}", "{ @class=\"btn btn-info\"}"));
+                method.AppendLine(String.Format("@Html.ActionLink(\"Delete\", \"Delete{0}\", new {2}   id=item.{1} {3}, new {4}) ", modelName, primaryKey, "{", "}", "{ @class=\"btn btn-danger\"}"));
                 method.AppendLine("       </td>");
 
                 method.AppendLine(" ");
