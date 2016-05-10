@@ -326,6 +326,16 @@ namespace WebApplicationDAO
             Label_ERROR.Text = GetEntityName() + " table metadata is populated to GridView. You are so close, Do not give up until you make it, dude :)";
 
         }
+        static string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
         private string GetCleanEntityName(string m)
         {
             if (!String.IsNullOrEmpty(m))
@@ -333,7 +343,7 @@ namespace WebApplicationDAO
                 var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
                 if (parts.Length > 1)
                 {
-                    m = parts[1].TrimEnd('s');
+                    m = "Nwm"+UppercaseFirst(parts[0]) + "" + UppercaseFirst(parts[1].TrimEnd('s'));
                 }
                 else
                 {
@@ -1398,9 +1408,16 @@ namespace WebApplicationDAO
                 Controls_String = TextBox_Edit.Text;
                 TextBox_SP.Text = generate_StoredProcedure();
                 TextBox_State.Text = gridState.ToString();
-                TextBox_Database_Utility_DataSet.Text = GenereateDataSetToModel(linkedList);
-                TextBox_Database_Utility_SaveOrUpdate.Text = GenereateSaveOrUpdateDatabaseUtility(linkedList);
-                TextBox_Database_Utility_List.Text = GenereateDataSetToList(linkedList);
+
+                StringBuilder built222 = new StringBuilder();
+                built222.AppendLine(GenereateSaveOrUpdateDatabaseUtility(linkedList));
+                built222.AppendLine(GenereateDataSetToModel(linkedList));
+                built222.AppendLine(GenereateDataSetToList(linkedList));
+                built222.AppendLine(generateSqlIReader(linkedList));
+
+                TextBox_Database_Utility_DataSet.Text ="";
+                TextBox_IReader.Text = built222.ToString();
+                TextBox_Database_Utility_List.Text = "";
                 //Label_Format.Text = "string format = \"MM/dd/yyyy; CultureInfo provider = CultureInfo.InvariantCulture;";
 
 
@@ -6053,7 +6070,7 @@ namespace WebApplicationDAO
 
         }
 
-        private void generateSqlIReader(List<Kontrol_Icerik> kontrolList)
+        private String generateSqlIReader(List<Kontrol_Icerik> kontrolList)
         {
             //GetBrouwerCollectionFromReader
             StringBuilder method = new StringBuilder();
@@ -6110,7 +6127,7 @@ namespace WebApplicationDAO
             method.AppendLine("return item;");
             method.AppendLine("}");
 
-            TextBox_IReader.Text = method.ToString();
+            return method.ToString();
 
         }
         private void createFile(StringBuilder pageBuilt, String fileName)

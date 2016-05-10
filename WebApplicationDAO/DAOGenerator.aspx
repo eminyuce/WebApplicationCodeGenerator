@@ -368,7 +368,8 @@
                 getFormattedSql(sql);
             });
             function getFormattedSql(sql) {
-                var link = "http://www.format-sql.com/Share?sql=" + encodeURI(sql);
+                // var link = "http://www.format-sql.com/Share?sql="+ encodeURI(sql);
+                var link = "http://www.format-sql.com";
                 window.open("", "_blank").location = link;
             }
  
