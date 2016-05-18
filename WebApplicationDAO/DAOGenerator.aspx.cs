@@ -1493,7 +1493,7 @@ namespace WebApplicationDAO
             built.AppendLine("//[OutputCache(CacheProfile = \"Cache1Hour\")]");
             built.AppendLine("public ActionResult Index()");
             built.AppendLine("{");
-            built.AppendLine(String.Format("var items = {0}Repository.Get{0}s();", modelName));
+            built.AppendLine(String.Format("var items = {0}Repository.Get{0}s();", modelName.Replace("Nwm", "")));
             built.AppendLine("return View(items);");
             built.AppendLine("}");
 
@@ -1501,7 +1501,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("public ActionResult {0}Detail(String id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id.Split('-').Last().ToInt();", primaryKey.ToLower()));
-            built.AppendLine(String.Format("var {0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName, primaryKey.ToLower()));
+            built.AppendLine(String.Format("var {0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""), primaryKey.ToLower()));
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
             built.AppendLine("}");
 
@@ -1513,7 +1513,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("if({0} == 0)", primaryKey.ToLower()));
             built.AppendLine("{");
             built.AppendLine("}else{");
-            built.AppendLine(String.Format("{0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName,
+            built.AppendLine(String.Format("{0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""),
                 primaryKey.ToLower()));
             built.AppendLine("}");
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
@@ -1523,7 +1523,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}({0} {1})", modelName, modelName.ToLower()));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{1}({2});",
-                primaryKey.ToLower(), modelName, modelName.ToLower()));
+                primaryKey.ToLower(), modelName.Replace("Nwm", ""), modelName.ToLower()));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
@@ -1531,7 +1531,7 @@ namespace WebApplicationDAO
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id;", FirstCharacterToLower(primaryKey)));
             built.AppendLine(String.Format("{0}Repository.Delete{0}({1});",
-                 modelName, FirstCharacterToLower(primaryKey)));
+                 modelName.Replace("Nwm", ""), FirstCharacterToLower(primaryKey)));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
@@ -4051,7 +4051,7 @@ namespace WebApplicationDAO
                 String primaryKey = GetPrimaryKeys(kontrolList);
                 String modelName = getModelName();
                 var method = new StringBuilder();
-                method.AppendLine(String.Format("@model {0}", modelName));
+                method.AppendLine(String.Format("@model List<{0}>", modelName));
                 method.AppendLine("  <p>");
                 method.AppendLine(String.Format("@Html.ActionLink(\"Create a new {0}\", \"SaveOrUpdate{0}\", new {1}   id=0 {2}, new{3})  ", modelName, "{", "}", "{ @class=\"btn btn-default\"}"));
                 method.AppendLine("       </p>");
@@ -5686,14 +5686,14 @@ namespace WebApplicationDAO
             //}
 
             //return surveys;
-
-            method.AppendLine(String.Format("public class {0}Repository", modelName));
+ 
+            method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm","")));
             method.AppendLine("{");
             method.AppendLine("");
             method.AppendLine("public " + staticText + " List<" + modelName + "> Get" + modelName + "sFromCache()");
             method.AppendLine("{");
             method.AppendLine("string cacheKey = \"" + modelName + "Cache\";");
-            method.AppendLine("var items = (List<" + modelName + ">)MemoryCache.Default.Get[cacheKey];");
+            method.AppendLine("var items = (List<" + modelName + ">)MemoryCache.Default.Get(cacheKey);");
             method.AppendLine("if (items == null)");
             method.AppendLine("{");
             method.AppendLine("items = Get" + modelName + "s();");
