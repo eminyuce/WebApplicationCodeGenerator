@@ -14,7 +14,6 @@ using System.Collections.Specialized;
 using System.Collections;
 using System.Resources;
 using System.IO;
-using Ionic.Zip;
 
 
 namespace WebApplicationDAO
@@ -343,7 +342,7 @@ namespace WebApplicationDAO
                 var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
                 if (parts.Length > 1)
                 {
-                    m = "Nwm"+UppercaseFirst(parts[0]) + "" + UppercaseFirst(parts[1].TrimEnd('s'));
+                    m = "Nwm" + UppercaseFirst(parts[0]) + "" + UppercaseFirst(parts[1].TrimEnd('s'));
                 }
                 else
                 {
@@ -1415,7 +1414,7 @@ namespace WebApplicationDAO
                 built222.AppendLine(GenereateDataSetToList(linkedList));
                 built222.AppendLine(generateSqlIReader(linkedList));
 
-                TextBox_Database_Utility_DataSet.Text ="";
+                TextBox_Database_Utility_DataSet.Text = "";
                 TextBox_IReader.Text = built222.ToString();
                 TextBox_Database_Utility_List.Text = "";
                 //Label_Format.Text = "string format = \"MM/dd/yyyy; CultureInfo provider = CultureInfo.InvariantCulture;";
@@ -1461,6 +1460,7 @@ namespace WebApplicationDAO
 
                 generateASpNetMvcList(linkedList);
                 generateASpNetMvcList2(linkedList);
+                generateASpNetMvcList3(linkedList);
                 generateASpNetMvcEditOrCreate(linkedList);
                 generateASpNetMvcDetails(linkedList);
 
@@ -1539,7 +1539,35 @@ namespace WebApplicationDAO
 
             TextBox_AspMvcAction.Text = built.ToString();
         }
+        private void generateASpNetMvcList3(List<Kontrol_Icerik> kontrolList)
+        {
+            try
+            {
 
+                String primaryKey = GetPrimaryKeys(kontrolList);
+                String modelName = getModelName();
+                var method = new StringBuilder();
+                method.AppendLine(String.Format("@model List<{0}>", modelName));
+                method.AppendLine("  @{");
+                method.AppendLine("  ViewBag.Title=\"Title\";");
+                method.AppendLine(" }");
+                method.AppendLine("       <div>");
+                method.AppendLine(String.Format(" @foreach ({0} item in Model)",modelName));
+                method.AppendLine("  {");
+                method.AppendLine(String.Format("    @Html.DisplayFor(modelItem => item,\"{0}\")  ", modelName));
+                method.AppendLine(" }");
+                method.AppendLine(" </div>");
+
+
+                TextBox_Database_Utility_List.Text = method.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                TextBox_Database_Utility_List.Text = ex.Message;
+
+            }
+        }
         private void generateASpNetMvcList2(List<Kontrol_Icerik> kontrolList)
         {
             try
@@ -4124,7 +4152,7 @@ namespace WebApplicationDAO
                 {
                     method.AppendLine(String.Format("@Html.HiddenFor(model => model.{0})  ", item.columnName));
                 }
-        
+
                 foreach (Kontrol_Icerik item in list)
                 {
                     method.AppendLine(" ");
@@ -5686,8 +5714,8 @@ namespace WebApplicationDAO
             //}
 
             //return surveys;
- 
-            method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm","")));
+
+            method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm", "")));
             method.AppendLine("{");
             method.AppendLine("");
             method.AppendLine("public " + staticText + " List<" + modelName + "> Get" + modelName + "sFromCache()");
@@ -6727,7 +6755,7 @@ namespace WebApplicationDAO
         CustomValidator_
     }
     public enum Function_Adi
-    {
+    { 
         BOS_,
         Ei_Function_,
         HtmlEncode_,
