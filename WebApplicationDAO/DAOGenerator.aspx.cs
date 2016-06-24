@@ -1493,7 +1493,7 @@ namespace WebApplicationDAO
             built.AppendLine("//[OutputCache(CacheProfile = \"Cache1Hour\")]");
             built.AppendLine("public ActionResult Index()");
             built.AppendLine("{");
-            built.AppendLine(String.Format("var items = {0}Repository.Get{0}s();", modelName.Replace("Nwm", "")));
+            built.AppendLine(String.Format("var items = {0}Repository.Get{0}s();", modelName));
             built.AppendLine("return View(items);");
             built.AppendLine("}");
 
@@ -1501,7 +1501,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("public ActionResult {0}Detail(String id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id.Split('-').Last().ToInt();", primaryKey.ToLower()));
-            built.AppendLine(String.Format("var {0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""), primaryKey.ToLower()));
+            built.AppendLine(String.Format("var {0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName, primaryKey.ToLower()));
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
             built.AppendLine("}");
 
@@ -1513,7 +1513,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("if({0} == 0)", primaryKey.ToLower()));
             built.AppendLine("{");
             built.AppendLine("}else{");
-            built.AppendLine(String.Format("{0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""),
+            built.AppendLine(String.Format("{0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName,
                 primaryKey.ToLower()));
             built.AppendLine("}");
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
