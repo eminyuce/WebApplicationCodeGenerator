@@ -26,11 +26,6 @@ namespace WebApplicationDAO
         }
 
 
-//        Host Name        mysql8.hostera.biz(173.0.129.24) 
-//Port number        3306 
-//Database name        mmyuce_wpData   
-//Database users         mmyuce_emin
-//şifre : emin123
 
         private void GetirTabloları()
         {
