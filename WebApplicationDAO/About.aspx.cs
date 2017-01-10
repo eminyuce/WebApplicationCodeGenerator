@@ -15,8 +15,7 @@ namespace WebApplicationDAO
     public partial class About : Page
     {
 
-        public static string connectionString = @"server=mysql8.hostera.biz;userid=mmyuce_emin;
-            password=emin123;database=mmyuce_wpData";
+        public static string connectionString = @"";
         private static String databaseName = "";
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -27,11 +26,6 @@ namespace WebApplicationDAO
         }
 
 
-//        Host Name        mysql8.hostera.biz(173.0.129.24) 
-//Port number        3306 
-//Database name        mmyuce_wpData   
-//Database users         mmyuce_emin
-//şifre : emin123
 
         private void GetirTabloları()
         {
