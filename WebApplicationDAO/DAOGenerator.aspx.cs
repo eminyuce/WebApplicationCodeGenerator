@@ -4164,7 +4164,7 @@ namespace WebApplicationDAO
                         method.AppendLine("<div class=\"checkbox\"> ");
                     }
                     method.AppendLine(String.Format("    @Html.EditorFor(model => model.{0}, new {{ @class = \"form-control\" }})  ", item.columnName));
-                    method.AppendLine(String.Format("    @Html.ValidationMessageFor(model => model.{0}, new {{ @class = \"text-danger\" }})  ", item.columnName));
+                    method.AppendLine(String.Format("    @Html.ValidationMessageFor(model => model.{0})  ", item.columnName));
                     method.AppendLine("</div>");
                     if (item.dataType.IndexOf("bit") > -1)
                     {
