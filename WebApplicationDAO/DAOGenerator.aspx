@@ -1462,7 +1462,48 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-
+                         <asp:WizardStep ID="WizardStep24" runat="server" Title="String patterns 2">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h3>Class Pattern</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput1" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <h3> Class Pattern 2   </h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+                                             
+                                    </td>
+                                      <td>
+                                        <h3>Class Pattern Output</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput3" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                </tr>
+                            </table>
+                        </asp:WizardStep>
+                           <asp:WizardStep ID="WizardStep25" runat="server" Title="String patterns 3">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h3>Class Pattern</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput4" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <h3> Class Pattern 2   </h3>
+                                        <asp:TextBox ID="TextBox2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+                                             
+                                    </td>
+                                      <td>
+                                        <h3>Class Pattern Output</h3>
+                                        <asp:TextBox ID="TextBox3" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                </tr>
+                            </table>
+                        </asp:WizardStep>
                     </WizardSteps>
                     <StepStyle BorderWidth="0px" ForeColor="Gray" />
                     <SideBarButtonStyle BorderWidth="0px" Font-Names="Verdana" ForeColor="White" />

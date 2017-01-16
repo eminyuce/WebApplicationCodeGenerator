@@ -1,0 +1,24 @@
+﻿using EImece.Domain.Entities;
+using EImece.Domain.Services.IServices;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using EImece.Domain.Repositories.IRepositories;
+using NLog;
+
+namespace EImece.Domain.Services
+{
+    public class {className}Service : {entityType}Service<{className}>, I{className}Service
+    {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        private I{className}Repository {className}Repository { get; set; }
+
+        public {className}Service(I{className}Repository repository) : base(repository)
+        {
+            {className}Repository = repository;
+        }
+    }
+}

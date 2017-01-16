@@ -36189,3 +36189,505 @@ State;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;19;False;19;False;False;Fa
 
 
 *************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = ListItems
+TARİH = Friday, May 06, 2016 11:05:07 AM
+
+
+ListItemId    ----->    TextBoxMax_
+ListId    ----->    TextBoxMax_
+Text    ----->    TextBoxMax_
+Value    ----->    TextBoxMax_
+Order    ----->    TextBoxMax_
+
+
+
+ListItems  ------------------>  TextBox_State <----------------
+
+ListItemId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;False;True;True;True;TextBox_ListItemId
+ListId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_ListId
+Text;YES;nvarchar;200;nvarchar(200);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_Text
+Value;YES;nvarchar;200;nvarchar(200);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_Value
+Order;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_Order
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = ListItems
+TARİH = Friday, May 06, 2016 11:06:10 AM
+
+
+ListItemId    ----->    TextBoxMax_
+ListId    ----->    TextBoxMax_
+Text    ----->    TextBoxMax_
+Value    ----->    TextBoxMax_
+Order    ----->    TextBoxMax_
+
+
+
+ListItems  ------------------>  TextBox_State <----------------
+
+ListItemId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;False;True;True;True;TextBox_ListItemId
+ListId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_ListId
+Text;YES;nvarchar;200;nvarchar(200);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_Text
+Value;YES;nvarchar;200;nvarchar(200);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_Value
+Order;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_Order
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = ListItems
+TARİH = Friday, May 06, 2016 11:06:54 AM
+
+
+ListItemId    ----->    TextBoxMax_
+ListId    ----->    TextBoxMax_
+Text    ----->    TextBoxMax_
+Value    ----->    TextBoxMax_
+Order    ----->    TextBoxMax_
+
+
+
+ListItems  ------------------>  TextBox_State <----------------
+
+ListItemId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;False;True;True;True;TextBox_ListItemId
+ListId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_ListId
+Text;YES;nvarchar;200;nvarchar(200);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_Text
+Value;YES;nvarchar;200;nvarchar(200);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_Value
+Order;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_Order
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = ListItems
+TARİH = Friday, May 06, 2016 11:34:36 AM
+
+
+ListItemId    ----->    TextBoxMax_
+ListId    ----->    TextBoxMax_
+Text    ----->    TextBoxMax_
+Value    ----->    TextBoxMax_
+Order    ----->    TextBoxMax_
+
+
+
+ListItems  ------------------>  TextBox_State <----------------
+
+ListItemId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;False;True;True;True;TextBox_ListItemId
+ListId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_ListId
+Text;YES;nvarchar;200;nvarchar(200);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_Text
+Value;YES;nvarchar;200;nvarchar(200);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_Value
+Order;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_Order
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = Cla
+TARİH = Friday, May 06, 2016 11:35:31 AM
+
+
+LR/IMO_Ship_No#    ----->    TextBoxMax_
+Name_of_Ship    ----->    TextBoxMax_
+Ship_Type    ----->    TextBoxMax_
+Class    ----->    TextBoxMax_
+Delivery_Date    ----->    TextBoxMax_
+UnitId    ----->    TextBoxMax_
+ComparisionType    ----->    TextBoxMax_
+
+
+
+Cla  ------------------>  TextBox_State <----------------
+
+LR/IMO_Ship_No#;YES;float;;float;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;False;True;True;True;TextBox_LR/IMO_Ship_No#
+Name_of_Ship;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_Name_of_Ship
+Ship_Type;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_Ship_Type
+Class;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_Class
+Delivery_Date;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_Delivery_Date
+UnitId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;TextBox_UnitId
+ComparisionType;YES;nvarchar;50;nvarchar(50);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;7;False;7;False;False;False;False;TextBox_ComparisionType
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = Cla
+TARİH = Friday, May 06, 2016 11:37:07 AM
+
+
+LR/IMO_Ship_No#    ----->    TextBoxMax_
+Name_of_Ship    ----->    TextBoxMax_
+Ship_Type    ----->    TextBoxMax_
+Class    ----->    TextBoxMax_
+Delivery_Date    ----->    TextBoxMax_
+UnitId    ----->    TextBoxMax_
+ComparisionType    ----->    TextBoxMax_
+
+
+
+Cla  ------------------>  TextBox_State <----------------
+
+LR/IMO_Ship_No#;YES;float;;float;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;False;True;True;True;TextBox_LR/IMO_Ship_No#
+Name_of_Ship;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_Name_of_Ship
+Ship_Type;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_Ship_Type
+Class;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_Class
+Delivery_Date;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_Delivery_Date
+UnitId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;TextBox_UnitId
+ComparisionType;YES;nvarchar;50;nvarchar(50);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;7;False;7;False;False;False;False;TextBox_ComparisionType
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = Companie
+TARİH = Friday, May 06, 2016 11:44:01 AM
+
+
+CompanyId    ----->    TextBoxMax_
+Notes    ----->    TextBox_MultiLine
+tmpSourceRowId    ----->    TextBoxMax_
+IsActive    ----->    CheckBox_
+DateUpdated    ----->    TextBoxMax_
+EditorUserId    ----->    TextBoxMax_
+
+
+
+Companie  ------------------>  TextBox_State <----------------
+
+CompanyId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;True;True;True;True;TextBox_CompanyId
+Notes;YES;nvarchar;4000;nvarchar(4000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_Notes
+tmpSourceRowId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_tmpSourceRowId
+IsActive;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;CheckBox_IsActive
+DateUpdated;YES;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_DateUpdated
+EditorUserId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;TextBox_EditorUserId
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = NwmPdfUpload
+TARİH = Sunday, May 22, 2016 2:40:06 PM
+
+
+PdfUploadId    ----->    TextBoxMax_
+FileId    ----->    TextBoxMax_
+FilePath    ----->    TextBox_MultiLine
+FileName    ----->    TextBox_MultiLine
+FileExtention    ----->    TextBoxMax_
+DateUpload    ----->    TextBoxMax_
+
+
+
+NwmPdfUpload  ------------------>  TextBox_State <----------------
+
+PdfUploadId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;True;True;True;True;TextBox_PdfUploadId
+FileId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_FileId
+FilePath;YES;nvarchar;1000;nvarchar(1000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_FilePath
+FileName;YES;nvarchar;1000;nvarchar(1000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_FileName
+FileExtention;YES;nvarchar;10;nvarchar(10);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_FileExtention
+DateUpload;YES;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;TextBox_DateUpload
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = NwmTemp
+TARİH = Sunday, May 22, 2016 2:43:56 PM
+
+
+Brand    ----->    TextBoxMax_
+
+
+
+NwmTemp  ------------------>  TextBox_State <----------------
+
+Brand;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;False;1;False;True;True;True;TextBox_Brand
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = Setting
+TARİH = Monday, January 16, 2017 1:42:52 PM
+
+
+Id    ----->    TextBoxMax_
+Name    ----->    TextBoxMax_
+CreatedDate    ----->    TextBoxMax_
+UpdatedDate    ----->    TextBoxMax_
+IsActive    ----->    CheckBox_
+Position    ----->    TextBoxMax_
+Description    ----->    TextBox_MultiLine
+SettingKey    ----->    TextBoxMax_
+SettingValue    ----->    TextBox_MultiLine
+EntityHash    ----->    TextBoxMax_
+Lang    ----->    TextBoxMax_
+
+
+
+Setting  ------------------>  TextBox_State <----------------
+
+Id;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;True;1;True;True;True;True;
+Name;NO;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_Name
+CreatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_CreatedDate
+UpdatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_UpdatedDate
+IsActive;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;CheckBox_IsActive
+Position;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;TextBox_Position
+Description;YES;nvarchar;4000;nvarchar(4000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;7;False;11;False;False;False;False;TextBox_Description
+SettingKey;NO;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;8;False;7;False;False;False;False;TextBox_SettingKey
+SettingValue;NO;nvarchar;4000;nvarchar(4000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;9;False;8;False;False;False;False;TextBox_SettingValue
+EntityHash;YES;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;10;False;9;False;False;False;False;TextBox_EntityHash
+Lang;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;11;False;10;False;False;False;False;TextBox_Lang
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = Menu
+TARİH = Monday, January 16, 2017 1:51:31 PM
+
+
+Id    ----->    TextBoxMax_
+ParentId    ----->    TextBoxMax_
+Name    ----->    TextBoxMax_
+CreatedDate    ----->    TextBoxMax_
+UpdatedDate    ----->    TextBoxMax_
+IsActive    ----->    CheckBox_
+Position    ----->    TextBoxMax_
+Description    ----->    TextBox_MultiLine
+ImageState    ----->    CheckBox_
+MainPage    ----->    CheckBox_
+LinkIsActive    ----->    CheckBox_
+Link    ----->    TextBoxMax_
+Static    ----->    CheckBox_
+MainImageId    ----->    TextBoxMax_
+MenuLink    ----->    TextBoxMax_
+PageTheme    ----->    TextBoxMax_
+Lang    ----->    TextBoxMax_
+EntityHash    ----->    TextBoxMax_
+
+
+
+Menu  ------------------>  TextBox_State <----------------
+
+Id;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;True;1;True;True;True;True;
+ParentId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_ParentId
+Name;NO;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_Name
+CreatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_CreatedDate
+UpdatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_UpdatedDate
+IsActive;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;CheckBox_IsActive
+Position;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;7;False;7;False;False;False;False;TextBox_Position
+Description;YES;nvarchar;4000;nvarchar(4000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;8;False;12;False;False;False;False;TextBox_Description
+ImageState;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;9;False;13;False;False;False;False;CheckBox_ImageState
+MainPage;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;10;False;14;False;False;False;False;CheckBox_MainPage
+LinkIsActive;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;11;False;15;False;False;False;False;CheckBox_LinkIsActive
+Link;YES;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;12;False;16;False;False;False;False;TextBox_Link
+Static;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;13;False;17;False;False;False;False;CheckBox_Static
+MainImageId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;14;False;18;False;False;False;False;TextBox_MainImageId
+MenuLink;NO;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;15;False;8;False;False;False;False;TextBox_MenuLink
+PageTheme;YES;nvarchar;50;nvarchar(50);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;16;False;11;False;False;False;False;TextBox_PageTheme
+Lang;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;17;False;9;False;False;False;False;TextBox_Lang
+EntityHash;YES;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;18;False;10;False;False;False;False;TextBox_EntityHash
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = Menu
+TARİH = Monday, January 16, 2017 1:52:50 PM
+
+
+Id    ----->    TextBoxMax_
+ParentId    ----->    TextBoxMax_
+Name    ----->    TextBoxMax_
+CreatedDate    ----->    TextBoxMax_
+UpdatedDate    ----->    TextBoxMax_
+IsActive    ----->    CheckBox_
+Position    ----->    TextBoxMax_
+Description    ----->    TextBox_MultiLine
+ImageState    ----->    CheckBox_
+MainPage    ----->    CheckBox_
+LinkIsActive    ----->    CheckBox_
+Link    ----->    TextBoxMax_
+Static    ----->    CheckBox_
+MainImageId    ----->    TextBoxMax_
+MenuLink    ----->    TextBoxMax_
+PageTheme    ----->    TextBoxMax_
+Lang    ----->    TextBoxMax_
+EntityHash    ----->    TextBoxMax_
+
+
+
+Menu  ------------------>  TextBox_State <----------------
+
+Id;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;True;1;True;True;True;True;
+ParentId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_ParentId
+Name;NO;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_Name
+CreatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_CreatedDate
+UpdatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;TextBox_UpdatedDate
+IsActive;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;CheckBox_IsActive
+Position;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;7;False;7;False;False;False;False;TextBox_Position
+Description;YES;nvarchar;4000;nvarchar(4000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;8;False;12;False;False;False;False;TextBox_Description
+ImageState;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;9;False;13;False;False;False;False;CheckBox_ImageState
+MainPage;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;10;False;14;False;False;False;False;CheckBox_MainPage
+LinkIsActive;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;11;False;15;False;False;False;False;CheckBox_LinkIsActive
+Link;YES;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;12;False;16;False;False;False;False;TextBox_Link
+Static;YES;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;13;False;17;False;False;False;False;CheckBox_Static
+MainImageId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;14;False;18;False;False;False;False;TextBox_MainImageId
+MenuLink;NO;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;15;False;8;False;False;False;False;TextBox_MenuLink
+PageTheme;YES;nvarchar;50;nvarchar(50);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;16;False;11;False;False;False;False;TextBox_PageTheme
+Lang;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;17;False;9;False;False;False;False;TextBox_Lang
+EntityHash;YES;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;18;False;10;False;False;False;False;TextBox_EntityHash
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = Product
+TARİH = Monday, January 16, 2017 2:00:49 PM
+
+
+Id    ----->    TextBoxMax_
+Name    ----->    TextBoxMax_
+CreatedDate    ----->    TextBoxMax_
+UpdatedDate    ----->    TextBoxMax_
+IsActive    ----->    CheckBox_
+Position    ----->    TextBoxMax_
+Description    ----->    TextBox_MultiLine
+MainPage    ----->    CheckBox_
+ImageState    ----->    CheckBox_
+MainImageId    ----->    TextBoxMax_
+ProductCategoryId    ----->    TextBoxMax_
+Price    ----->    TextBoxMax_
+Discount    ----->    TextBoxMax_
+ProductCode    ----->    TextBoxMax_
+Lang    ----->    TextBoxMax_
+EntityHash    ----->    TextBoxMax_
+
+
+
+Product  ------------------>  TextBox_State <----------------
+
+Id;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;True;1;True;True;True;True;
+Name;NO;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_Name
+CreatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_CreatedDate
+UpdatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_UpdatedDate
+IsActive;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;CheckBox_IsActive
+Position;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;TextBox_Position
+Description;YES;nvarchar;4000;nvarchar(4000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;7;False;16;False;False;False;False;TextBox_Description
+MainPage;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;8;False;8;False;False;False;False;CheckBox_MainPage
+ImageState;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;9;False;9;False;False;False;False;CheckBox_ImageState
+MainImageId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;10;False;12;False;False;False;False;TextBox_MainImageId
+ProductCategoryId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;11;False;7;False;False;False;False;TextBox_ProductCategoryId
+Price;YES;float;;float;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;12;False;13;False;False;False;False;TextBox_Price
+Discount;YES;float;;float;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;13;False;14;False;False;False;False;TextBox_Discount
+ProductCode;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;14;False;15;False;False;False;False;TextBox_ProductCode
+Lang;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;15;False;10;False;False;False;False;TextBox_Lang
+EntityHash;YES;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;16;False;11;False;False;False;False;TextBox_EntityHash
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = Product
+TARİH = Monday, January 16, 2017 2:01:06 PM
+
+
+Id    ----->    TextBoxMax_
+Name    ----->    TextBoxMax_
+CreatedDate    ----->    TextBoxMax_
+UpdatedDate    ----->    TextBoxMax_
+IsActive    ----->    CheckBox_
+Position    ----->    TextBoxMax_
+Description    ----->    TextBox_MultiLine
+MainPage    ----->    CheckBox_
+ImageState    ----->    CheckBox_
+MainImageId    ----->    TextBoxMax_
+ProductCategoryId    ----->    TextBoxMax_
+Price    ----->    TextBoxMax_
+Discount    ----->    TextBoxMax_
+ProductCode    ----->    TextBoxMax_
+Lang    ----->    TextBoxMax_
+EntityHash    ----->    TextBoxMax_
+
+
+
+Product  ------------------>  TextBox_State <----------------
+
+Id;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;True;1;True;True;True;True;
+Name;NO;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_Name
+CreatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_CreatedDate
+UpdatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;4;False;True;True;True;TextBox_UpdatedDate
+IsActive;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;5;False;5;False;True;True;True;CheckBox_IsActive
+Position;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;6;False;6;False;True;True;True;TextBox_Position
+Description;YES;nvarchar;4000;nvarchar(4000);textBox_MULTI;TextBox_MultiLine;BOS_;BOS_;BOS_;7;False;16;False;False;False;False;TextBox_Description
+MainPage;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;8;False;8;False;False;False;False;CheckBox_MainPage
+ImageState;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;9;False;9;False;False;False;False;CheckBox_ImageState
+MainImageId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;10;False;12;False;False;False;False;TextBox_MainImageId
+ProductCategoryId;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;11;False;7;False;False;False;False;TextBox_ProductCategoryId
+Price;YES;float;;float;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;12;False;13;False;False;False;False;TextBox_Price
+Discount;YES;float;;float;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;13;False;14;False;False;False;False;TextBox_Discount
+ProductCode;YES;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;14;False;15;False;False;False;False;TextBox_ProductCode
+Lang;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;15;False;10;False;False;False;False;TextBox_Lang
+EntityHash;YES;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;16;False;11;False;False;False;False;TextBox_EntityHash
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = FileStorageTag
+TARİH = Monday, January 16, 2017 2:01:15 PM
+
+
+Id    ----->    TextBoxMax_
+FileStorageId    ----->    TextBoxMax_
+TagId    ----->    TextBoxMax_
+
+
+
+FileStorageTag  ------------------>  TextBox_State <----------------
+
+Id;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;True;1;True;True;True;True;
+FileStorageId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;2;False;True;True;True;TextBox_FileStorageId
+TagId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;3;False;True;True;True;TextBox_TagId
+
+
+
+*************************************FINISH***********************************************
+**************************************************************************
+TABLO ADI = MenuFile
+TARİH = Monday, January 16, 2017 2:01:40 PM
+
+
+Id    ----->    TextBoxMax_
+MenuId    ----->    TextBoxMax_
+FileStorageId    ----->    TextBoxMax_
+Name    ----->    TextBoxMax_
+CreatedDate    ----->    TextBoxMax_
+UpdatedDate    ----->    TextBoxMax_
+IsActive    ----->    CheckBox_
+Position    ----->    TextBoxMax_
+EntityHash    ----->    TextBoxMax_
+Lang    ----->    TextBoxMax_
+
+
+
+MenuFile  ------------------>  TextBox_State <----------------
+
+Id;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;1;True;6;True;True;True;True;
+MenuId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;2;False;7;False;True;True;True;TextBox_MenuId
+FileStorageId;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;3;False;8;False;True;True;True;TextBox_FileStorageId
+Name;NO;nvarchar;255;nvarchar(255);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;4;False;1;False;True;True;True;TextBox_Name
+CreatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;5;False;2;False;True;True;True;TextBox_CreatedDate
+UpdatedDate;NO;datetime;;datetime;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;6;False;3;False;True;True;True;TextBox_UpdatedDate
+IsActive;NO;bit;;bit;check_BOX;CheckBox_;BOS_;BOS_;BOS_;7;False;4;False;False;False;False;CheckBox_IsActive
+Position;NO;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;8;False;5;False;False;False;False;TextBox_Position
+EntityHash;YES;nvarchar;500;nvarchar(500);textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;9;False;9;False;False;False;False;TextBox_EntityHash
+Lang;YES;int;;int;textBox_NORMAL;TextBoxMax_;BOS_;BOS_;BOS_;10;False;10;False;False;False;False;TextBox_Lang
+
+
+
+*************************************FINISH***********************************************

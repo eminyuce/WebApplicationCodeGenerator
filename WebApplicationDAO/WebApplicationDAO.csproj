@@ -143,6 +143,7 @@
     <Content Include="Account\OpenAuthProviders.ascx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Account\RegisterExternalLogin.aspx" />
+    <Content Include="ClassPattern1.txt" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -199,6 +200,9 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="ClassPattern2.txt" />
+    <Content Include="ClassPattern3.txt" />
+    <Content Include="ClassPattern4.txt" />
     <Content Include="DAOGenerator.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="GridView_State.txt" />

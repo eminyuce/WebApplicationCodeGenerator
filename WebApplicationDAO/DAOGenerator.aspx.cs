@@ -1354,7 +1354,7 @@ namespace WebApplicationDAO
                 generateTableItem(linkedList);
                 GenerateTableRepository(linkedList);
                 GenerateStringPatterns(linkedList);
-
+                GenerateClassStringPatterns(linkedList);
                 //Eğer istersek DAO dosyalarını oluştursun..
                 if (CheckBox_All_DAO.Checked)
                 {
@@ -1552,7 +1552,7 @@ namespace WebApplicationDAO
                 method.AppendLine("  ViewBag.Title=\"Title\";");
                 method.AppendLine(" }");
                 method.AppendLine("       <div>");
-                method.AppendLine(String.Format(" @foreach ({0} item in Model)",modelName));
+                method.AppendLine(String.Format(" @foreach ({0} item in Model)", modelName));
                 method.AppendLine("  {");
                 method.AppendLine(String.Format("    @Html.DisplayFor(modelItem => item,\"{0}\")  ", modelName));
                 method.AppendLine(" }");
@@ -5799,7 +5799,66 @@ namespace WebApplicationDAO
 
 
         }
+        private void GenerateClassStringPatterns(List<Kontrol_Icerik> linkedList)
+        {
 
+            var method = new StringBuilder();
+            var method2 = new StringBuilder();
+            var method3 = new StringBuilder();
+            var method4 = new StringBuilder();
+            try
+            {
+
+                String entityType = "Base";
+                if (linkedList.Any(r => r.columnName.Equals("name", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    entityType = "BaseEntity";
+                }
+
+                if (linkedList.Any(r => r.columnName.Equals("description", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    entityType = "BaseContent";
+                }
+                String modelName = getModelName();
+                String selectedTable = GetRealEntityName();
+
+                String patternOriginal = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern1.txt")));
+                String patternOriginal2 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern2.txt")));
+                String patternOriginal3 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern3.txt")));
+                String patternOriginal4 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern4.txt")));
+
+                var pattern = patternOriginal.Replace("{className}", modelName);
+                pattern = pattern.Replace("{entityType}", entityType);
+                method.AppendLine(pattern);
+
+                var pattern2 = patternOriginal2.Replace("{className}", modelName);
+                pattern2 = pattern2.Replace("{entityType}", entityType);
+                method2.AppendLine(pattern2);
+
+
+                var pattern3 = patternOriginal3.Replace("{className}", modelName);
+                pattern3 = pattern3.Replace("{entityType}", entityType);
+                method3.AppendLine(pattern3);
+
+
+                var pattern4 = patternOriginal4.Replace("{className}", modelName);
+                pattern4 = pattern4.Replace("{entityType}", entityType);
+                method4.AppendLine(pattern4);
+
+
+
+            }
+            catch (Exception ex)
+            {
+                method.AppendLine(ex.Message);
+            }
+
+            TextBox_ClassPatternOutput1.Text = method.ToString();
+            TextBox_ClassPatternOutput2.Text = method2.ToString();
+            TextBox_ClassPatternOutput3.Text = method3.ToString();
+            TextBox_ClassPatternOutput4.Text = method4.ToString();
+
+        }
         private void generateTableItem(List<Kontrol_Icerik> linkedList)
         {
             StringBuilder method = new StringBuilder();
@@ -6755,7 +6814,7 @@ namespace WebApplicationDAO
         CustomValidator_
     }
     public enum Function_Adi
-    { 
+    {
         BOS_,
         Ei_Function_,
         HtmlEncode_,
