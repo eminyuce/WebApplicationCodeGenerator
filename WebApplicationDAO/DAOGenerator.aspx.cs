@@ -5834,28 +5834,34 @@ namespace WebApplicationDAO
 
                 var pattern = patternOriginal.Replace("{className}", modelName);
                 pattern = pattern.Replace("{entityType}", entityType);
+                pattern = pattern.Replace("{realClassName}", selectedTable);
                 method.AppendLine(pattern);
 
                 var pattern2 = patternOriginal2.Replace("{className}", modelName);
                 pattern2 = pattern2.Replace("{entityType}", entityType);
+                pattern2 = pattern2.Replace("{realClassName}", selectedTable);
                 method2.AppendLine(pattern2);
 
 
                 var pattern3 = patternOriginal3.Replace("{className}", modelName);
                 pattern3 = pattern3.Replace("{entityType}", entityType);
+                pattern3 = pattern3.Replace("{realClassName}", selectedTable);
                 method3.AppendLine(pattern3);
 
 
                 var pattern4 = patternOriginal4.Replace("{className}", modelName);
                 pattern4 = pattern4.Replace("{entityType}", entityType);
+                pattern4 = pattern4.Replace("{realClassName}", selectedTable);
                 method4.AppendLine(pattern4);
 
                 var pattern5 = patternOriginal5.Replace("{className}", modelName);
                 pattern5 = pattern5.Replace("{entityType}", entityType);
+                pattern5 = pattern5.Replace("{realClassName}", selectedTable);
                 method5.AppendLine(pattern5);
 
                 var pattern6 = patternOriginal6.Replace("{className}", modelName);
                 pattern6 = pattern6.Replace("{entityType}", entityType);
+                pattern6 = pattern6.Replace("{realClassName}", selectedTable);
                 method6.AppendLine(pattern6);
 
 

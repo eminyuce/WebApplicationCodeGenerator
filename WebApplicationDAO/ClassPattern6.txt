@@ -1,4 +1,4 @@
-﻿@model List<{entityType}>
+﻿@model List<{className}>
 @using EImece.Domain.Helpers;
 @using GridMvc.Html
 @using GridMvc.Sorting
@@ -15,9 +15,9 @@
     pageSizeNumber = pageSizeNumber == 0 ? Settings.GridPageSizeNumber : pageSizeNumber;
     var controllerName = "{className}";
     var title = "{className}";
-    var gridName = "{entityType}Grid";
+    var gridName = "{className}Grid";
     var contents = Model;
-    var baseList = contents.DownCasting<{entityType}>();
+    var baseList = contents.DownCasting<{className}>();
 
     var gridImagesText = AdminResource.GridImagesText;
     var gridEditText = AdminResource.GridEditText;
@@ -27,7 +27,7 @@
 
 }
 
-<h2>{entityType}</h2>
+<h2>{className}</h2>
 
 
 <div class="panel panel-info">
@@ -92,7 +92,7 @@ columns.Add(c => c.Name)
             .Sanitized(false)
       .RenderValueAs(d =>
     @<b>
-        @Html.ActionLink(d.Name, "Detail", "{className}", new { area = "", categoryName = GeneralHelper.GetUrlSeoString(d.{entityType}Category.Name), id = d.GetSeoUrl() }, new { @class = "btn btn-link", @target = "_blank" })
+        @Html.ActionLink(d.Name, "Detail", "{className}", new { area = "", categoryName = GeneralHelper.GetUrlSeoString(d.{className}Category.Name), id = d.GetSeoUrl() }, new { @class = "btn btn-link", @target = "_blank" })
     </b>);
 
 
