@@ -5806,6 +5806,8 @@ namespace WebApplicationDAO
             var method2 = new StringBuilder();
             var method3 = new StringBuilder();
             var method4 = new StringBuilder();
+            var method5 = new StringBuilder();
+            var method6 = new StringBuilder();
             try
             {
 
@@ -5826,6 +5828,9 @@ namespace WebApplicationDAO
                 String patternOriginal2 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern2.txt")));
                 String patternOriginal3 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern3.txt")));
                 String patternOriginal4 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern4.txt")));
+                String patternOriginal5 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern5.txt")));
+                String patternOriginal6 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern6.txt")));
+
 
                 var pattern = patternOriginal.Replace("{className}", modelName);
                 pattern = pattern.Replace("{entityType}", entityType);
@@ -5845,6 +5850,13 @@ namespace WebApplicationDAO
                 pattern4 = pattern4.Replace("{entityType}", entityType);
                 method4.AppendLine(pattern4);
 
+                var pattern5 = patternOriginal5.Replace("{className}", modelName);
+                pattern5 = pattern5.Replace("{entityType}", entityType);
+                method5.AppendLine(pattern5);
+
+                var pattern6 = patternOriginal6.Replace("{className}", modelName);
+                pattern6 = pattern6.Replace("{entityType}", entityType);
+                method6.AppendLine(pattern6);
 
 
             }
@@ -5857,6 +5869,8 @@ namespace WebApplicationDAO
             TextBox_ClassPatternOutput2.Text = method2.ToString();
             TextBox_ClassPatternOutput3.Text = method3.ToString();
             TextBox_ClassPatternOutput4.Text = method4.ToString();
+            TextBox_ClassPatternOutput5.Text = method5.ToString();
+            TextBox_ClassPatternOutput6.Text = method6.ToString();
 
         }
         private void generateTableItem(List<Kontrol_Icerik> linkedList)

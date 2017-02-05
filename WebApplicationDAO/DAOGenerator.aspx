@@ -1462,43 +1462,43 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                         <asp:WizardStep ID="WizardStep24" runat="server" Title="String patterns 2">
+                         <asp:WizardStep ID="WizardStep24" runat="server" Title="EF Repository">
                             <table>
                                 <tr>
+                                  
                                     <td>
-                                        <h3>Class Pattern</h3>
-                                        <asp:TextBox ID="TextBox_ClassPatternOutput1" TextMode="MultiLine" CssClass="resultTextBox"
+                                        <h3>Repository Interface Class</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput4" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Class Pattern 2   </h3>
+                                        <h3> Repository Class  </h3>
                                         <asp:TextBox ID="TextBox_ClassPatternOutput2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                             
                                     </td>
-                                      <td>
-                                        <h3>Class Pattern Output</h3>
+                                    <td>
+                                        <h3>Service Interface Class</h3>
                                         <asp:TextBox ID="TextBox_ClassPatternOutput3" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                           <asp:WizardStep ID="WizardStep25" runat="server" Title="String patterns 3">
+                           <asp:WizardStep ID="WizardStep25" runat="server" Title="EF Services">
                             <table>
                                 <tr>
                                     <td>
-                                        <h3>Class Pattern</h3>
-                                        <asp:TextBox ID="TextBox_ClassPatternOutput4" TextMode="MultiLine" CssClass="resultTextBox"
+                                        <h3>Service Class</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput1" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                     </td>
-                                    <td>
-                                        <h3> Class Pattern 2   </h3>
-                                        <asp:TextBox ID="TextBox2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+                                     <td>
+                                        <h3> Controller Class   </h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput5" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
                                              
                                     </td>
                                       <td>
-                                        <h3>Class Pattern Output</h3>
-                                        <asp:TextBox ID="TextBox3" TextMode="MultiLine" CssClass="resultTextBox"
+                                        <h3>Index Page</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput6" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                     </td>
                                 </tr>

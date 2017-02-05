@@ -1381,13 +1381,13 @@ namespace WebApplicationDAO {
         protected global::System.Web.UI.WebControls.WizardStep WizardStep24;
         
         /// <summary>
-        /// TextBox_ClassPatternOutput1 control.
+        /// TextBox_ClassPatternOutput4 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_ClassPatternOutput1;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_ClassPatternOutput4;
         
         /// <summary>
         /// TextBox_ClassPatternOutput2 control.
@@ -1417,30 +1417,30 @@ namespace WebApplicationDAO {
         protected global::System.Web.UI.WebControls.WizardStep WizardStep25;
         
         /// <summary>
-        /// TextBox_ClassPatternOutput4 control.
+        /// TextBox_ClassPatternOutput1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_ClassPatternOutput4;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_ClassPatternOutput1;
         
         /// <summary>
-        /// TextBox2 control.
+        /// TextBox_ClassPatternOutput5 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox2;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_ClassPatternOutput5;
         
         /// <summary>
-        /// TextBox3 control.
+        /// TextBox_ClassPatternOutput6 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox3;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_ClassPatternOutput6;
     }
 }

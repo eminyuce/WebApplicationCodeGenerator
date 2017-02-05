@@ -1,0 +1,136 @@
+﻿using EImece.Domain;
+using EImece.Domain.Entities;
+using EImece.Domain.Helpers.AttributeHelper;
+using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+
+namespace EImece.Areas.Admin.Controllers
+{
+    public class {className}sController : BaseAdminController
+    {
+        protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        public ActionResult Index(String search = "")
+        {
+            Expression<Func<{entityType}, bool>> whereLambda = r => r.Name.ToLower().Contains(search.Trim().ToLower());
+            var result = {entityType}Service.SearchEntities(whereLambda, search);
+            return View(result);
+        }
+
+
+
+        //
+        // GET: /{entityType}/Create
+
+        public ActionResult SaveOrEdit(int id = 0)
+        {
+
+            var item = EntityFactory.GetBaseEntityInstance<{entityType}>();
+
+
+            if (id == 0)
+            {
+                
+            }
+            else
+            {
+                item = {entityType}Service.GetSingle(id);
+            }
+
+
+            return View(item);
+        }
+
+        //
+        // POST: /{entityType}/Create
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveOrEdit({entityType} {entityType}, HttpPostedFileBase itemImage = null)
+        {
+            try
+            {
+
+                if (ModelState.IsValid)
+                {
+
+				 FilesHelper.SaveFileFromHttpPostedFileBase(itemImage,
+                        story.ImageHeight,
+                        story.ImageWidth,
+                        EImeceImageType.StoryMainImage,{entityType});
+                
+
+
+                    {entityType}Service.SaveOrEditEntity({entityType});
+                    int itemId = {entityType}.Id;
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Unable to save changes:" + ex.StackTrace, {entityType});
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+
+            return View({entityType});
+        }
+
+
+
+        //
+            [DeleteAuthorize()]
+        public ActionResult Delete(int id = 0)
+        {
+            if (id == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            {entityType} item = {entityType}Service.GetSingle(id);
+            if (item == null)
+            {
+                return HttpNotFound();
+            }
+
+
+            return View(item);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+            [DeleteAuthorize()]
+        public ActionResult DeleteConfirmed(int id)
+        {
+
+            {entityType} {entityType} = {entityType}Service.GetSingle(id);
+            if ({entityType} == null)
+            {
+                return HttpNotFound();
+            }
+            try
+            {
+                {entityType}Service.Delete{entityType}ById(id);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Unable to delete item:" + ex.StackTrace, {entityType});
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+
+            return View({entityType});
+
+        }
+    }
+}

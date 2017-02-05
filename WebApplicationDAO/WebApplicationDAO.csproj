@@ -203,6 +203,8 @@
     <Content Include="ClassPattern2.txt" />
     <Content Include="ClassPattern3.txt" />
     <Content Include="ClassPattern4.txt" />
+    <Content Include="ClassPattern5.txt" />
+    <Content Include="ClassPattern6.txt" />
     <Content Include="DAOGenerator.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="GridView_State.txt" />
