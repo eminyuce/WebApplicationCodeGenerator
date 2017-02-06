@@ -12,7 +12,7 @@ namespace EImece.Domain.Repositories
 {
     public class {className}Repository : {entityType}Repository<{className}>, I{className}Repository
     {
-	    protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+	    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 			
         public {className}Repository(IEImeceContext dbContext) : base(dbContext)
         {

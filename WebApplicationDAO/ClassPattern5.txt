@@ -14,7 +14,7 @@ namespace EImece.Areas.Admin.Controllers
 {
     public class {className}sController : BaseAdminController
     {
-        protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public ActionResult Index(String search = "")
         {
             Expression<Func<{className}, bool>> whereLambda = r => r.Name.ToLower().Contains(search.Trim().ToLower());
