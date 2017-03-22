@@ -1531,7 +1531,7 @@ namespace WebApplicationDAO
                         if (firstRow != null)
                         {
 
-                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "Datetime");
+                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "DateTime");
                             if (firstRow[column].GetType().Name.Equals("DBNull"))
                             {
                                 dataType = "string";
@@ -1573,7 +1573,7 @@ namespace WebApplicationDAO
                         if (firstRow != null)
                         {
 
-                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "Datetime");
+                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "DateTime");
                             if (firstRow[column].GetType().Name.Equals("DBNull"))
                             {
                                 dataType = "string";
@@ -1610,6 +1610,7 @@ namespace WebApplicationDAO
                         }
 
                     }
+                    method.AppendLine("return item;");
                     method.AppendLine("}");
                     built2.AppendLine(method.ToString());
 
