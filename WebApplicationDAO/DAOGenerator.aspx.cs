@@ -1487,7 +1487,7 @@ namespace WebApplicationDAO
             {
                 var queryParts = Regex.Split(sqlCommand, @"\s+").Where(s => s != string.Empty).ToList();
                 String sp = queryParts.FirstOrDefault();
-                sqlCommand = sqlCommand.Replace(sp,"");
+                sqlCommand = sqlCommand.Replace(sp, "");
 
 
                 SqlConnection conn = new SqlConnection(connectionString);
@@ -1496,11 +1496,11 @@ namespace WebApplicationDAO
                 cmd.CommandText = sp;
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                var queryParts2 = Regex.Split(sqlCommand, @",").Where(s => s != string.Empty).Select(r=>r.Trim()).ToList();
+                var queryParts2 = Regex.Split(sqlCommand, @",").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
                 foreach (var item in queryParts2)
                 {
                     var parameterParts = Regex.Split(item, @"=").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
-                    cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'","")));
+                    cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'", "")));
                 }
                 da.SelectCommand = cmd;
 
@@ -1531,7 +1531,7 @@ namespace WebApplicationDAO
                         if (firstRow != null)
                         {
 
-                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool");
+                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "Datetime");
                             if (firstRow[column].GetType().Name.Equals("DBNull"))
                             {
                                 dataType = "string";
@@ -1549,9 +1549,79 @@ namespace WebApplicationDAO
             catch (Exception ex)
             {
                 TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
-             
+
             }
-          
+            String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
+            try
+            {
+                var built2 = new StringBuilder();
+                var ds = GetDataSet(TextBox_StoredProc_Exec.Text, connectionString);
+                for (int i = 0; i < ds.Tables.Count; i++)
+                {
+                    DataTable table = ds.Tables[i];
+                    String modelName = String.Format("Table{0}", i);
+                    var method = new StringBuilder();
+                    method.AppendLine("private " + staticText + " " + modelName + " Get" + modelName + "FromDataRow(DataRow dr)");
+                    method.AppendLine("{");
+                    method.AppendLine("var item = new " + modelName + "();");
+                    method.AppendLine("");
+
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        String dataType = "string";
+                        DataRow firstRow = table.Rows.Cast<DataRow>().ToArray().Take(1).FirstOrDefault();
+                        if (firstRow != null)
+                        {
+
+                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "Datetime");
+                            if (firstRow[column].GetType().Name.Equals("DBNull"))
+                            {
+                                dataType = "string";
+                            }
+                        }
+                       // method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToStr();");
+
+
+                        if (dataType.IndexOf("string") > -1)
+                        {
+                            // method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? \"\" : read[\"" + item.columnName + "\"].ToString();");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToStr();");
+                        }
+                        else if (dataType.IndexOf("int") > -1)
+                        {
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToInt();");
+                        }
+                        else if (dataType.IndexOf("date") > -1)
+                        {
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? DateTime.Now : DateTime.Parse(read[\"" + item.columnName + "\"].ToString());");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToDateTime();");
+
+                        }
+                        else if (dataType.IndexOf("bool") > -1)
+                        {
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? false : Boolean.Parse(read[\"" + item.columnName + "\"].ToString());");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToBool();");
+                        }
+                        else if (dataType.IndexOf("float") > -1)
+                        {
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : float.Parse(read[\"" + item.columnName + "\"].ToString());");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToFloat();");
+                        }
+
+                    }
+                    method.AppendLine("}");
+                    built2.AppendLine(method.ToString());
+
+                }
+                TextBox_StoredProc_Exec_Model_DataReader.Text = built2.ToString();
+            }
+            catch (Exception ex)
+            {
+                TextBox_StoredProc_Exec_Model_DataReader.Text = ex.StackTrace;
+
+            }
+
         }
         private void generateAspMvcActions(List<Kontrol_Icerik> kontrolList)
         {
