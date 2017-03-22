@@ -5,4 +5,5 @@ Basically it creates some razor engine pages and database related methods in a j
 
 It also creates some of Sql query and stored procedures like SaveOrUpdateTableName.
 
+It is basically producing code or sql as a text inside textarea so you should copy/paste to your project.
 
