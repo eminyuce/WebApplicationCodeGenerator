@@ -43,7 +43,7 @@ namespace WebApplicationDAO
 
         private static String downloadFileName = "generatedCode";
         private static String lessonDirectory = "Lesson", codeDirectory = "App_Code";
-        private static string connectionString = "";
+        public static string connectionString = "";
         private static List<Kontrol_Icerik> _kontroller = new List<Kontrol_Icerik>();
         private static List<Kontrol_Icerik> _kontrollerColumnUtility;
         private static bool isDateTime = true;
@@ -1469,15 +1469,90 @@ namespace WebApplicationDAO
                 generateSqlQueriesOtherSql(linkedList);
                 generateSqlQueriesOtherSqlGroupBy(linkedList);
 
+
                 generateAspMvcActions(linkedList);
                 Label_ERROR.Text = GetEntityName() + " table codes are created. You made it dude, Congratulation :) ";
+
+                generateSPModel();
             }
             else
             {
                 Label_ERROR.Text = "Write the connection string, fill out the gridview and create the codes, bro :)";
             }
         }
+        private DataSet GetDataSet(string sqlCommand, string connectionString)
+        {
+            DataSet ds = new DataSet();
+            if (!String.IsNullOrEmpty(sqlCommand))
+            {
+                var queryParts = Regex.Split(sqlCommand, @"\s+").Where(s => s != string.Empty).ToList();
+                String sp = queryParts.FirstOrDefault();
+                sqlCommand = sqlCommand.Replace(sp,"");
 
+
+                SqlConnection conn = new SqlConnection(connectionString);
+                SqlDataAdapter da = new SqlDataAdapter();
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = sp;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                var queryParts2 = Regex.Split(sqlCommand, @",").Where(s => s != string.Empty).Select(r=>r.Trim()).ToList();
+                foreach (var item in queryParts2)
+                {
+                    var parameterParts = Regex.Split(item, @"=").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
+                    cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'","")));
+                }
+                da.SelectCommand = cmd;
+
+
+                conn.Open();
+                da.Fill(ds);
+                conn.Close();
+
+            }
+            return ds;
+        }
+        private void generateSPModel()
+        {
+            try
+            {
+                var built2 = new StringBuilder();
+                var ds = GetDataSet(TextBox_StoredProc_Exec.Text, connectionString);
+                for (int i = 0; i < ds.Tables.Count; i++)
+                {
+                    DataTable table = ds.Tables[i];
+
+                    var built = new StringBuilder();
+                    built.AppendLine(String.Format("public class Table{0} ", i) + "{");
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        String dataType = "string";
+                        DataRow firstRow = table.Rows.Cast<DataRow>().ToArray().Take(1).FirstOrDefault();
+                        if (firstRow != null)
+                        {
+
+                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool");
+                            if (firstRow[column].GetType().Name.Equals("DBNull"))
+                            {
+                                dataType = "string";
+                            }
+                        }
+
+                        built.AppendLine(String.Format("public {1} {0} ", column.ColumnName, dataType) + "{ get; set;}");
+                    }
+                    built.AppendLine("}");
+                    built2.AppendLine(built.ToString());
+
+                }
+                TextBox_StoredProc_Exec_Model.Text = built2.ToString();
+            }
+            catch (Exception ex)
+            {
+                TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
+             
+            }
+          
+        }
         private void generateAspMvcActions(List<Kontrol_Icerik> kontrolList)
         {
             String selectedTable = GetRealEntityName();

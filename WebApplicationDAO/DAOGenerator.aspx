@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" 
+﻿<%@ Page Language="C#" AutoEventWireup="true"
     CodeBehind="DAOGenerator.aspx.cs" ValidateRequest="false" Inherits="WebApplicationDAO.DAOGenerator" %>
 
 
@@ -348,7 +348,7 @@
                 document.execCommand("Copy", false, null);
                 document.body.removeChild(copyDiv);
             }
-            
+
             // Copy provided text to the clipboard.
             function copyTextToClipboard(text) {
                 var copyFrom = $('<textarea/>'); //create a textarea
@@ -372,7 +372,7 @@
                 var link = "http://www.format-sql.com";
                 window.open("", "_blank").location = link;
             }
- 
+
 
 
             console.log("It is clicked.111");
@@ -441,7 +441,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
- 
+
         <div class="Main">
             <div class="Control">
                 <asp:ScriptManager ID="ScriptManager1" EnableScriptGlobalization="true" EnableScriptLocalization="true"
@@ -455,18 +455,18 @@
                         <td>
                             <asp:TextBox ID="TextBox_ConnectionString" runat="server" Width="698px"></asp:TextBox>
                         </td>
-                       
+
                     </tr>
                     <tr>
-                          <td>
+                        <td>
                             <asp:Label ID="Label21" CssClass="labelYazi" runat="server" Text="String Pattern"></asp:Label>
                         </td>
                         <td>
                             <asp:TextBox ID="TextBox_StringPattern" Text="public {1} {0}  {get;set}" runat="server" Width="698px"></asp:TextBox>
                         </td>
                     </tr>
-                        <tr>
-                          <td>
+                    <tr>
+                        <td>
                             <asp:Label ID="Label22" CssClass="labelYazi" runat="server" Text="Download Path"></asp:Label>
                         </td>
                         <td>
@@ -499,10 +499,10 @@
                         <td>
                             <asp:CheckBox ID="CheckBox_MethodStatic" Font-Bold="True" Checked="True" ForeColor="Blue" Text="Methods Static" runat="server" />
                         </td>
-                         
-                          <td>
-                        <a target="_blank" href="DatabaseUtility.txt">DatabaseUtility Code</a>
-                    </td>
+
+                        <td>
+                            <a target="_blank" href="DatabaseUtility.txt">DatabaseUtility Code</a>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -531,7 +531,7 @@
                         <td>
                             <asp:CheckBox ID="CheckBox_ModelAttributesVisible" Font-Bold="True" ForeColor="Blue" Text="Model Attributes Visible" runat="server" />
                         </td>
-                           <td>
+                        <td>
                             <asp:CheckBox ID="CheckBox_Downlaod" Font-Bold="True" ForeColor="Blue" Text="Download File" runat="server" />
                         </td>
                     </tr>
@@ -551,7 +551,7 @@
                         <asp:CheckBox ID="CheckBox_All_DAO" Text="Bütün DAO ve Itemları Kodlarını Dosyaya Yaz"
                             runat="server" />
                     </asp:Panel>
-                  
+
                 </table>
                 <%--<asp:CheckBox ID="CheckBox_Ajax" Text="Ajax" runat="server" />--%>
                 <asp:Label ID="Label_Format" Visible="false" runat="server"></asp:Label>
@@ -584,7 +584,7 @@
                     <StepPreviousButtonStyle CssClass="WizardButtonStyle" />
                     <CancelButtonStyle CssClass="WizardButtonStyle" />
                     <WizardSteps>
-                        <asp:WizardStep ID="WizardStep6"  runat="server"  Title="Table Metadata">
+                        <asp:WizardStep ID="WizardStep6" runat="server" Title="Table Metadata">
                             <table>
                                 <tr>
                                     <td>
@@ -1213,7 +1213,7 @@
                                         <asp:TextBox ID="TextBox_Database_Utility_SaveOrUpdate" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                         <br />
-                                        <input type="button"  class="clipboardButton button" id="clipboardButtonDatabase_SaveOrUpdate" name="clipboardButtonDatabase_UtilityDataSet" value="Select" />
+                                        <input type="button" class="clipboardButton button" id="clipboardButtonDatabase_SaveOrUpdate" name="clipboardButtonDatabase_UtilityDataSet" value="Select" />
 
                                     </td>
                                     <td>
@@ -1254,7 +1254,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep19"  runat="server" Title="Column Utilities">
+                        <asp:WizardStep ID="WizardStep19" runat="server" Title="Column Utilities">
                             <table>
                                 <tr>
                                     <td>
@@ -1360,7 +1360,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                          <asp:WizardStep ID="WizardStep23_Sql" runat="server" Title="Sql Queries">
+                        <asp:WizardStep ID="WizardStep23_Sql" runat="server" Title="Sql Queries">
                             <table>
                                 <tr>
                                     <td>
@@ -1374,13 +1374,12 @@
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Sql
+                                        <h3>Sql
                                             
                                             <input id="formattedSql2" type="button" value="Formatted Sql">
-
                                         </h3>
                                         <asp:TextBox ID="TextBox_Sql_Search2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                                                   
+
 
                                     </td>
                                 </tr>
@@ -1400,19 +1399,18 @@
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Sql
+                                        <h3>Sql
                                             
                                             <input id="TextBox_Sql_GroupBy3ss" type="button" value="Formatted Sql">
-
                                         </h3>
                                         <asp:TextBox ID="TextBox_Sql_GroupBy3" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                                                   
+
 
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                          <asp:WizardStep ID="WizardStep239" runat="server" Title="Asp.Net MVC Actions">
+                        <asp:WizardStep ID="WizardStep239" runat="server" Title="Asp.Net MVC Actions">
                             <table>
                                 <tr>
                                     <td>
@@ -1426,18 +1424,18 @@
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Test 2s
+                                        <h3>Test 2s
                                             
                                              
                                         </h3>
                                         <asp:TextBox ID="TextBox_AspMvcAction2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                                                   
+
 
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                             <asp:WizardStep ID="WizardStep23" runat="server" Title="String patterns">
+                        <asp:WizardStep ID="WizardStep23" runat="server" Title="String patterns">
                             <table>
                                 <tr>
                                     <td>
@@ -1451,28 +1449,28 @@
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Test 2s
+                                        <h3>Test 2s
                                             
                                              
                                         </h3>
                                         <asp:TextBox ID="TextBox_StringPatterns3" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                                                   
+
 
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                         <asp:WizardStep ID="WizardStep24" runat="server" Title="EF Repository">
+                        <asp:WizardStep ID="WizardStep24" runat="server" Title="EF Repository">
                             <table>
                                 <tr>
-                                  
+
                                     <td>
                                         <h3>Repository Interface Class</h3>
                                         <asp:TextBox ID="TextBox_ClassPatternOutput4" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Repository Class  </h3>
+                                        <h3>Repository Class  </h3>
                                         <asp:TextBox ID="TextBox_ClassPatternOutput2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
@@ -1483,7 +1481,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                           <asp:WizardStep ID="WizardStep25" runat="server" Title="EF Services">
+                        <asp:WizardStep ID="WizardStep25" runat="server" Title="EF Services">
                             <table>
                                 <tr>
                                     <td>
@@ -1491,14 +1489,35 @@
                                         <asp:TextBox ID="TextBox_ClassPatternOutput1" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                     </td>
-                                     <td>
-                                        <h3> Controller Class   </h3>
+                                    <td>
+                                        <h3>Controller Class   </h3>
                                         <asp:TextBox ID="TextBox_ClassPatternOutput5" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                             
+
                                     </td>
-                                      <td>
+                                    <td>
                                         <h3>Index Page</h3>
                                         <asp:TextBox ID="TextBox_ClassPatternOutput6" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                </tr>
+                            </table>
+                        </asp:WizardStep>
+                        <asp:WizardStep ID="WizardStep26" runat="server" Title="Stored PROCEDURE Model">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h3>Service Class</h3>
+                                        <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <h3>Controller Class   </h3>
+                                        <asp:TextBox ID="TextBox_StoredProc_Exec_Model" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+
+                                    </td>
+                                    <td>
+                                        <h3>Index Page</h3>
+                                        <asp:TextBox ID="TextBox_StoredProc_Exec_Model_DataReader" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                     </td>
                                 </tr>
