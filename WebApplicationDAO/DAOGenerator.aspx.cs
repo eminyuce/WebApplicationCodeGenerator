@@ -1514,16 +1514,26 @@ namespace WebApplicationDAO
         }
         private void generateSPModel()
         {
+            string StoredProc_Exec = TextBox_StoredProc_Exec.Text;
+            string[] m = StoredProc_Exec.Split("-".ToCharArray());
+            String tableNamesTxt = m.LastOrDefault();
+            List<string> tableNames = new List<string>();
+            if (!String.IsNullOrEmpty(tableNamesTxt))
+            {
+                tableNames = Regex.Split(tableNamesTxt, @"\s+").Where(s => s != string.Empty).ToList();
+            }
+            String sqlCommand=m.FirstOrDefault();
+
+            var ds = GetDataSet(sqlCommand, connectionString);
             try
             {
                 var built2 = new StringBuilder();
-                var ds = GetDataSet(TextBox_StoredProc_Exec.Text, connectionString);
                 for (int i = 0; i < ds.Tables.Count; i++)
                 {
                     DataTable table = ds.Tables[i];
 
                     var built = new StringBuilder();
-                    built.AppendLine(String.Format("public class Table{0} ", i) + "{");
+                    built.AppendLine(String.Format("public class {0} ", tableNames.Any() ? tableNames[i] :  "Tablo"+ i) + "{");
                     foreach (DataColumn column in table.Columns)
                     {
                         String dataType = "string";
@@ -1555,11 +1565,11 @@ namespace WebApplicationDAO
             try
             {
                 var built2 = new StringBuilder();
-                var ds = GetDataSet(TextBox_StoredProc_Exec.Text, connectionString);
+              
                 for (int i = 0; i < ds.Tables.Count; i++)
                 {
                     DataTable table = ds.Tables[i];
-                    String modelName = String.Format("Table{0}", i);
+                    String modelName = String.Format("{0}", tableNames.Any() ? tableNames[i] : "Tablo" + i);
                     var method = new StringBuilder();
                     method.AppendLine("private " + staticText + " " + modelName + " Get" + modelName + "FromDataRow(DataRow dr)");
                     method.AppendLine("{");
@@ -1579,7 +1589,7 @@ namespace WebApplicationDAO
                                 dataType = "string";
                             }
                         }
-                       // method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToStr();");
+                        // method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToStr();");
 
 
                         if (dataType.IndexOf("string") > -1)
@@ -1621,6 +1631,66 @@ namespace WebApplicationDAO
             {
                 TextBox_StoredProc_Exec_Model_DataReader.Text = ex.StackTrace;
 
+            }
+      
+            try
+            {
+                var method = new StringBuilder();
+                method.AppendLine("//" + sqlCommand);
+                var queryParts = Regex.Split(sqlCommand, @"\s+").Where(s => s != string.Empty).ToList();
+                String sp = queryParts.FirstOrDefault();
+                sqlCommand = sqlCommand.Replace(sp, "");
+
+                var queryParts2 = Regex.Split(sqlCommand, @",").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
+
+
+
+                String modelName = String.Format("{0}", tableNames.Any() ? tableNames.LastOrDefault() : "Table" + (ds.Tables.Count + 1)); 
+                String selectedTable = GetRealEntityName();
+                method.AppendLine(" public " + staticText + " " + modelName + " Get" + modelName + "()");
+                method.AppendLine(" {");
+                String commandText = sp;
+                method.AppendLine(" string connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringKey].ConnectionString;");
+                method.AppendLine(String.Format(" String commandText = @\"{0}\";", commandText));
+                method.AppendLine(" var parameterList = new List<SqlParameter>();");
+                method.AppendLine(" var commandType = CommandType.StoredProcedure;");
+
+
+                foreach (var item in queryParts2)
+                {
+                    var parameterParts = Regex.Split(item, @"=").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
+                    method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + parameterParts.FirstOrDefault() + "\", \"" + parameterParts.LastOrDefault().Replace("'","") + "\",SqlDbType.Int));");
+                }
+
+                method.AppendLine(" DataSet dataSet = DatabaseUtility.ExecuteDataSet(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
+                method.AppendLine(" if (dataSet.Tables.Count > 0)");
+                method.AppendLine(" {");
+                for (int i = 0; i < ds.Tables.Count; i++)
+                {
+                    String modelName2 = String.Format("{0}", tableNames.Any() ? tableNames[i] : "Tablo" + i);
+                    method.AppendLine(String.Format("var list{0}=new List<{1}>();",i, modelName2));
+                    method.AppendLine(String.Format(" using (DataTable dt = dataSet.Tables[{0}])",i));
+                    method.AppendLine(" {");
+                    method.AppendLine(" foreach (DataRow dr in dt.Rows)");
+                    method.AppendLine(" {");
+                    method.AppendLine(String.Format(" var e = Get{0}FromDataRow(dr);", modelName2));
+                    method.AppendLine(String.Format(" list{0}.Add(e);", i));
+                    method.AppendLine(" }");
+                    method.AppendLine(" }");
+                    method.AppendLine(" ");
+                    method.AppendLine(" ");
+                }
+
+                method.AppendLine(" }");
+                method.AppendLine(" return null;");
+                method.AppendLine(" }");
+
+                TextBox_StoredProc_Exec.Text = method.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                TextBox_StoredProc_Exec.Text = ex.StackTrace;
             }
 
         }
