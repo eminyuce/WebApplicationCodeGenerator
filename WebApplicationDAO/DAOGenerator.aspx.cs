@@ -1485,7 +1485,7 @@ namespace WebApplicationDAO
             DataSet ds = new DataSet();
             if (!String.IsNullOrEmpty(sqlCommand))
             {
-                var queryParts = Regex.Split(sqlCommand, @"\s+").Where(s => s != string.Empty).ToList();
+                var queryParts = Regex.Split(sqlCommand, @"\s+").Where(s => !String.IsNullOrEmpty(s)).Select(r => r.Trim()).ToList();
                 String sp = queryParts.FirstOrDefault();
                 sqlCommand = sqlCommand.Replace(sp, "");
 
@@ -1496,12 +1496,16 @@ namespace WebApplicationDAO
                 cmd.CommandText = sp;
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                var queryParts2 = Regex.Split(sqlCommand, @",").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
-                foreach (var item in queryParts2)
+                if (!String.IsNullOrEmpty(sqlCommand))
                 {
-                    var parameterParts = Regex.Split(item, @"=").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
-                    cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'", "")));
+                    var queryParts2 = Regex.Split(sqlCommand, @",").Where(s => !String.IsNullOrEmpty(s)).Select(r => r.Trim()).ToList();
+                    foreach (var item in queryParts2)
+                    {
+                        var parameterParts = Regex.Split(item, @"=").Where(s => !String.IsNullOrEmpty(s)).Select(r => r.Trim()).ToList();
+                        cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'", "")));
+                    }
                 }
+              
                 da.SelectCommand = cmd;
 
 
@@ -1515,16 +1519,42 @@ namespace WebApplicationDAO
         private void generateSPModel()
         {
             string StoredProc_Exec = TextBox_StoredProc_Exec.Text;
-            string[] m = StoredProc_Exec.Split("-".ToCharArray());
-            String tableNamesTxt = m.LastOrDefault();
-            List<string> tableNames = new List<string>();
-            if (!String.IsNullOrEmpty(tableNamesTxt))
-            {
-                tableNames = Regex.Split(tableNamesTxt, @"\s+").Where(s => s != string.Empty).ToList();
-            }
-            String sqlCommand=m.FirstOrDefault();
 
-            var ds = GetDataSet(sqlCommand, connectionString);
+            if (String.IsNullOrEmpty(StoredProc_Exec))
+            {
+                return;
+            }
+    
+            DataSet ds = null;
+            String sqlCommand = "";
+            List<string> tableNames = new List<string>();
+            try
+            {
+                StoredProc_Exec = StoredProc_Exec.Replace("]", "").Replace("[", "").Trim();
+                string[] m = StoredProc_Exec.Split("-".ToCharArray());
+                String tableNamesTxt = m.LastOrDefault();
+       
+                if (!String.IsNullOrEmpty(tableNamesTxt))
+                {
+                    tableNames = Regex.Split(tableNamesTxt, @"\s+").Where(s => s != string.Empty).ToList();
+                }
+                sqlCommand = m.FirstOrDefault();
+               
+                ds = GetDataSet(sqlCommand, connectionString);
+            }
+            catch (Exception ex)
+            {
+
+                TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
+
+               
+            }
+            if (ds == null)
+            {
+                return;
+            }
+
+
             try
             {
                 var built2 = new StringBuilder();
