@@ -1619,6 +1619,8 @@ namespace WebApplicationDAO
                                 dataType = "string";
                             }
                         }
+
+                        dataType = dataType.ToLower();
                         // method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToStr();");
 
 
