@@ -1485,7 +1485,7 @@ namespace WebApplicationDAO
             DataSet ds = new DataSet();
             if (!String.IsNullOrEmpty(sqlCommand))
             {
-                var queryParts = Regex.Split(sqlCommand, @"\s+").Where(s => !String.IsNullOrEmpty(s)).Select(r => r.Trim()).ToList();
+                var queryParts = Regex.Split(sqlCommand, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                 String sp = queryParts.FirstOrDefault();
                 sqlCommand = sqlCommand.Replace(sp, "");
 
@@ -1498,10 +1498,10 @@ namespace WebApplicationDAO
 
                 if (!String.IsNullOrEmpty(sqlCommand))
                 {
-                    var queryParts2 = Regex.Split(sqlCommand, @",").Where(s => !String.IsNullOrEmpty(s)).Select(r => r.Trim()).ToList();
+                    var queryParts2 = Regex.Split(sqlCommand, @",").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                     foreach (var item in queryParts2)
                     {
-                        var parameterParts = Regex.Split(item, @"=").Where(s => !String.IsNullOrEmpty(s)).Select(r => r.Trim()).ToList();
+                        var parameterParts = Regex.Split(item, @"=").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                         cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'", "")));
                     }
                 }
@@ -1536,7 +1536,7 @@ namespace WebApplicationDAO
        
                 if (!String.IsNullOrEmpty(tableNamesTxt))
                 {
-                    tableNames = Regex.Split(tableNamesTxt, @"\s+").Where(s => s != string.Empty).ToList();
+                    tableNames = Regex.Split(tableNamesTxt, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                 }
                 sqlCommand = m.FirstOrDefault();
                
@@ -1667,17 +1667,17 @@ namespace WebApplicationDAO
             {
                 var method = new StringBuilder();
                 method.AppendLine("//" + sqlCommand);
-                var queryParts = Regex.Split(sqlCommand, @"\s+").Where(s => s != string.Empty).ToList();
+                var queryParts = Regex.Split(sqlCommand, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                 String sp = queryParts.FirstOrDefault();
                 sqlCommand = sqlCommand.Replace(sp, "");
 
-                var queryParts2 = Regex.Split(sqlCommand, @",").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
+                var queryParts2 = Regex.Split(sqlCommand, @",").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
 
 
 
                 String modelName = String.Format("{0}", tableNames.Any() ? tableNames.LastOrDefault() : "Table" + (ds.Tables.Count + 1)); 
                 String selectedTable = GetRealEntityName();
-                method.AppendLine(" public " + staticText + " " + modelName + " Get" + modelName + "()");
+                method.AppendLine(" public " + staticText + " List<" + modelName + "> Get" + modelName + "()");
                 method.AppendLine(" {");
                 String commandText = sp;
                 method.AppendLine(" string connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringKey].ConnectionString;");
@@ -1688,7 +1688,7 @@ namespace WebApplicationDAO
 
                 foreach (var item in queryParts2)
                 {
-                    var parameterParts = Regex.Split(item, @"=").Where(s => s != string.Empty).Select(r => r.Trim()).ToList();
+                    var parameterParts = Regex.Split(item, @"=").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                     method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + parameterParts.FirstOrDefault() + "\", \"" + parameterParts.LastOrDefault().Replace("'","") + "\",SqlDbType.Int));");
                 }
 
