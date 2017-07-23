@@ -4052,7 +4052,7 @@ namespace WebApplicationDAO
             built.AppendLine("CREATE PROCEDURE  " + entityPrefix + "SaveOrUpdate" + modifiedTableName + "(");
             foreach (var item in list)
             {
-                built.AppendLine("@" + item.columnName + " " + item.dataType_MaxChar + " = " + item.columnDefaultValue + " ,");
+                built.AppendLine("@" + item.columnName + " " + item.dataType_MaxChar + " = " + (String.IsNullOrEmpty(item.columnDefaultValue) ? "NULL" : item.columnDefaultValue) + " ,");
             }
             built = built.Remove(built.Length - 3, 3);
             built.Append(")");
