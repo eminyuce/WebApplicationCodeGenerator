@@ -207,7 +207,6 @@
     <Content Include="ClassPattern6.txt" />
     <Content Include="DAOGenerator.aspx" />
     <Content Include="Default.aspx" />
-    <Content Include="GridView_State.txt" />
     <Content Include="Images\accent.png" />
     <Content Include="Images\bullet.png" />
     <Content Include="Images\heroAccent.png" />

@@ -2083,6 +2083,11 @@ namespace WebApplicationDAO
             method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + primaryKey + "\", " + FirstCharacterToLower(primaryKey) + ",SqlDbType.Int));");
             method.AppendLine(" DatabaseUtility.ExecuteNonQuery(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
             method.AppendLine(" }");
+
+ 
+
+
+
             return method.ToString();
         }
 
@@ -4547,6 +4552,7 @@ namespace WebApplicationDAO
             String modelName = getModelName();
             String selectedTable = GetRealEntityName();
             String primaryKey = GetPrimaryKeys(linkedList);
+            string primaryKeyOrginal = primaryKey;
             primaryKey = FirstCharacterToLower(primaryKey);
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
 
@@ -4572,11 +4578,11 @@ namespace WebApplicationDAO
 
             method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm", "")));
             method.AppendLine("{");
+            method.AppendLine("private static string CacheKeyAllItems = \"" + modelName + "Cache\";");
             method.AppendLine("");
             method.AppendLine("public " + staticText + " List<" + modelName + "> Get" + modelName + "sFromCache()");
             method.AppendLine("{");
-            method.AppendLine("string cacheKey = \"" + modelName + "Cache\";");
-            method.AppendLine("var items = (List<" + modelName + ">)MemoryCache.Default.Get(cacheKey);");
+            method.AppendLine("var items = (List<" + modelName + ">)MemoryCache.Default.Get(CacheKeyAllItems);");
             method.AppendLine("if (items == null)");
             method.AppendLine("{");
             method.AppendLine("items = Get" + modelName + "s();");
@@ -4595,15 +4601,23 @@ namespace WebApplicationDAO
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " int SaveOrUpdate" + modelName + "( " + modelName + " item)");
             method.AppendLine("{");
+            method.AppendLine("     RemoveCache();");
             method.AppendLine("     return DBDirectory.SaveOrUpdate" + modelName + "(item);");
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " " + modelName + " Get" + modelName + "(int " + primaryKey + ")");
             method.AppendLine("{");
+            method.AppendLine("var item = Get" + modelName + "sFromCache().FirstOrDefault(r => r." + primaryKeyOrginal + " == " + primaryKey + ");");
+            method.AppendLine("if (item != null) return item;");
             method.AppendLine("     return DBDirectory.Get" + modelName + "(" + primaryKey + ");");
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " void Delete" + modelName + "(int " + primaryKey + ")");
             method.AppendLine("{");
+            method.AppendLine("     RemoveCache();");
             method.AppendLine("     DBDirectory.Delete" + modelName + "(" + primaryKey + ");");
+            method.AppendLine("}");
+            method.AppendLine("public " + staticText + " void RemoveCache()");
+            method.AppendLine("{");
+            method.AppendLine("     MemoryCache.Defaul.Remove(CacheKeyAllItems);");
             method.AppendLine("}");
             foreach (var ki in linkedList)
             {
@@ -5622,3 +5636,5 @@ namespace WebApplicationDAO
         Masked_
     }
 }
+
+ 

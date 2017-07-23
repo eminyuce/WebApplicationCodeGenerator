@@ -570,7 +570,7 @@
             </div>
             <%--  --%>
             <div class="Result">
-                <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="0" CssClass="wizardCSS"
+                <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="8" CssClass="wizardCSS"
                     OnActiveStepChanged="Wizard1_ActiveStepChanged" CancelButtonType="Link" FinishCompleteButtonType="Link"
                     FinishPreviousButtonType="Link" StartNextButtonType="Link" StepNextButtonType="Link"
                     StepPreviousButtonType="Link" EnableTheming="True" CancelButtonText="İptal" FinishCompleteButtonText="Bitti"
