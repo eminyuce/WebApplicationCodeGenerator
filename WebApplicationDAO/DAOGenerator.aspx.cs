@@ -4590,7 +4590,7 @@ namespace WebApplicationDAO
             method.AppendLine("policy = new CacheItemPolicy();");
             method.AppendLine("policy.Priority = CacheItemPriority.Default;");
             method.AppendLine(" policy.AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(Settings.CacheMediumSeconds);");
-            method.AppendLine("MemoryCache.Default.Set(cacheKey, items, policy);");
+            method.AppendLine("MemoryCache.Default.Set(CacheKeyAllItems, items, policy);");
             method.AppendLine("}");
             method.AppendLine(" return items;");
             method.AppendLine("}");
