@@ -570,7 +570,7 @@
             </div>
             <%--  --%>
             <div class="Result">
-                <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="8" CssClass="wizardCSS"
+                <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="7" CssClass="wizardCSS"
                     OnActiveStepChanged="Wizard1_ActiveStepChanged" CancelButtonType="Link" FinishCompleteButtonType="Link"
                     FinishPreviousButtonType="Link" StartNextButtonType="Link" StepNextButtonType="Link"
                     StepPreviousButtonType="Link" EnableTheming="True" CancelButtonText="İptal" FinishCompleteButtonText="Bitti"
@@ -906,14 +906,14 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <h3></h3>
+                                        <h3>&nbsp;</h3>
                                         <asp:TextBox ID="TextBox_MyTableItem" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                         <br />
                                         <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_Repository" value="Select" />
                                     </td>
                                     <td>
-                                        <h3></h3>
+                                        <h3>&nbsp;</h3>
                                         <asp:TextBox ID="TextBox_MyTableItem2" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                         <br />

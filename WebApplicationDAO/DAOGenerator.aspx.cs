@@ -1700,7 +1700,7 @@ namespace WebApplicationDAO
             built.AppendLine("//[OutputCache(CacheProfile = \"Cache1Hour\")]");
             built.AppendLine("public ActionResult Index()");
             built.AppendLine("{");
-            built.AppendLine(String.Format("var items = {0}Repository.Get{0}s();", modelName.Replace("Nwm", "")));
+            built.AppendLine(String.Format("var items = {0}Repository.Get{1}s();", modelName.Replace("Nwm", ""), modelName));
             built.AppendLine("return View(items);");
             built.AppendLine("}");
 
@@ -1708,7 +1708,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("public ActionResult {0}Detail(String id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id.Split('-').Last().ToInt();", primaryKey.ToLower()));
-            built.AppendLine(String.Format("var {0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""), primaryKey.ToLower()));
+            built.AppendLine(String.Format("var {0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""), primaryKey.ToLower(), modelName));
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
             built.AppendLine("}");
 
@@ -1720,8 +1720,8 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("if({0} == 0)", primaryKey.ToLower()));
             built.AppendLine("{");
             built.AppendLine("}else{");
-            built.AppendLine(String.Format("{0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""),
-                primaryKey.ToLower()));
+            built.AppendLine(String.Format("{0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""),
+                primaryKey.ToLower(), modelName));
             built.AppendLine("}");
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
             built.AppendLine("}");
@@ -1729,16 +1729,14 @@ namespace WebApplicationDAO
             built.AppendLine("[HttpPost]");
             built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}({0} {1})", modelName, modelName.ToLower()));
             built.AppendLine("{");
-            built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{1}({2});",
-                primaryKey.ToLower(), modelName.Replace("Nwm", ""), modelName.ToLower()));
+            built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{3}({2});", primaryKey.ToLower(), modelName.Replace("Nwm", ""), modelName.ToLower(), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
             built.AppendLine(String.Format("public ActionResult Delete{0}(int id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id;", FirstCharacterToLower(primaryKey)));
-            built.AppendLine(String.Format("{0}Repository.Delete{0}({1});",
-                 modelName.Replace("Nwm", ""), FirstCharacterToLower(primaryKey)));
+            built.AppendLine(String.Format("{0}Repository.Delete{2}({1});", modelName.Replace("Nwm", ""), FirstCharacterToLower(primaryKey), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
