@@ -4615,7 +4615,7 @@ namespace WebApplicationDAO
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " void RemoveCache()");
             method.AppendLine("{");
-            method.AppendLine("     MemoryCache.Defaul.Remove(CacheKeyAllItems);");
+            method.AppendLine("     MemoryCache.Default.Remove(CacheKeyAllItems);");
             method.AppendLine("}");
             foreach (var ki in linkedList)
             {
