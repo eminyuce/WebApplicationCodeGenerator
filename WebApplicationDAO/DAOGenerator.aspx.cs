@@ -1359,16 +1359,16 @@ namespace WebApplicationDAO
                 createGridView(linkedList, boundField, selectedTable);
                 Genereate_XML(linkedList);
                 Kontroller = linkedList;
-                TextBox_Edit.Text = built.ToString().Replace(ajaxControls, "");
-                TextBox_In.Text = edit.ToString();
-                TextBox_Insert.Text = insert.ToString();
-                TextBox_Labels.Text = labels.ToString();
-                TextBox_Label_ONLY.Text = sadeceLabels(linkedList);
-                TextBox__labelsCodeBehind.Text = label_item.ToString();
-                TextBox_GridView.Text = boundField.ToString();
+            //  TextBox_Edit.Text = built.ToString().Replace(ajaxControls, "");
+            //  TextBox_In.Text = edit.ToString();
+            //  TextBox_Insert.Text = insert.ToString();
+            //  TextBox_Labels.Text = labels.ToString();
+            //  TextBox_Label_ONLY.Text = sadeceLabels(linkedList);
+            //  TextBox__labelsCodeBehind.Text = label_item.ToString();
+            //  TextBox_GridView.Text = boundField.ToString();
                 TextBox_Veri.Text = generateData();
-                GridView_String = TextBox_GridView.Text;
-                Controls_String = TextBox_Edit.Text;
+            //  GridView_String = TextBox_GridView.Text;
+             //   Controls_String = TextBox_Edit.Text;
                 TextBox_SP.Text = generate_StoredProcedure();
                 TextBox_State.Text = gridState.ToString();
 
@@ -1404,12 +1404,12 @@ namespace WebApplicationDAO
 
                 #region ListView...........................................
 
-                TextBox_ListView_Label_Evals.Text = ListView_Labels_Evals(linkedList, selectedTable);
-                TextBox_ListView_Evals.Text = ListView_Evals(linkedList, selectedTable);
-                TextBox_ListView_Tables_Evals.Text = ListView_Tables_Evals(linkedList, selectedTable);
-                TextBox_ListView_Kutu.Text = ListView_Kutulama_Evals(linkedList, selectedTable);
-                TextBox_ListView_Defaut.Text = ListView_Evals_Default(linkedList, selectedTable);
-                TextBox_ListView_Liste.Text = ListView_Evals_List(linkedList, selectedTable);
+                //TextBox_ListView_Label_Evals.Text = ListView_Labels_Evals(linkedList, selectedTable);
+                //TextBox_ListView_Evals.Text = ListView_Evals(linkedList, selectedTable);
+                //TextBox_ListView_Tables_Evals.Text = ListView_Tables_Evals(linkedList, selectedTable);
+                //TextBox_ListView_Kutu.Text = ListView_Kutulama_Evals(linkedList, selectedTable);
+                //TextBox_ListView_Defaut.Text = ListView_Evals_Default(linkedList, selectedTable);
+                //TextBox_ListView_Liste.Text = ListView_Evals_List(linkedList, selectedTable);
                 #endregion
 
 
@@ -2242,35 +2242,35 @@ namespace WebApplicationDAO
 
             foreach (Kontrol_Icerik item in kontrolList)
             {
-
+                var sqlParameter = GetUrlString(item.columnName);
                 if (item.dataType.IndexOf("varchar") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ".ToStr(),SqlDbType.NVarChar));");
                 }
                 else if (item.dataType.IndexOf("int") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.Int));");
                 }
                 else if (item.dataType.IndexOf("date") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.DateTime));");
                 }
                 else if (item.dataType.IndexOf("bit") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.Bit));");
                 }
                 else if (item.dataType.IndexOf("float") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.Float));");
                 }
                 else
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.NVarChar));");
                 }
 
@@ -3393,7 +3393,7 @@ namespace WebApplicationDAO
                     xmlfields.AppendLine("<word Keyword=\"" + item.columnName + "\" Translate=\"" + item.columnName + "\"/>");
                 }
             }
-            TextBox_List_XML.Text = xmlfields.ToString();
+          //  TextBox_List_XML.Text = xmlfields.ToString();
         }
         #region XML
 
@@ -3808,8 +3808,8 @@ namespace WebApplicationDAO
         {
             String selectedTable = GetEntityName();
             String fileName = selectedTable + "_admin";
-            string initMethod = TextBox_Insert.Text;
-            string retrieveMethod = TextBox_In.Text;
+            string initMethod = ""; // TextBox_Insert.Text;
+            string retrieveMethod = "";// TextBox_In.Text;
             string singleORdefault = "" + selectedTable + " item = db." + selectedTable + "s.SingleOrDefault(r=>r." + this.GetPrimaryKeys(Kontroller) + " == columnID);";
             string initItem = "initialize(item,Label_Warning)";
             string retrieveItem = "retrieveData(item,Label_Warning)";
@@ -4032,6 +4032,36 @@ namespace WebApplicationDAO
             built.AppendLine("}");
             return built.ToString();
         }
+
+        public static readonly Regex CarriageRegex = new Regex(@"(\r\n|\r|\n)+");
+        //remove carriage returns from the header name
+        public static string RemoveCarriage(string text)
+        {
+            if (String.IsNullOrEmpty(text))
+            {
+                return "";
+            }
+            return CarriageRegex.Replace(text, string.Empty).Trim();
+        }
+
+
+        public static string GetUrlString(string strIn)
+        {
+            // Replace invalid characters with empty strings. 
+            strIn = strIn.ToLower();
+            strIn = RemoveCarriage(strIn);
+            char[] szArr = strIn.ToCharArray();
+            var list = new List<char>();
+            foreach (char c in szArr)
+            {
+                int ci = c;
+                if ((ci >= 'a' && ci <= 'z') || (ci >= '0' && ci <= '9') || ci <= ' ')
+                {
+                    list.Add(c);
+                }
+            }
+            return new String(list.ToArray()).Replace(" ", "_");
+        }
         private String generate_StoredProcedure()
         {
 
@@ -4050,7 +4080,7 @@ namespace WebApplicationDAO
             built.AppendLine("CREATE PROCEDURE  " + entityPrefix + "SaveOrUpdate" + modifiedTableName + "(");
             foreach (var item in list)
             {
-                built.AppendLine("@" + item.columnName + " " + item.dataType_MaxChar + " = " + (String.IsNullOrEmpty(item.columnDefaultValue) ? "NULL" : item.columnDefaultValue) + " ,");
+                built.AppendLine("@" + GetUrlString(item.columnName) + " " + item.dataType_MaxChar + " = " + (String.IsNullOrEmpty(item.columnDefaultValue) ? "NULL" : item.columnDefaultValue) + " ,");
             }
             built = built.Remove(built.Length - 3, 3);
             built.Append(")");
@@ -4069,7 +4099,7 @@ namespace WebApplicationDAO
             foreach (var item in list)
             {
                 if (!item.primaryKey)
-                    built.Append("@" + item.columnName + ",");
+                    built.Append("@" + GetUrlString(item.columnName) + ",");
             }
             built = built.Remove(built.Length - 1, 1);
             built.AppendLine(")");
@@ -4083,7 +4113,7 @@ namespace WebApplicationDAO
             {
                 if (!item.primaryKey)
                 {
-                    built.AppendLine(String.Format("[{0}]", item.columnName) + " = @" + item.columnName + ",");
+                    built.AppendLine(String.Format("[{0}]", item.columnName) + " = @" + GetUrlString(item.columnName) + ",");
                 }
             }
             built = built.Remove(built.Length - 3, 2);

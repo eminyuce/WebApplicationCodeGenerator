@@ -570,7 +570,7 @@
             </div>
             <%--  --%>
             <div class="Result">
-                <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="7" CssClass="wizardCSS"
+                <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="1" CssClass="wizardCSS"
                     OnActiveStepChanged="Wizard1_ActiveStepChanged" CancelButtonType="Link" FinishCompleteButtonType="Link"
                     FinishPreviousButtonType="Link" StartNextButtonType="Link" StepNextButtonType="Link"
                     StepPreviousButtonType="Link" EnableTheming="True" CancelButtonText="İptal" FinishCompleteButtonText="Bitti"
@@ -749,131 +749,9 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep1" runat="server" Title="Admin">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Düzenleme Metodu
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_In" TextMode="MultiLine" ToolTip="Düzenleme Metodu" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Yönetim Paneli
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Edit" TextMode="MultiLine" ToolTip="Yönetim Paneli" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Yükleme Metodu
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Insert" TextMode="MultiLine" ToolTip="Yükleme Metodu" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep2" runat="server" Title="Label">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Tablolu Label
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Labels" TextMode="MultiLine" ToolTip="Tablolu Label" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Label Değerleri Atiyor
-                                        </h3>
-                                        <asp:TextBox ID="TextBox__labelsCodeBehind" ToolTip="Label Değerleri Atiyor" TextMode="MultiLine"
-                                            CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Tablosuz Label
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Label_ONLY" ToolTip="Tablosuz Label" TextMode="MultiLine"
-                                            CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep3" runat="server" Title="ListView 1">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Sadece ListView Evals
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Evals" ToolTip=" Sadece ListView Evals" TextMode="MultiLine"
-                                            CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>ListView Labels Evals
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Label_Evals" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Listview Table Evals
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Tables_Evals" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep4" runat="server" Title="ListView 2">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>ListView !!!!!!!!!!!!!
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Defaut" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>Listview Kutulama
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Kutu" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>ListView Listeleme !!!!!!!!!!!!!
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Liste" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep5" runat="server" Title="Xml ve GridView">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Resource Dosyasından Xml dosyasına
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Resource_to_XML" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>Verilerimizin XML yapısı
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_List_XML" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Grid View Bound Fields...
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_GridView" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
+                  
+        
+                  
                         <asp:WizardStep ID="WizardStep7" runat="server" Title="Sql Code and Random data">
                             <table>
                                 <tr>
