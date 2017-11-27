@@ -1439,11 +1439,14 @@ namespace WebApplicationDAO
                 Label_ERROR.Text = "Write the connection string, fill out the gridview and create the codes, bro :)";
             }
         }
+        // se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1 Table2;
         private DataSet GetDataSet(string sqlCommand, string connectionString)
         {
             DataSet ds = new DataSet();
             if (!String.IsNullOrEmpty(sqlCommand))
             {
+               
+
                 var queryParts = Regex.Split(sqlCommand, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                 String sp = queryParts.FirstOrDefault();
                 sqlCommand = sqlCommand.Replace(sp, "");
@@ -1489,6 +1492,7 @@ namespace WebApplicationDAO
             List<string> tableNames = new List<string>();
             try
             {
+            
                 StoredProc_Exec = StoredProc_Exec.Replace("]", "").Replace("[", "").Trim();
                 string[] m = StoredProc_Exec.Split("-".ToCharArray());
                 String tableNamesTxt = m.LastOrDefault();

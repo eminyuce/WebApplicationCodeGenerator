@@ -1109,7 +1109,7 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <h3>Service Class</h3>
+                                        <h3>Creating SP code EX: se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1 Table2</h3>
                                         <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                     </td>
