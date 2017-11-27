@@ -1109,9 +1109,14 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <h3>Creating SP code EX: se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1 Table2</h3>
+                                        <h3>Creating SP code</h3> 
+                                        <div>
+                                         se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1 Table2
+                                        </div>
+                                          <div>
                                         <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
+                                                   </div>
                                     </td>
                                     <td>
                                         <h3>Controller Class   </h3>
