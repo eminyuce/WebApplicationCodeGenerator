@@ -1529,19 +1529,27 @@ namespace WebApplicationDAO
                     built.AppendLine(String.Format("public class {0} ", tableNames.Any() ? tableNames[i] :  "Tablo"+ i) + "{");
                     foreach (DataColumn column in table.Columns)
                     {
-                        String dataType = "string";
-                        DataRow firstRow = table.Rows.Cast<DataRow>().ToArray().Take(1).FirstOrDefault();
-                        if (firstRow != null)
+                        try
                         {
-
-                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "DateTime");
-                            if (firstRow[column].GetType().Name.Equals("DBNull"))
+                            String dataType = "string";
+                            DataRow firstRow = table.Rows.Cast<DataRow>().ToArray().Take(1).FirstOrDefault();
+                            if (firstRow != null)
                             {
-                                dataType = "string";
-                            }
-                        }
 
-                        built.AppendLine(String.Format("public {1} {0} ", column.ColumnName, dataType) + "{ get; set;}");
+                                dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "DateTime");
+                                if (firstRow[column].GetType().Name.Equals("DBNull"))
+                                {
+                                    dataType = "string";
+                                }
+                            }
+
+                            built.AppendLine(String.Format("public {1} {0} ", column.ColumnName, dataType) + "{ get; set;}");
+                        }
+                        catch (Exception ee)
+                        {
+                        
+                        }
+                      
                     }
                     built.AppendLine("}");
                     built2.AppendLine(built.ToString());
@@ -1653,8 +1661,18 @@ namespace WebApplicationDAO
 
                 foreach (var item in queryParts2)
                 {
-                    var parameterParts = Regex.Split(item, @"=").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
-                    method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + parameterParts.FirstOrDefault() + "\", \"" + parameterParts.LastOrDefault().Replace("'","") + "\",SqlDbType.Int));");
+                    try
+                    {
+                        var parameterParts = Regex.Split(item, @"=").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+                        method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + parameterParts.FirstOrDefault() + "\", \"" + parameterParts.LastOrDefault().Replace("'", "") + "\",SqlDbType.Int));");
+               
+                    }
+                    catch (Exception)
+                    {
+                        
+                        
+                    }
+                  
                 }
 
                 method.AppendLine(" DataSet dataSet = DatabaseUtility.ExecuteDataSet(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
@@ -1662,18 +1680,27 @@ namespace WebApplicationDAO
                 method.AppendLine(" {");
                 for (int i = 0; i < ds.Tables.Count; i++)
                 {
-                    String modelName2 = String.Format("{0}", tableNames.Any() ? tableNames[i] : "Tablo" + i);
-                    method.AppendLine(String.Format("var list{0}=new List<{1}>();",i, modelName2));
-                    method.AppendLine(String.Format(" using (DataTable dt = dataSet.Tables[{0}])",i));
-                    method.AppendLine(" {");
-                    method.AppendLine(" foreach (DataRow dr in dt.Rows)");
-                    method.AppendLine(" {");
-                    method.AppendLine(String.Format(" var e = Get{0}FromDataRow(dr);", modelName2));
-                    method.AppendLine(String.Format(" list{0}.Add(e);", i));
-                    method.AppendLine(" }");
-                    method.AppendLine(" }");
-                    method.AppendLine(" ");
-                    method.AppendLine(" ");
+                    try
+                    {
+                        String modelName2 = String.Format("{0}", tableNames.Any() ? tableNames[i] : "Tablo" + i);
+                        method.AppendLine(String.Format("var list{0}=new List<{1}>();", i, modelName2));
+                        method.AppendLine(String.Format(" using (DataTable dt = dataSet.Tables[{0}])", i));
+                        method.AppendLine(" {");
+                        method.AppendLine(" foreach (DataRow dr in dt.Rows)");
+                        method.AppendLine(" {");
+                        method.AppendLine(String.Format(" var e = Get{0}FromDataRow(dr);", modelName2));
+                        method.AppendLine(String.Format(" list{0}.Add(e);", i));
+                        method.AppendLine(" }");
+                        method.AppendLine(" }");
+                        method.AppendLine(" ");
+                        method.AppendLine(" ");
+                    }
+                    catch (Exception)
+                    {
+                        
+                         
+                    }
+                
                 }
 
                 method.AppendLine(" }");
