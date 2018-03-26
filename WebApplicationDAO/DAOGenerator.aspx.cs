@@ -16,6 +16,7 @@ using System.Resources;
 using System.IO;
 
 
+
 namespace WebApplicationDAO
 {
     //public partial class DAOGenerator : System.Web.UI.Page
@@ -506,10 +507,12 @@ namespace WebApplicationDAO
                             }
                             row.CssClass = "varcharCss";
                             break;
-                        case "ntext": this.selectDropDown_Text(drop, "TextBox_MultiLine");
+                        case "ntext":
+                            this.selectDropDown_Text(drop, "TextBox_MultiLine");
                             row.CssClass = "textCss";
                             break;
-                        case "text": this.selectDropDown_Text(drop, "TextBox_MultiLine");
+                        case "text":
+                            this.selectDropDown_Text(drop, "TextBox_MultiLine");
                             row.CssClass = "textCss";
                             break;
                         case "smalldatetime":
@@ -1306,12 +1309,12 @@ namespace WebApplicationDAO
                 }
 
                 #region Insert-Update-Delete-Select Methods
- 
+
 
                 generateSqlIReader(linkedList);
                 generateNewInstance(linkedList);
 
-        
+
 
                 #endregion
 
@@ -1359,16 +1362,16 @@ namespace WebApplicationDAO
                 createGridView(linkedList, boundField, selectedTable);
                 Genereate_XML(linkedList);
                 Kontroller = linkedList;
-            //  TextBox_Edit.Text = built.ToString().Replace(ajaxControls, "");
-            //  TextBox_In.Text = edit.ToString();
-            //  TextBox_Insert.Text = insert.ToString();
-            //  TextBox_Labels.Text = labels.ToString();
-            //  TextBox_Label_ONLY.Text = sadeceLabels(linkedList);
-            //  TextBox__labelsCodeBehind.Text = label_item.ToString();
-            //  TextBox_GridView.Text = boundField.ToString();
+                //  TextBox_Edit.Text = built.ToString().Replace(ajaxControls, "");
+                //  TextBox_In.Text = edit.ToString();
+                //  TextBox_Insert.Text = insert.ToString();
+                //  TextBox_Labels.Text = labels.ToString();
+                //  TextBox_Label_ONLY.Text = sadeceLabels(linkedList);
+                //  TextBox__labelsCodeBehind.Text = label_item.ToString();
+                //  TextBox_GridView.Text = boundField.ToString();
                 TextBox_Veri.Text = generateData();
-            //  GridView_String = TextBox_GridView.Text;
-             //   Controls_String = TextBox_Edit.Text;
+                //  GridView_String = TextBox_GridView.Text;
+                //   Controls_String = TextBox_Edit.Text;
                 TextBox_SP.Text = generate_StoredProcedure();
                 TextBox_State.Text = gridState.ToString();
 
@@ -1413,7 +1416,7 @@ namespace WebApplicationDAO
                 #endregion
 
 
-            
+
 
                 appendGridViewStateToAFile(gridState2);
 
@@ -1445,7 +1448,7 @@ namespace WebApplicationDAO
             DataSet ds = new DataSet();
             if (!String.IsNullOrEmpty(sqlCommand))
             {
-               
+
 
                 var queryParts = Regex.Split(sqlCommand, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                 String sp = queryParts.FirstOrDefault();
@@ -1467,7 +1470,7 @@ namespace WebApplicationDAO
                         cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'", "")));
                     }
                 }
-              
+
                 da.SelectCommand = cmd;
 
 
@@ -1486,23 +1489,23 @@ namespace WebApplicationDAO
             {
                 return;
             }
-    
+
             DataSet ds = null;
             String sqlCommand = "";
             List<string> tableNames = new List<string>();
             try
             {
-            
+
                 StoredProc_Exec = StoredProc_Exec.Replace("]", "").Replace("[", "").Trim();
                 string[] m = StoredProc_Exec.Split("-".ToCharArray());
                 String tableNamesTxt = m.LastOrDefault();
-       
+
                 if (!String.IsNullOrEmpty(tableNamesTxt))
                 {
                     tableNames = Regex.Split(tableNamesTxt, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                 }
                 sqlCommand = m.FirstOrDefault();
-               
+
                 ds = GetDataSet(sqlCommand, connectionString);
             }
             catch (Exception ex)
@@ -1510,7 +1513,7 @@ namespace WebApplicationDAO
 
                 TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
 
-               
+
             }
             if (ds == null)
             {
@@ -1526,7 +1529,7 @@ namespace WebApplicationDAO
                     DataTable table = ds.Tables[i];
 
                     var built = new StringBuilder();
-                    built.AppendLine(String.Format("public class {0} ", tableNames.Any() ? tableNames[i] :  "Tablo"+ i) + "{");
+                    built.AppendLine(String.Format("public class {0} ", tableNames.Any() ? tableNames[i] : "Tablo" + i) + "{");
                     foreach (DataColumn column in table.Columns)
                     {
                         try
@@ -1547,9 +1550,9 @@ namespace WebApplicationDAO
                         }
                         catch (Exception ee)
                         {
-                        
+
                         }
-                      
+
                     }
                     built.AppendLine("}");
                     built2.AppendLine(built.ToString());
@@ -1566,7 +1569,7 @@ namespace WebApplicationDAO
             try
             {
                 var built2 = new StringBuilder();
-              
+
                 for (int i = 0; i < ds.Tables.Count; i++)
                 {
                     DataTable table = ds.Tables[i];
@@ -1635,7 +1638,7 @@ namespace WebApplicationDAO
                 TextBox_StoredProc_Exec_Model_DataReader.Text = ex.StackTrace;
 
             }
-      
+
             try
             {
                 var method = new StringBuilder();
@@ -1648,7 +1651,7 @@ namespace WebApplicationDAO
 
 
 
-                String modelName = String.Format("{0}", tableNames.Any() ? tableNames.LastOrDefault() : "Table" + (ds.Tables.Count + 1)); 
+                String modelName = String.Format("{0}", tableNames.Any() ? tableNames.LastOrDefault() : "Table" + (ds.Tables.Count + 1));
                 String selectedTable = GetRealEntityName();
                 method.AppendLine(" public " + staticText + " List<" + modelName + "> Get" + modelName + "()");
                 method.AppendLine(" {");
@@ -1665,25 +1668,37 @@ namespace WebApplicationDAO
                     {
                         var parameterParts = Regex.Split(item, @"=").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                         method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + parameterParts.FirstOrDefault() + "\", \"" + parameterParts.LastOrDefault().Replace("'", "") + "\",SqlDbType.Int));");
-               
+
                     }
                     catch (Exception)
                     {
-                        
-                        
+
+
                     }
-                  
+
+                }
+                if (ds.Tables.Count == 1)
+                {
+                    method.AppendLine(String.Format("[return_type]"));
                 }
 
                 method.AppendLine(" DataSet dataSet = DatabaseUtility.ExecuteDataSet(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
                 method.AppendLine(" if (dataSet.Tables.Count > 0)");
                 method.AppendLine(" {");
+                String modelName2 = "";
                 for (int i = 0; i < ds.Tables.Count; i++)
                 {
                     try
                     {
-                        String modelName2 = String.Format("{0}", tableNames.Any() ? tableNames[i] : "Tablo" + i);
-                        method.AppendLine(String.Format("var list{0}=new List<{1}>();", i, modelName2));
+                        modelName2 = String.Format("{0}", tableNames.Any() ? tableNames[i] : "Tablo" + i);
+                        if (ds.Tables.Count != 1)
+                        {
+                            method.AppendLine(String.Format("var list{0}=new List<{1}>();", i, modelName2));
+                        }
+                        else
+                        {
+
+                        }
                         method.AppendLine(String.Format(" using (DataTable dt = dataSet.Tables[{0}])", i));
                         method.AppendLine(" {");
                         method.AppendLine(" foreach (DataRow dr in dt.Rows)");
@@ -1697,14 +1712,17 @@ namespace WebApplicationDAO
                     }
                     catch (Exception)
                     {
-                        
-                         
+
+
                     }
-                
+
                 }
 
+                method.Replace("[return_type]", String.Format("var list{0}=new List<{1}>();", 0, modelName2));
                 method.AppendLine(" }");
-                method.AppendLine(" return null;");
+                method.AppendLine(" return list0;");
+
+
                 method.AppendLine(" }");
 
                 TextBox_StoredProc_Exec.Text = method.ToString();
@@ -1716,6 +1734,7 @@ namespace WebApplicationDAO
             }
 
         }
+
         private void generateAspMvcActions(List<Kontrol_Icerik> kontrolList)
         {
             String selectedTable = GetRealEntityName();
@@ -2113,7 +2132,7 @@ namespace WebApplicationDAO
             method.AppendLine(" DatabaseUtility.ExecuteNonQuery(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
             method.AppendLine(" }");
 
- 
+
 
 
 
@@ -2658,17 +2677,23 @@ namespace WebApplicationDAO
                 case Control_Adi.Label_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2677,17 +2702,23 @@ namespace WebApplicationDAO
                 case Control_Adi.Button_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2696,17 +2727,23 @@ namespace WebApplicationDAO
                 case Control_Adi.CheckBox_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2715,17 +2752,23 @@ namespace WebApplicationDAO
                 case Control_Adi.RadioButton_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2734,17 +2777,23 @@ namespace WebApplicationDAO
                 case Control_Adi.TextBoxMax_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = true;
+                        case Validator_Adi.BOS_:
+                            result = true;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = true;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.RangeValidator_: result = true;
+                        case Validator_Adi.RangeValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = true;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.CompareValidator_: result = true;
+                        case Validator_Adi.CompareValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.CustomValidator_: result = true;
+                        case Validator_Adi.CustomValidator_:
+                            result = true;
                             break;
                         default:
                             break;
@@ -2754,17 +2803,23 @@ namespace WebApplicationDAO
 
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = true;
+                        case Validator_Adi.BOS_:
+                            result = true;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = true;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.RangeValidator_: result = true;
+                        case Validator_Adi.RangeValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = true;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.CompareValidator_: result = true;
+                        case Validator_Adi.CompareValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.CustomValidator_: result = true;
+                        case Validator_Adi.CustomValidator_:
+                            result = true;
                             break;
                         default:
                             break;
@@ -2774,17 +2829,23 @@ namespace WebApplicationDAO
                 case Control_Adi.LinkButton_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2793,17 +2854,23 @@ namespace WebApplicationDAO
                 case Control_Adi.ImageButton_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2812,17 +2879,23 @@ namespace WebApplicationDAO
                 case Control_Adi.FileUpload_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2831,17 +2904,23 @@ namespace WebApplicationDAO
                 case Control_Adi.DropDownList_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2850,17 +2929,23 @@ namespace WebApplicationDAO
                 case Control_Adi.CheckBoxList_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2869,17 +2954,23 @@ namespace WebApplicationDAO
                 case Control_Adi.RadioButtonList_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2888,17 +2979,23 @@ namespace WebApplicationDAO
                 case Control_Adi.ListBox_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = false;
+                        case Validator_Adi.BOS_:
+                            result = false;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = false;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RangeValidator_: result = false;
+                        case Validator_Adi.RangeValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = false;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CompareValidator_: result = false;
+                        case Validator_Adi.CompareValidator_:
+                            result = false;
                             break;
-                        case Validator_Adi.CustomValidator_: result = false;
+                        case Validator_Adi.CustomValidator_:
+                            result = false;
                             break;
                         default:
                             break;
@@ -2907,17 +3004,23 @@ namespace WebApplicationDAO
                 case Control_Adi.TextBox_Password_:
                     switch (validator)
                     {
-                        case Validator_Adi.BOS_: result = true;
+                        case Validator_Adi.BOS_:
+                            result = true;
                             break;
-                        case Validator_Adi.RequiredFieldValidator_: result = true;
+                        case Validator_Adi.RequiredFieldValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.RangeValidator_: result = true;
+                        case Validator_Adi.RangeValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.RegularExpressionValidator_: result = true;
+                        case Validator_Adi.RegularExpressionValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.CompareValidator_: result = true;
+                        case Validator_Adi.CompareValidator_:
+                            result = true;
                             break;
-                        case Validator_Adi.CustomValidator_: result = true;
+                        case Validator_Adi.CustomValidator_:
+                            result = true;
                             break;
                         default:
                             break;
@@ -3424,7 +3527,7 @@ namespace WebApplicationDAO
                     xmlfields.AppendLine("<word Keyword=\"" + item.columnName + "\" Translate=\"" + item.columnName + "\"/>");
                 }
             }
-          //  TextBox_List_XML.Text = xmlfields.ToString();
+            //  TextBox_List_XML.Text = xmlfields.ToString();
         }
         #region XML
 
@@ -4579,7 +4682,7 @@ namespace WebApplicationDAO
 
             return method.ToString();
         }
-      
+
         #endregion
 
         #region Odbc Connection Methods -->Insert - Update - Delete - Select
@@ -4602,8 +4705,8 @@ namespace WebApplicationDAO
             return method.ToString();
         }
 
-        
-             
+
+
 
         private void GenerateTableRepository(List<Kontrol_Icerik> linkedList)
         {
@@ -5501,7 +5604,7 @@ namespace WebApplicationDAO
             DownloadGeneratedSourceCode(list);
 
         }
-       
+
         private String convertSqlDataTypeToCSharp(String key)
         {
             String result = "";
@@ -5696,4 +5799,3 @@ namespace WebApplicationDAO
     }
 }
 
- 
