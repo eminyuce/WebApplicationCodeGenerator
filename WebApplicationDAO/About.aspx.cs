@@ -15,8 +15,7 @@ namespace WebApplicationDAO
     public partial class About : Page
     {
 
-        public static string connectionString = @"server=mysql8.hostera.biz;userid=mmyuce_emin;
-            password=emin123;database=mmyuce_wpData";
+        public static string connectionString = @"";
         private static String databaseName = "";
         protected void Page_Load(object sender, EventArgs e)
         {
