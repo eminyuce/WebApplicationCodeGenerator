@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" 
+﻿<%@ Page Language="C#" AutoEventWireup="true"
     CodeBehind="DAOGenerator.aspx.cs" ValidateRequest="false" Inherits="WebApplicationDAO.DAOGenerator" %>
 
 
@@ -348,7 +348,7 @@
                 document.execCommand("Copy", false, null);
                 document.body.removeChild(copyDiv);
             }
-            
+
             // Copy provided text to the clipboard.
             function copyTextToClipboard(text) {
                 var copyFrom = $('<textarea/>'); //create a textarea
@@ -372,7 +372,7 @@
                 var link = "http://www.format-sql.com";
                 window.open("", "_blank").location = link;
             }
- 
+
 
 
             console.log("It is clicked.111");
@@ -441,7 +441,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
- 
+
         <div class="Main">
             <div class="Control">
                 <asp:ScriptManager ID="ScriptManager1" EnableScriptGlobalization="true" EnableScriptLocalization="true"
@@ -455,18 +455,18 @@
                         <td>
                             <asp:TextBox ID="TextBox_ConnectionString" runat="server" Width="698px"></asp:TextBox>
                         </td>
-                       
+
                     </tr>
                     <tr>
-                          <td>
+                        <td>
                             <asp:Label ID="Label21" CssClass="labelYazi" runat="server" Text="String Pattern"></asp:Label>
                         </td>
                         <td>
                             <asp:TextBox ID="TextBox_StringPattern" Text="public {1} {0}  {get;set}" runat="server" Width="698px"></asp:TextBox>
                         </td>
                     </tr>
-                        <tr>
-                          <td>
+                    <tr>
+                        <td>
                             <asp:Label ID="Label22" CssClass="labelYazi" runat="server" Text="Download Path"></asp:Label>
                         </td>
                         <td>
@@ -499,10 +499,10 @@
                         <td>
                             <asp:CheckBox ID="CheckBox_MethodStatic" Font-Bold="True" Checked="True" ForeColor="Blue" Text="Methods Static" runat="server" />
                         </td>
-                         
-                          <td>
-                        <a target="_blank" href="DatabaseUtility.txt">DatabaseUtility Code</a>
-                    </td>
+
+                        <td>
+                            <a target="_blank" href="DatabaseUtility.txt">DatabaseUtility Code</a>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -531,7 +531,7 @@
                         <td>
                             <asp:CheckBox ID="CheckBox_ModelAttributesVisible" Font-Bold="True" ForeColor="Blue" Text="Model Attributes Visible" runat="server" />
                         </td>
-                           <td>
+                        <td>
                             <asp:CheckBox ID="CheckBox_Downlaod" Font-Bold="True" ForeColor="Blue" Text="Download File" runat="server" />
                         </td>
                     </tr>
@@ -551,7 +551,7 @@
                         <asp:CheckBox ID="CheckBox_All_DAO" Text="Bütün DAO ve Itemları Kodlarını Dosyaya Yaz"
                             runat="server" />
                     </asp:Panel>
-                  
+
                 </table>
                 <%--<asp:CheckBox ID="CheckBox_Ajax" Text="Ajax" runat="server" />--%>
                 <asp:Label ID="Label_Format" Visible="false" runat="server"></asp:Label>
@@ -570,7 +570,7 @@
             </div>
             <%--  --%>
             <div class="Result">
-                <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="0" CssClass="wizardCSS"
+                <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="1" CssClass="wizardCSS"
                     OnActiveStepChanged="Wizard1_ActiveStepChanged" CancelButtonType="Link" FinishCompleteButtonType="Link"
                     FinishPreviousButtonType="Link" StartNextButtonType="Link" StepNextButtonType="Link"
                     StepPreviousButtonType="Link" EnableTheming="True" CancelButtonText="İptal" FinishCompleteButtonText="Bitti"
@@ -584,7 +584,7 @@
                     <StepPreviousButtonStyle CssClass="WizardButtonStyle" />
                     <CancelButtonStyle CssClass="WizardButtonStyle" />
                     <WizardSteps>
-                        <asp:WizardStep ID="WizardStep6"  runat="server"  Title="Table Metadata">
+                        <asp:WizardStep ID="WizardStep6" runat="server" Title="Table Metadata">
                             <table>
                                 <tr>
                                     <td>
@@ -749,131 +749,9 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep1" runat="server" Title="Admin">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Düzenleme Metodu
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_In" TextMode="MultiLine" ToolTip="Düzenleme Metodu" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Yönetim Paneli
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Edit" TextMode="MultiLine" ToolTip="Yönetim Paneli" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Yükleme Metodu
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Insert" TextMode="MultiLine" ToolTip="Yükleme Metodu" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep2" runat="server" Title="Label">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Tablolu Label
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Labels" TextMode="MultiLine" ToolTip="Tablolu Label" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Label Değerleri Atiyor
-                                        </h3>
-                                        <asp:TextBox ID="TextBox__labelsCodeBehind" ToolTip="Label Değerleri Atiyor" TextMode="MultiLine"
-                                            CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Tablosuz Label
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Label_ONLY" ToolTip="Tablosuz Label" TextMode="MultiLine"
-                                            CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep3" runat="server" Title="ListView 1">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Sadece ListView Evals
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Evals" ToolTip=" Sadece ListView Evals" TextMode="MultiLine"
-                                            CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>ListView Labels Evals
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Label_Evals" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Listview Table Evals
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Tables_Evals" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep4" runat="server" Title="ListView 2">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>ListView !!!!!!!!!!!!!
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Defaut" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>Listview Kutulama
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Kutu" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>ListView Listeleme !!!!!!!!!!!!!
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_ListView_Liste" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep5" runat="server" Title="Xml ve GridView">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Resource Dosyasından Xml dosyasına
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Resource_to_XML" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>Verilerimizin XML yapısı
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_List_XML" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Grid View Bound Fields...
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_GridView" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
+                  
+        
+                  
                         <asp:WizardStep ID="WizardStep7" runat="server" Title="Sql Code and Random data">
                             <table>
                                 <tr>
@@ -900,276 +778,20 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep8" runat="server" Title="Sql Connection Methodları 1">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>SqlConnection Insert Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_InsertMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>SqlConnection Update Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_UpdateMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>SqlConnection Delete Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_DeleteMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep9" runat="server" Title="Sql Connection Methodları 2">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>SqlConnection Select Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_SelectMethod1" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>SqlConnection Select Method 2
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_SelectMethod2" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>SqlConnection Select Method 3
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_SelectMethod3" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep18" runat="server" Title="Sql Connection Methodları 3">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>SqlConnection Select Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_SelectMethod4" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>SqlConnection Select Method 2
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_SelectMethod5" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>SqlConnection Select Method 3
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_SelectMethod6" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep10" runat="server" Title="Odbc Connection Methodları 1">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>OdbcConnection Insert Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OdbcInsertMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OdbcConnection Update Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OdbcUpdateMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>OdbcConnection Delete Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OdbcDeleteMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep11" runat="server" Title="Odbc Connection Methodları 2">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>OdbcConnection Select Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OdbcSelectMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OdbcConnection Select Method 2
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OdbcSelectMethod2" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OdbcConnection Select Method 3
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OdbcSelectMethod3" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep12" runat="server" Title="OleDb Connection Methodları 1">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>OleDbConnection Insert Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbInsertMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OleDbConnection Update Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbUpdateMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>OleDbConnection Delete Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbDeleteMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep13" runat="server" Title="OleDb Connection Methodları 2">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>OleDbConnection Select Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbSelectMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OleDbConnection Select Method 2
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbSelectMethod2" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OleDbConnection Select Method 3
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbSelectMethod3" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep17" runat="server" Title="OleDb Connection Methodları 3">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>OleDbConnection Select Method 4
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbSelectMethod4" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OleDbConnection Select Method 5
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbSelectMethod5" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OleDbConnection Select Method 6
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OleDbSelectMethod6" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep14" runat="server" Title="Oracle Connection Methodları 1">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>OracleConnection Insert Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OracleInsertMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                    <td>
-                                        <h3>OracleConnection Update Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OracleUpdateMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>OracleConnection Delete Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OracleDeleteMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep15" runat="server" Title="Oracle Connection Methodları 2">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>OracleConnection Select Method
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OracleSelectMethod" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>OracleConnection Select Method 2
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OracleSelectMethod2" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>OracleConnection Select Method 3
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_OracleSelectMethod3" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
+                       
+                      
                         <asp:WizardStep ID="WizardStep16" runat="server" Title="Item ve Ireader">
                             <table>
                                 <tr>
                                     <td>
-                                        <h3></h3>
+                                        <h3>&nbsp;</h3>
                                         <asp:TextBox ID="TextBox_MyTableItem" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                         <br />
                                         <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_Repository" value="Select" />
                                     </td>
                                     <td>
-                                        <h3></h3>
+                                        <h3>&nbsp;</h3>
                                         <asp:TextBox ID="TextBox_MyTableItem2" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                         <br />
@@ -1185,26 +807,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep20" runat="server" Title="Infragistic">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>igGrid Schema</h3>
-                                        <asp:TextBox ID="TextBox_Infragistic_Schema" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>igGrid</h3>
-                                        <asp:TextBox ID="TextBox_Infragistic_igGrid" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3></h3>
-                                        <asp:TextBox ID="TextBox_GetSqlParameter" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
+                     
                         <asp:WizardStep ID="WizardStep21" runat="server" Title="Database Utility">
                             <table>
                                 <tr>
@@ -1213,7 +816,7 @@
                                         <asp:TextBox ID="TextBox_Database_Utility_SaveOrUpdate" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                         <br />
-                                        <input type="button"  class="clipboardButton button" id="clipboardButtonDatabase_SaveOrUpdate" name="clipboardButtonDatabase_UtilityDataSet" value="Select" />
+                                        <input type="button" class="clipboardButton button" id="clipboardButtonDatabase_SaveOrUpdate" name="clipboardButtonDatabase_UtilityDataSet" value="Select" />
 
                                     </td>
                                     <td>
@@ -1254,7 +857,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep19"  runat="server" Title="Column Utilities">
+                        <asp:WizardStep ID="WizardStep19" runat="server" Title="Column Utilities">
                             <table>
                                 <tr>
                                     <td>
@@ -1360,7 +963,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                          <asp:WizardStep ID="WizardStep23_Sql" runat="server" Title="Sql Queries">
+                        <asp:WizardStep ID="WizardStep23_Sql" runat="server" Title="Sql Queries">
                             <table>
                                 <tr>
                                     <td>
@@ -1374,13 +977,12 @@
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Sql
+                                        <h3>Sql
                                             
                                             <input id="formattedSql2" type="button" value="Formatted Sql">
-
                                         </h3>
                                         <asp:TextBox ID="TextBox_Sql_Search2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                                                   
+
 
                                     </td>
                                 </tr>
@@ -1400,19 +1002,18 @@
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Sql
+                                        <h3>Sql
                                             
                                             <input id="TextBox_Sql_GroupBy3ss" type="button" value="Formatted Sql">
-
                                         </h3>
                                         <asp:TextBox ID="TextBox_Sql_GroupBy3" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                                                   
+
 
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                          <asp:WizardStep ID="WizardStep239" runat="server" Title="Asp.Net MVC Actions">
+                        <asp:WizardStep ID="WizardStep239" runat="server" Title="Asp.Net MVC Actions">
                             <table>
                                 <tr>
                                     <td>
@@ -1426,18 +1027,18 @@
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Test 2s
+                                        <h3>Test 2s
                                             
                                              
                                         </h3>
                                         <asp:TextBox ID="TextBox_AspMvcAction2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                                                   
+
 
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                             <asp:WizardStep ID="WizardStep23" runat="server" Title="String patterns">
+                        <asp:WizardStep ID="WizardStep23" runat="server" Title="String patterns">
                             <table>
                                 <tr>
                                     <td>
@@ -1451,18 +1052,85 @@
                                             runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <h3> Test 2s
+                                        <h3>Test 2s
                                             
                                              
                                         </h3>
                                         <asp:TextBox ID="TextBox_StringPatterns3" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                                                   
+
 
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
+                        <asp:WizardStep ID="WizardStep24" runat="server" Title="EF Repository">
+                            <table>
+                                <tr>
 
+                                    <td>
+                                        <h3>Repository Interface Class</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput4" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <h3>Repository Class  </h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <h3>Service Interface Class</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput3" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                </tr>
+                            </table>
+                        </asp:WizardStep>
+                        <asp:WizardStep ID="WizardStep25" runat="server" Title="EF Services">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h3>Service Class</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput1" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <h3>Controller Class   </h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput5" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+
+                                    </td>
+                                    <td>
+                                        <h3>Index Page</h3>
+                                        <asp:TextBox ID="TextBox_ClassPatternOutput6" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                </tr>
+                            </table>
+                        </asp:WizardStep>
+                        <asp:WizardStep ID="WizardStep26" runat="server" Title="Stored PROCEDURE Model">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h3>Creating SP code</h3> 
+                                        <div>
+                                         se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1 Table2
+                                        </div>
+                                          <div>
+                                        <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                                   </div>
+                                    </td>
+                                    <td>
+                                        <h3>Controller Class   </h3>
+                                        <asp:TextBox ID="TextBox_StoredProc_Exec_Model" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+
+                                    </td>
+                                    <td>
+                                        <h3>Index Page</h3>
+                                        <asp:TextBox ID="TextBox_StoredProc_Exec_Model_DataReader" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                </tr>
+                            </table>
+                        </asp:WizardStep>
                     </WizardSteps>
                     <StepStyle BorderWidth="0px" ForeColor="Gray" />
                     <SideBarButtonStyle BorderWidth="0px" Font-Names="Verdana" ForeColor="White" />

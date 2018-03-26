@@ -43,7 +43,7 @@ namespace WebApplicationDAO
 
         private static String downloadFileName = "generatedCode";
         private static String lessonDirectory = "Lesson", codeDirectory = "App_Code";
-        private static string connectionString = "";
+        public static string connectionString = "";
         private static List<Kontrol_Icerik> _kontroller = new List<Kontrol_Icerik>();
         private static List<Kontrol_Icerik> _kontrollerColumnUtility;
         private static bool isDateTime = true;
@@ -1306,55 +1306,19 @@ namespace WebApplicationDAO
                 }
 
                 #region Insert-Update-Delete-Select Methods
-
-                generateSqlConnectionInsertMethod(linkedList);
-                generateSqlConnectionDeleteMethod(linkedList);
-                generateSqlConnectionUpdateMethod(linkedList);
-                generateSqlConnectionSelectMethod(linkedList);
-                generateSqlConnectionSelectMethod2(linkedList);
-                generateSqlConnectionSelectMethod3(linkedList);
-                generateSqlConnectionSelectMethod4(linkedList);
-                generateSqlConnectionSelectMethod5(linkedList);
-                generateSqlConnectionSelectMethod6(linkedList);
+ 
 
                 generateSqlIReader(linkedList);
                 generateNewInstance(linkedList);
 
-                generateOdbcConnectionInsertMethod(linkedList);
-                generateOdbcConnectionDeleteMethod(linkedList);
-                generateOdbcConnectionUpdateMethod(linkedList);
-                generateOdbcConnectionSelectMethod(linkedList);
-                generateOdbcConnectionSelectMethod2(linkedList);
-                generateOdbcConnectionSelectMethod3(linkedList);
-
-
-
-                generateOleDbConnectionInsertMethod(linkedList);
-                generateOleDbConnectionDeleteMethod(linkedList);
-                generateOleDbConnectionUpdateMethod(linkedList);
-                generateOleDbConnectionSelectMethod(linkedList);
-                generateOleDbConnectionSelectMethod2(linkedList);
-                generateOleDbConnectionSelectMethod3(linkedList);
-                generateOleDbConnectionSelectMethod4(linkedList);
-                generateOleDbConnectionSelectMethod5(linkedList);
-                generateOleDbConnectionSelectMethod6(linkedList);
-
-
-
-
-                generateOracleConnectionInsertMethod(linkedList);
-                generateOracleConnectionDeleteMethod(linkedList);
-                generateOracleConnectionUpdateMethod(linkedList);
-                generateOracleConnectionSelectMethod(linkedList);
-                generateOracleConnectionSelectMethod2(linkedList);
-                generateOracleConnectionSelectMethod3(linkedList);
+        
 
                 #endregion
 
                 generateTableItem(linkedList);
                 GenerateTableRepository(linkedList);
                 GenerateStringPatterns(linkedList);
-
+                GenerateClassStringPatterns(linkedList);
                 //Eğer istersek DAO dosyalarını oluştursun..
                 if (CheckBox_All_DAO.Checked)
                 {
@@ -1395,16 +1359,16 @@ namespace WebApplicationDAO
                 createGridView(linkedList, boundField, selectedTable);
                 Genereate_XML(linkedList);
                 Kontroller = linkedList;
-                TextBox_Edit.Text = built.ToString().Replace(ajaxControls, "");
-                TextBox_In.Text = edit.ToString();
-                TextBox_Insert.Text = insert.ToString();
-                TextBox_Labels.Text = labels.ToString();
-                TextBox_Label_ONLY.Text = sadeceLabels(linkedList);
-                TextBox__labelsCodeBehind.Text = label_item.ToString();
-                TextBox_GridView.Text = boundField.ToString();
+            //  TextBox_Edit.Text = built.ToString().Replace(ajaxControls, "");
+            //  TextBox_In.Text = edit.ToString();
+            //  TextBox_Insert.Text = insert.ToString();
+            //  TextBox_Labels.Text = labels.ToString();
+            //  TextBox_Label_ONLY.Text = sadeceLabels(linkedList);
+            //  TextBox__labelsCodeBehind.Text = label_item.ToString();
+            //  TextBox_GridView.Text = boundField.ToString();
                 TextBox_Veri.Text = generateData();
-                GridView_String = TextBox_GridView.Text;
-                Controls_String = TextBox_Edit.Text;
+            //  GridView_String = TextBox_GridView.Text;
+             //   Controls_String = TextBox_Edit.Text;
                 TextBox_SP.Text = generate_StoredProcedure();
                 TextBox_State.Text = gridState.ToString();
 
@@ -1440,21 +1404,16 @@ namespace WebApplicationDAO
 
                 #region ListView...........................................
 
-                TextBox_ListView_Label_Evals.Text = ListView_Labels_Evals(linkedList, selectedTable);
-                TextBox_ListView_Evals.Text = ListView_Evals(linkedList, selectedTable);
-                TextBox_ListView_Tables_Evals.Text = ListView_Tables_Evals(linkedList, selectedTable);
-                TextBox_ListView_Kutu.Text = ListView_Kutulama_Evals(linkedList, selectedTable);
-                TextBox_ListView_Defaut.Text = ListView_Evals_Default(linkedList, selectedTable);
-                TextBox_ListView_Liste.Text = ListView_Evals_List(linkedList, selectedTable);
+                //TextBox_ListView_Label_Evals.Text = ListView_Labels_Evals(linkedList, selectedTable);
+                //TextBox_ListView_Evals.Text = ListView_Evals(linkedList, selectedTable);
+                //TextBox_ListView_Tables_Evals.Text = ListView_Tables_Evals(linkedList, selectedTable);
+                //TextBox_ListView_Kutu.Text = ListView_Kutulama_Evals(linkedList, selectedTable);
+                //TextBox_ListView_Defaut.Text = ListView_Evals_Default(linkedList, selectedTable);
+                //TextBox_ListView_Liste.Text = ListView_Evals_List(linkedList, selectedTable);
                 #endregion
 
 
-                #region Infragistic
-
-                generateInfragisticGrid();
-                generateInfragisticSchema();
-
-                #endregion
+            
 
                 appendGridViewStateToAFile(gridState2);
 
@@ -1469,15 +1428,294 @@ namespace WebApplicationDAO
                 generateSqlQueriesOtherSql(linkedList);
                 generateSqlQueriesOtherSqlGroupBy(linkedList);
 
+
                 generateAspMvcActions(linkedList);
                 Label_ERROR.Text = GetEntityName() + " table codes are created. You made it dude, Congratulation :) ";
+
+                generateSPModel();
             }
             else
             {
                 Label_ERROR.Text = "Write the connection string, fill out the gridview and create the codes, bro :)";
             }
         }
+        // se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1 Table2;
+        private DataSet GetDataSet(string sqlCommand, string connectionString)
+        {
+            DataSet ds = new DataSet();
+            if (!String.IsNullOrEmpty(sqlCommand))
+            {
+               
 
+                var queryParts = Regex.Split(sqlCommand, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+                String sp = queryParts.FirstOrDefault();
+                sqlCommand = sqlCommand.Replace(sp, "");
+
+
+                SqlConnection conn = new SqlConnection(connectionString);
+                SqlDataAdapter da = new SqlDataAdapter();
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = sp;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                if (!String.IsNullOrEmpty(sqlCommand))
+                {
+                    var queryParts2 = Regex.Split(sqlCommand, @",").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+                    foreach (var item in queryParts2)
+                    {
+                        var parameterParts = Regex.Split(item, @"=").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+                        cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'", "")));
+                    }
+                }
+              
+                da.SelectCommand = cmd;
+
+
+                conn.Open();
+                da.Fill(ds);
+                conn.Close();
+
+            }
+            return ds;
+        }
+        private void generateSPModel()
+        {
+            string StoredProc_Exec = TextBox_StoredProc_Exec.Text;
+
+            if (String.IsNullOrEmpty(StoredProc_Exec))
+            {
+                return;
+            }
+    
+            DataSet ds = null;
+            String sqlCommand = "";
+            List<string> tableNames = new List<string>();
+            try
+            {
+            
+                StoredProc_Exec = StoredProc_Exec.Replace("]", "").Replace("[", "").Trim();
+                string[] m = StoredProc_Exec.Split("-".ToCharArray());
+                String tableNamesTxt = m.LastOrDefault();
+       
+                if (!String.IsNullOrEmpty(tableNamesTxt))
+                {
+                    tableNames = Regex.Split(tableNamesTxt, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+                }
+                sqlCommand = m.FirstOrDefault();
+               
+                ds = GetDataSet(sqlCommand, connectionString);
+            }
+            catch (Exception ex)
+            {
+
+                TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
+
+               
+            }
+            if (ds == null)
+            {
+                return;
+            }
+
+
+            try
+            {
+                var built2 = new StringBuilder();
+                for (int i = 0; i < ds.Tables.Count; i++)
+                {
+                    DataTable table = ds.Tables[i];
+
+                    var built = new StringBuilder();
+                    built.AppendLine(String.Format("public class {0} ", tableNames.Any() ? tableNames[i] :  "Tablo"+ i) + "{");
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        try
+                        {
+                            String dataType = "string";
+                            DataRow firstRow = table.Rows.Cast<DataRow>().ToArray().Take(1).FirstOrDefault();
+                            if (firstRow != null)
+                            {
+
+                                dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "DateTime");
+                                if (firstRow[column].GetType().Name.Equals("DBNull"))
+                                {
+                                    dataType = "string";
+                                }
+                            }
+
+                            built.AppendLine(String.Format("public {1} {0} ", column.ColumnName, dataType) + "{ get; set;}");
+                        }
+                        catch (Exception ee)
+                        {
+                        
+                        }
+                      
+                    }
+                    built.AppendLine("}");
+                    built2.AppendLine(built.ToString());
+
+                }
+                TextBox_StoredProc_Exec_Model.Text = built2.ToString();
+            }
+            catch (Exception ex)
+            {
+                TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
+
+            }
+            String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
+            try
+            {
+                var built2 = new StringBuilder();
+              
+                for (int i = 0; i < ds.Tables.Count; i++)
+                {
+                    DataTable table = ds.Tables[i];
+                    String modelName = String.Format("{0}", tableNames.Any() ? tableNames[i] : "Tablo" + i);
+                    var method = new StringBuilder();
+                    method.AppendLine("private " + staticText + " " + modelName + " Get" + modelName + "FromDataRow(DataRow dr)");
+                    method.AppendLine("{");
+                    method.AppendLine("var item = new " + modelName + "();");
+                    method.AppendLine("");
+
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        String dataType = "string";
+                        DataRow firstRow = table.Rows.Cast<DataRow>().ToArray().Take(1).FirstOrDefault();
+                        if (firstRow != null)
+                        {
+
+                            dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "DateTime");
+                            if (firstRow[column].GetType().Name.Equals("DBNull"))
+                            {
+                                dataType = "string";
+                            }
+                        }
+
+                        dataType = dataType.ToLower();
+                        // method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToStr();");
+
+
+                        if (dataType.IndexOf("string") > -1)
+                        {
+                            // method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? \"\" : read[\"" + item.columnName + "\"].ToString();");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToStr();");
+                        }
+                        else if (dataType.IndexOf("int") > -1)
+                        {
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToInt();");
+                        }
+                        else if (dataType.IndexOf("date") > -1)
+                        {
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? DateTime.Now : DateTime.Parse(read[\"" + item.columnName + "\"].ToString());");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToDateTime();");
+
+                        }
+                        else if (dataType.IndexOf("bool") > -1)
+                        {
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? false : Boolean.Parse(read[\"" + item.columnName + "\"].ToString());");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToBool();");
+                        }
+                        else if (dataType.IndexOf("float") > -1)
+                        {
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : float.Parse(read[\"" + item.columnName + "\"].ToString());");
+                            method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToFloat();");
+                        }
+
+                    }
+                    method.AppendLine("return item;");
+                    method.AppendLine("}");
+                    built2.AppendLine(method.ToString());
+
+                }
+                TextBox_StoredProc_Exec_Model_DataReader.Text = built2.ToString();
+            }
+            catch (Exception ex)
+            {
+                TextBox_StoredProc_Exec_Model_DataReader.Text = ex.StackTrace;
+
+            }
+      
+            try
+            {
+                var method = new StringBuilder();
+                method.AppendLine("//" + sqlCommand);
+                var queryParts = Regex.Split(sqlCommand, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+                String sp = queryParts.FirstOrDefault();
+                sqlCommand = sqlCommand.Replace(sp, "");
+
+                var queryParts2 = Regex.Split(sqlCommand, @",").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+
+
+
+                String modelName = String.Format("{0}", tableNames.Any() ? tableNames.LastOrDefault() : "Table" + (ds.Tables.Count + 1)); 
+                String selectedTable = GetRealEntityName();
+                method.AppendLine(" public " + staticText + " List<" + modelName + "> Get" + modelName + "()");
+                method.AppendLine(" {");
+                String commandText = sp;
+                method.AppendLine(" string connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringKey].ConnectionString;");
+                method.AppendLine(String.Format(" String commandText = @\"{0}\";", commandText));
+                method.AppendLine(" var parameterList = new List<SqlParameter>();");
+                method.AppendLine(" var commandType = CommandType.StoredProcedure;");
+
+
+                foreach (var item in queryParts2)
+                {
+                    try
+                    {
+                        var parameterParts = Regex.Split(item, @"=").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+                        method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + parameterParts.FirstOrDefault() + "\", \"" + parameterParts.LastOrDefault().Replace("'", "") + "\",SqlDbType.Int));");
+               
+                    }
+                    catch (Exception)
+                    {
+                        
+                        
+                    }
+                  
+                }
+
+                method.AppendLine(" DataSet dataSet = DatabaseUtility.ExecuteDataSet(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
+                method.AppendLine(" if (dataSet.Tables.Count > 0)");
+                method.AppendLine(" {");
+                for (int i = 0; i < ds.Tables.Count; i++)
+                {
+                    try
+                    {
+                        String modelName2 = String.Format("{0}", tableNames.Any() ? tableNames[i] : "Tablo" + i);
+                        method.AppendLine(String.Format("var list{0}=new List<{1}>();", i, modelName2));
+                        method.AppendLine(String.Format(" using (DataTable dt = dataSet.Tables[{0}])", i));
+                        method.AppendLine(" {");
+                        method.AppendLine(" foreach (DataRow dr in dt.Rows)");
+                        method.AppendLine(" {");
+                        method.AppendLine(String.Format(" var e = Get{0}FromDataRow(dr);", modelName2));
+                        method.AppendLine(String.Format(" list{0}.Add(e);", i));
+                        method.AppendLine(" }");
+                        method.AppendLine(" }");
+                        method.AppendLine(" ");
+                        method.AppendLine(" ");
+                    }
+                    catch (Exception)
+                    {
+                        
+                         
+                    }
+                
+                }
+
+                method.AppendLine(" }");
+                method.AppendLine(" return null;");
+                method.AppendLine(" }");
+
+                TextBox_StoredProc_Exec.Text = method.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                TextBox_StoredProc_Exec.Text = ex.StackTrace;
+            }
+
+        }
         private void generateAspMvcActions(List<Kontrol_Icerik> kontrolList)
         {
             String selectedTable = GetRealEntityName();
@@ -1493,7 +1731,7 @@ namespace WebApplicationDAO
             built.AppendLine("//[OutputCache(CacheProfile = \"Cache1Hour\")]");
             built.AppendLine("public ActionResult Index()");
             built.AppendLine("{");
-            built.AppendLine(String.Format("var items = {0}Repository.Get{0}s();", modelName));
+            built.AppendLine(String.Format("var items = {0}Repository.Get{1}s();", modelName.Replace("Nwm", ""), modelName));
             built.AppendLine("return View(items);");
             built.AppendLine("}");
 
@@ -1501,7 +1739,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("public ActionResult {0}Detail(String id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id.Split('-').Last().ToInt();", primaryKey.ToLower()));
-            built.AppendLine(String.Format("var {0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName, primaryKey.ToLower()));
+            built.AppendLine(String.Format("var {0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""), primaryKey.ToLower(), modelName));
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
             built.AppendLine("}");
 
@@ -1513,8 +1751,8 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("if({0} == 0)", primaryKey.ToLower()));
             built.AppendLine("{");
             built.AppendLine("}else{");
-            built.AppendLine(String.Format("{0} = {1}Repository.Get{1}({2});", modelName.ToLower(), modelName,
-                primaryKey.ToLower()));
+            built.AppendLine(String.Format("{0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""),
+                primaryKey.ToLower(), modelName));
             built.AppendLine("}");
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
             built.AppendLine("}");
@@ -1522,16 +1760,14 @@ namespace WebApplicationDAO
             built.AppendLine("[HttpPost]");
             built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}({0} {1})", modelName, modelName.ToLower()));
             built.AppendLine("{");
-            built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{1}({2});",
-                primaryKey.ToLower(), modelName.Replace("Nwm", ""), modelName.ToLower()));
+            built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{3}({2});", primaryKey.ToLower(), modelName.Replace("Nwm", ""), modelName.ToLower(), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
             built.AppendLine(String.Format("public ActionResult Delete{0}(int id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id;", FirstCharacterToLower(primaryKey)));
-            built.AppendLine(String.Format("{0}Repository.Delete{0}({1});",
-                 modelName.Replace("Nwm", ""), FirstCharacterToLower(primaryKey)));
+            built.AppendLine(String.Format("{0}Repository.Delete{2}({1});", modelName.Replace("Nwm", ""), FirstCharacterToLower(primaryKey), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
@@ -1552,7 +1788,7 @@ namespace WebApplicationDAO
                 method.AppendLine("  ViewBag.Title=\"Title\";");
                 method.AppendLine(" }");
                 method.AppendLine("       <div>");
-                method.AppendLine(String.Format(" @foreach ({0} item in Model)",modelName));
+                method.AppendLine(String.Format(" @foreach ({0} item in Model)", modelName));
                 method.AppendLine("  {");
                 method.AppendLine(String.Format("    @Html.DisplayFor(modelItem => item,\"{0}\")  ", modelName));
                 method.AppendLine(" }");
@@ -1876,6 +2112,11 @@ namespace WebApplicationDAO
             method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + primaryKey + "\", " + FirstCharacterToLower(primaryKey) + ",SqlDbType.Int));");
             method.AppendLine(" DatabaseUtility.ExecuteNonQuery(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
             method.AppendLine(" }");
+
+ 
+
+
+
             return method.ToString();
         }
 
@@ -2032,35 +2273,35 @@ namespace WebApplicationDAO
 
             foreach (Kontrol_Icerik item in kontrolList)
             {
-
+                var sqlParameter = GetUrlString(item.columnName);
                 if (item.dataType.IndexOf("varchar") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ".ToStr(),SqlDbType.NVarChar));");
                 }
                 else if (item.dataType.IndexOf("int") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.Int));");
                 }
                 else if (item.dataType.IndexOf("date") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.DateTime));");
                 }
                 else if (item.dataType.IndexOf("bit") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.Bit));");
                 }
                 else if (item.dataType.IndexOf("float") > -1)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.Float));");
                 }
                 else
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + item.columnName + "\", item." +
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ",SqlDbType.NVarChar));");
                 }
 
@@ -3183,7 +3424,7 @@ namespace WebApplicationDAO
                     xmlfields.AppendLine("<word Keyword=\"" + item.columnName + "\" Translate=\"" + item.columnName + "\"/>");
                 }
             }
-            TextBox_List_XML.Text = xmlfields.ToString();
+          //  TextBox_List_XML.Text = xmlfields.ToString();
         }
         #region XML
 
@@ -3598,8 +3839,8 @@ namespace WebApplicationDAO
         {
             String selectedTable = GetEntityName();
             String fileName = selectedTable + "_admin";
-            string initMethod = TextBox_Insert.Text;
-            string retrieveMethod = TextBox_In.Text;
+            string initMethod = ""; // TextBox_Insert.Text;
+            string retrieveMethod = "";// TextBox_In.Text;
             string singleORdefault = "" + selectedTable + " item = db." + selectedTable + "s.SingleOrDefault(r=>r." + this.GetPrimaryKeys(Kontroller) + " == columnID);";
             string initItem = "initialize(item,Label_Warning)";
             string retrieveItem = "retrieveData(item,Label_Warning)";
@@ -3822,6 +4063,36 @@ namespace WebApplicationDAO
             built.AppendLine("}");
             return built.ToString();
         }
+
+        public static readonly Regex CarriageRegex = new Regex(@"(\r\n|\r|\n)+");
+        //remove carriage returns from the header name
+        public static string RemoveCarriage(string text)
+        {
+            if (String.IsNullOrEmpty(text))
+            {
+                return "";
+            }
+            return CarriageRegex.Replace(text, string.Empty).Trim();
+        }
+
+
+        public static string GetUrlString(string strIn)
+        {
+            // Replace invalid characters with empty strings. 
+            strIn = strIn.ToLower();
+            strIn = RemoveCarriage(strIn);
+            char[] szArr = strIn.ToCharArray();
+            var list = new List<char>();
+            foreach (char c in szArr)
+            {
+                int ci = c;
+                if ((ci >= 'a' && ci <= 'z') || (ci >= '0' && ci <= '9') || ci <= ' ')
+                {
+                    list.Add(c);
+                }
+            }
+            return new String(list.ToArray()).Replace(" ", "_");
+        }
         private String generate_StoredProcedure()
         {
 
@@ -3840,7 +4111,7 @@ namespace WebApplicationDAO
             built.AppendLine("CREATE PROCEDURE  " + entityPrefix + "SaveOrUpdate" + modifiedTableName + "(");
             foreach (var item in list)
             {
-                built.AppendLine("@" + item.columnName + " " + item.dataType_MaxChar + " = " + item.columnDefaultValue + " ,");
+                built.AppendLine("@" + GetUrlString(item.columnName) + " " + item.dataType_MaxChar + " = " + (String.IsNullOrEmpty(item.columnDefaultValue) ? "NULL" : item.columnDefaultValue) + " ,");
             }
             built = built.Remove(built.Length - 3, 3);
             built.Append(")");
@@ -3859,7 +4130,7 @@ namespace WebApplicationDAO
             foreach (var item in list)
             {
                 if (!item.primaryKey)
-                    built.Append("@" + item.columnName + ",");
+                    built.Append("@" + GetUrlString(item.columnName) + ",");
             }
             built = built.Remove(built.Length - 1, 1);
             built.AppendLine(")");
@@ -3873,7 +4144,7 @@ namespace WebApplicationDAO
             {
                 if (!item.primaryKey)
                 {
-                    built.AppendLine(String.Format("[{0}]", item.columnName) + " = @" + item.columnName + ",");
+                    built.AppendLine(String.Format("[{0}]", item.columnName) + " = @" + GetUrlString(item.columnName) + ",");
                 }
             }
             built = built.Remove(built.Length - 3, 2);
@@ -4164,7 +4435,7 @@ namespace WebApplicationDAO
                         method.AppendLine("<div class=\"checkbox\"> ");
                     }
                     method.AppendLine(String.Format("    @Html.EditorFor(model => model.{0}, new {{ @class = \"form-control\" }})  ", item.columnName));
-                    method.AppendLine(String.Format("    @Html.ValidationMessageFor(model => model.{0}, new {{ @class = \"text-danger\" }})  ", item.columnName));
+                    method.AppendLine(String.Format("    @Html.ValidationMessageFor(model => model.{0})  ", item.columnName));
                     method.AppendLine("</div>");
                     if (item.dataType.IndexOf("bit") > -1)
                     {
@@ -4308,391 +4579,7 @@ namespace WebApplicationDAO
 
             return method.ToString();
         }
-        private void generateSqlConnectionInsertMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Insert, false)]");
-            method.AppendLine("public int  insert" + GetEntityName() + "(" + modelName + " myItem){");
-            method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            //method.AppendLine(" try");
-            //method.AppendLine("{");
-            method.AppendLine("SqlCommand command = new SqlCommand();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("//command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            StringBuilder insertSql = new StringBuilder();
-            StringBuilder insertSql2 = new StringBuilder();
-            insertSql.Append("(");
-            insertSql2.Append("(");
-            for (int i = 0; i < kontrolList.Count; i++)
-            {
-                Kontrol_Icerik item = kontrolList[i];
-                if (!item.primaryKey)
-                {
-                    if (i != kontrolList.Count - 1)
-                    {
-                        insertSql.Append("@" + item.columnName + ", ");
-                        insertSql2.Append(item.columnName + ", ");
-                    }
-                    else
-                    {
-                        insertSql.Append("@" + item.columnName + "");
-                        insertSql2.Append(item.columnName + "");
-                    }
-                }
-            }
-
-
-            insertSql.Append(")");
-            insertSql2.Append(")");
-            method.AppendLine("command.CommandText = @\"INSERT INTO " + GetEntityName() + " " + insertSql2 + " values " + insertSql + "\";");
-            method.AppendLine("setParametersAddWithValue(command,myItem);");
-
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("");
-
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine("command.CommandText = @\"SELECT @@IDENTITY\";");
-            method.AppendLine("");
-            method.AppendLine("int id = (int)command.ExecuteScalar();");
-
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" return id;");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(this.generateSqlAddWithValue(kontrolList));
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Insert, false)]");
-            method.AppendLine("public void insert" + GetEntityName() + "ALL(List<" + modelName + "> list)");
-            method.AppendLine("{");
-            method.AppendLine("foreach (" + modelName + " i in list)");
-            method.AppendLine("{");
-            method.AppendLine("this.insert" + GetEntityName() + "(i);");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_InsertMethod.Text = method.ToString();
-
-        }
-
-
-        private void generateSqlConnectionUpdateMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            try
-            {
-
-
-                StringBuilder method = new StringBuilder();
-                String modelName = getModelName();
-                method.AppendLine("[DataObjectMethod(DataObjectMethodType.Update, false)]");
-                method.AppendLine("public Boolean  update" + GetEntityName() + "(" + modelName + " myItem){");
-                method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-                method.AppendLine("SqlCommand command = new SqlCommand();");
-                method.AppendLine("");
-                //method.AppendLine(" try");
-                //method.AppendLine("{");
-                method.AppendLine("connect.Open();");
-                method.AppendLine("command.CommandType = CommandType.Text;");
-                method.AppendLine("//command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-                StringBuilder updateSql = new StringBuilder();
-
-                for (int i = 0; i < kontrolList.Count; i++)
-                {
-                    Kontrol_Icerik item = kontrolList[i];
-                    if (!item.primaryKey)
-                    {
-                        if (i != kontrolList.Count - 1)
-                        {
-                            updateSql.Append(item.columnName + "=@" + item.columnName + ", ");
-                        }
-                        else
-                        {
-                            updateSql.Append(item.columnName + "=@" + item.columnName);
-                        }
-                    }
-                }
-
-                Kontrol_Icerik prKey = GetPrimaryKeysItem();
-                updateSql.Append("  WHERE " + prKey.columnName + "= @" + prKey.columnName + "");
-
-                method.AppendLine("command.CommandText = @\"UPDATE " + GetEntityName() + " SET  " + updateSql + "\";");
-
-
-                method.AppendLine("command.Connection = connect;");
-                method.AppendLine("setParametersAddWithValue(command,myItem);");
-                method.AppendLine("command.Parameters.AddWithValue(\"@" + prKey.columnName + "\", myItem." + prKey.columnName + ");");
-
-                method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-                method.AppendLine("     connect.Close();");
-                method.AppendLine(" return true;");
-                method.AppendLine(" }");
-                method.AppendLine(" }");
-
-                method.AppendLine("[DataObjectMethod(DataObjectMethodType.Update, false)]");
-                method.AppendLine("public void update" + GetEntityName() + "ALL(List<" + modelName + "> list)");
-                method.AppendLine("{");
-                method.AppendLine("foreach (" + modelName + " i in list)");
-                method.AppendLine("{");
-                method.AppendLine("this.update" + GetEntityName() + "(i);");
-                method.AppendLine("}");
-                method.AppendLine("}");
-                TextBox_UpdateMethod.Text = method.ToString();
-
-            }
-            catch (Exception ex)
-            {
-                TextBox_UpdateMethod.Text = ex.Message;
-
-            }
-        }
-        private void generateSqlConnectionDeleteMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            try
-            {
-
-
-                StringBuilder method = new StringBuilder();
-                String modelName = getModelName();
-                method.AppendLine("[DataObjectMethod(DataObjectMethodType.Delete, false)]");
-                method.AppendLine("public Boolean  delete" + GetEntityName() + "(int ID){");
-                method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-                method.AppendLine("SqlCommand command = new SqlCommand();");
-                method.AppendLine("");
-                //method.AppendLine(" try");
-                //method.AppendLine("{");
-                method.AppendLine("connect.Open();");
-                method.AppendLine("command.CommandType = CommandType.Text;");
-
-                StringBuilder deleteSql = new StringBuilder();
-                Kontrol_Icerik prKey = GetPrimaryKeysItem();
-                deleteSql.Append("WHERE " + prKey.columnName + "= @" + prKey.columnName + "");
-
-                method.AppendLine("command.CommandText = @\"Delete From " + GetEntityName() + " " + deleteSql + "\";");
-                method.AppendLine("command.Connection = connect;");
-                method.AppendLine("command.Parameters.AddWithValue(\"@" + prKey.columnName + "\",ID);");
-                method.AppendLine("");
-                method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-                method.AppendLine("     connect.Close();");
-                method.AppendLine(" return true;");
-                method.AppendLine(" }");
-                method.AppendLine(" }");
-                method.AppendLine("");
-                method.AppendLine("[DataObjectMethod(DataObjectMethodType.Delete, false)]");
-                method.AppendLine("public void delete" + GetEntityName() + "ALL(List<" + modelName + "> list)");
-                method.AppendLine("{");
-                method.AppendLine("foreach (" + modelName + " i in list)");
-                method.AppendLine("{");
-                method.AppendLine("this.delete" + GetEntityName() + "(i." + prKey.columnName + ");");
-                method.AppendLine("}");
-                method.AppendLine("}");
-                method.AppendLine("public void delete" + GetEntityName() + "(" + modelName + " item)");
-                method.AppendLine("{");
-                method.AppendLine("this.delete" + GetEntityName() + "(item." + prKey.columnName + ");");
-                method.AppendLine("}");
-
-                TextBox_DeleteMethod.Text = method.ToString();
-            }
-            catch (Exception ex)
-            {
-                TextBox_DeleteMethod.Text = ex.Message;
-            }
-        }
-        private void generateSqlConnectionSelectMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (SqlCommand SqlCommand)");
-            method.AppendLine("{");
-            method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("SqlCommand command = SqlCommand;");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("");
-            method.AppendLine("SqlDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_SelectMethod1.Text = method.ToString();
-        }
-        private void generateSqlConnectionSelectMethod2(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + "WithState(Boolean state,String lang)");
-            method.AppendLine(" {");
-            method.AppendLine("String sql = \"SELECT * FROM " + GetEntityName() + " WHERE STATE= @STATE AND LANG=@LANG ORDER BY ORDERING\";");
-            method.AppendLine("");
-            method.AppendLine(" List<SqlParameter> list = new List<SqlParameter>();");
-            method.AppendLine("");
-            method.AppendLine(" SqlParameter param1 = new SqlParameter();");
-            method.AppendLine("param1.ParameterName = \"@STATE\";");
-            method.AppendLine("param1.Value = state;");
-            method.AppendLine("param1.DbType = DbType.Boolean;");
-            method.AppendLine("list.Add(param1);");
-            method.AppendLine("");
-            method.AppendLine("param1 = new SqlParameter();");
-            method.AppendLine("param1.ParameterName = \"@LANG\";");
-            method.AppendLine("param1.Value = lang;");
-            method.AppendLine("param1.DbType = DbType.String;");
-            method.AppendLine("list.Add(param1);");
-            method.AppendLine("");
-            method.AppendLine("return this.get" + GetEntityName() + "(sql, list.ToArray());");
-            method.AppendLine("}");
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (String sql,SqlParameter [] values)");
-            method.AppendLine("{");
-            method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("SqlCommand command = new SqlCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText =sql;");
-            method.AppendLine("command.Parameters.AddRange(values);");
-            method.AppendLine("SqlDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_SelectMethod2.Text = method.ToString();
-        }
-        private void generateSqlConnectionSelectMethod3(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public " + modelName + " get" + GetEntityName() + " (int ID)");
-            method.AppendLine("{");
-            method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("SqlCommand command = new SqlCommand();");
-            method.AppendLine("");
-            method.AppendLine("" + modelName + " item = null;");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText = \"SELECT * FROM " + GetEntityName() + " WHERE  " + prKey.columnName + "=@ID\";");
-            method.AppendLine("command.Parameters.AddWithValue(\"@ID\",ID);");
-            method.AppendLine("SqlDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("if (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("item = get" + GetEntityName() + "CollectionFromReader(read);");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return item;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_SelectMethod3.Text = method.ToString();
-        }
-
-        private void generateSqlConnectionSelectMethod4(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (String sql)");
-            method.AppendLine("{");
-            method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("SqlCommand command = new SqlCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText =sql;");
-            method.AppendLine("SqlDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_SelectMethod4.Text = method.ToString();
-        }
-        private void generateSqlConnectionSelectMethod5(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> getAll" + GetEntityName() + "Items()");
-            method.AppendLine("{");
-            method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("SqlCommand command = new SqlCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText = \"SELECT * FROM " + GetEntityName() + "\";");
-            method.AppendLine("SqlDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_SelectMethod5.Text = method.ToString();
-        }
-        private void generateSqlConnectionSelectMethod6(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + "ItemsWithState()");
-            method.AppendLine("{");
-            method.AppendLine("using(SqlConnection connect = new SqlConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("SqlCommand command = new SqlCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText = \"SELECT * FROM " + GetEntityName() + " WHERE State=@State  ORDER BY Ordering \";");
-            method.AppendLine("command.Parameters.AddWithValue(\"@State\", true);");
-            method.AppendLine("SqlDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_SelectMethod6.Text = method.ToString();
-        }
+      
         #endregion
 
         #region Odbc Connection Methods -->Insert - Update - Delete - Select
@@ -4715,976 +4602,8 @@ namespace WebApplicationDAO
             return method.ToString();
         }
 
-        private void generateOdbcConnectionInsertMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public Boolean  insert" + GetEntityName() + "(" + modelName + " myItem){");
-            method.AppendLine("using(OdbcConnection connect = new OdbcConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("using(OdbcCommand command = new OdbcCommand()){");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("//command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            StringBuilder insertSql = new StringBuilder();
-            StringBuilder insertSql2 = new StringBuilder();
-            insertSql.Append("(");
-            insertSql2.Append("(");
-            for (int i = 0; i < kontrolList.Count; i++)
-            {
-                Kontrol_Icerik item = kontrolList[i];
-                if (!item.primaryKey)
-                {
-                    if (i != kontrolList.Count - 1)
-                    {
-                        insertSql.Append("@" + item.columnName + ", ");
-                        insertSql2.Append(item.columnName + ", ");
-                    }
-                    else
-                    {
-                        insertSql.Append("@" + item.columnName + "");
-                        insertSql2.Append(item.columnName + "");
-                    }
-                }
-            }
-
-
-            insertSql.Append(")");
-            insertSql2.Append(")");
-            method.AppendLine("command.CommandText = @\"INSERT INTO " + GetEntityName() + " " + insertSql2 + " values " + insertSql + "\";");
-            method.AppendLine("setParametersAddWithValue(command,myItem);");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("");
-            method.AppendLine("command.ExecuteNonQuery();");
-            method.AppendLine("return true;");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("return false;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(this.generateOdbcAddWithValue(kontrolList));
-            TextBox_OdbcInsertMethod.Text = method.ToString();
-
-        }
-        private void generateOdbcConnectionUpdateMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public Boolean  update" + GetEntityName() + "(" + modelName + " myItem){");
-            method.AppendLine("using(OdbcConnection connect = new OdbcConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("using(OdbcCommand command = new OdbcCommand()){");
-            method.AppendLine("");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("//command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            StringBuilder updateSql = new StringBuilder();
-
-            for (int i = 0; i < kontrolList.Count; i++)
-            {
-                Kontrol_Icerik item = kontrolList[i];
-                if (!item.primaryKey)
-                {
-                    if (i != kontrolList.Count - 1)
-                    {
-                        updateSql.Append(item.columnName + "=@" + item.columnName + ", ");
-                    }
-                    else
-                    {
-                        updateSql.Append(item.columnName + "=@" + item.columnName);
-                    }
-                }
-            }
-
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            updateSql.Append("  WHERE " + prKey.columnName + "= @" + prKey.columnName + "");
-
-            method.AppendLine("command.CommandText = @\"UPDATE " + GetEntityName() + " SET  " + updateSql + "\";");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("");
-            method.AppendLine("setParametersAddWithValue(command,myItem);");
-
-
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine("return true;");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("return false;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            TextBox_OdbcUpdateMethod.Text = method.ToString();
-        }
-        private void generateOdbcConnectionDeleteMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public Boolean  delete" + GetEntityName() + "(int ID){");
-            method.AppendLine("using(OdbcConnection connect = new OdbcConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("using(OdbcCommand command = new OdbcCommand()){");
-            method.AppendLine("");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-
-            StringBuilder deleteSql = new StringBuilder();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            deleteSql.Append("WHERE " + prKey.columnName + "= @" + prKey.columnName + "");
-
-            method.AppendLine("command.CommandText = @\"Delete From " + GetEntityName() + " " + deleteSql + "\";");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.Parameters.AddWithValue(\"@ID\", ID);");
-            method.AppendLine("");
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine("return true;");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("return false;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            TextBox_OdbcDeleteMethod.Text = method.ToString();
-        }
-        private void generateOdbcConnectionSelectMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (OdbcCommand odbcCommand)");
-            method.AppendLine("{");
-            method.AppendLine("using(OdbcConnection connect = new OdbcConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OdbcCommand command = odbcCommand;");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("");
-            method.AppendLine("OdbcDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("    listItem = null;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OdbcSelectMethod.Text = method.ToString();
-        }
-        private void generateOdbcConnectionSelectMethod2(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (String sql,SqlParameter [] values)");
-            method.AppendLine("{");
-            method.AppendLine("using(OdbcConnection  connect = new OdbcConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("using(OdbcCommand command = new OdbcCommand()){");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText =sql;");
-            method.AppendLine("command.Parameters.AddRange(values);");
-            method.AppendLine("OdbcDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("     listItem = null;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OdbcSelectMethod2.Text = method.ToString();
-        }
-        private void generateOdbcConnectionSelectMethod3(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public " + modelName + " get" + GetEntityName() + " (int ID)");
-            method.AppendLine("{");
-            method.AppendLine("using(OdbcConnection  connect = new OdbcConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("using(OdbcCommand command = new OdbcCommand()){");
-            method.AppendLine("");
-            method.AppendLine("" + modelName + " item = null;");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText = \"SELECT * FROM " + GetEntityName() + " WHERE  ID=@ID\";");
-            method.AppendLine("command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            method.AppendLine("OdbcDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("if (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("item = get" + GetEntityName() + "CollectionFromReader(read);");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("     listItem = null;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("return item;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OdbcSelectMethod3.Text = method.ToString();
-        }
-        #endregion
-
-        #region OleDb Connection Methods -->Insert - Update - Delete - Select
-
-        private String generateOleAddWithValue(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("private void setParametersAddWithValue(OleDbCommand command," + modelName + " item)");
-            method.AppendLine(" {");
-            foreach (Kontrol_Icerik item in kontrolList)
-            {
-                if (!item.primaryKey)
-                {
-                    if (item.dataType.IndexOf("varchar") > -1)
-                    {
-                        //item.Code == null ? "" : item.Code
-                        method.AppendLine("command.Parameters.AddWithValue(\"@" + item.columnName + "\", item." + item.columnName + " == null ? \"\" : item." + item.columnName + ");");
-                    }
-                    else if (item.dataType.IndexOf("int") > -1)
-                    {
-                        method.AppendLine("command.Parameters.AddWithValue(\"@" + item.columnName + "\", item." + item.columnName + ");");
-                    }
-                    else if (item.dataType.IndexOf("date") > -1)
-                    {
-                        method.AppendLine("command.Parameters.AddWithValue(\"@" + item.columnName + "\", item." + item.columnName + ");");
-                    }
-                    else if (item.dataType.IndexOf("bit") > -1)
-                    {
-                        method.AppendLine("command.Parameters.AddWithValue(\"@" + item.columnName + "\", item." + item.columnName + ");");
-                    }
-                    else if (item.dataType.IndexOf("float") > -1)
-                    {
-                        method.AppendLine("command.Parameters.AddWithValue(\"@" + item.columnName + "\", item." + item.columnName + ");");
-                    }
-                    else
-                    {
-                        method.AppendLine("command.Parameters.AddWithValue(\"@" + item.columnName + "\", item." + item.columnName + ");");
-                    }
-
-
-                }
-            }
-            method.AppendLine(" }");
-
-
-            return method.ToString();
-        }
-        private void generateOleDbConnectionInsertMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Insert, false)]");
-            method.AppendLine("public int  insert" + GetEntityName() + "(" + modelName + " myItem){");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            //method.AppendLine(" try");
-            //method.AppendLine("{");
-            method.AppendLine("OleDbCommand command = new OleDbCommand();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("//command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            StringBuilder insertSql = new StringBuilder();
-            StringBuilder insertSql2 = new StringBuilder();
-            insertSql.Append("(");
-            insertSql2.Append("(");
-            for (int i = 0; i < kontrolList.Count; i++)
-            {
-                Kontrol_Icerik item = kontrolList[i];
-                if (!item.primaryKey)
-                {
-                    if (i != kontrolList.Count - 1)
-                    {
-                        insertSql.Append("@" + item.columnName + ", ");
-                        insertSql2.Append(item.columnName + ", ");
-                    }
-                    else
-                    {
-                        insertSql.Append("@" + item.columnName + "");
-                        insertSql2.Append(item.columnName + "");
-                    }
-                }
-            }
-
-
-            insertSql.Append(")");
-            insertSql2.Append(")");
-            method.AppendLine("command.CommandText = @\"INSERT INTO " + GetEntityName() + " " + insertSql2 + " values " + insertSql + "\";");
-            method.AppendLine("setParametersAddWithValue(command,myItem);");
-
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("");
-
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine("command.CommandText = @\"SELECT @@IDENTITY\";");
-            method.AppendLine("");
-            method.AppendLine("int id = (int)command.ExecuteScalar();");
-
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" return id;");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(this.generateOleAddWithValue(kontrolList));
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Insert, false)]");
-            method.AppendLine("public void insert" + GetEntityName() + "ALL(List<" + modelName + "> list)");
-            method.AppendLine("{");
-            method.AppendLine("foreach (" + modelName + " i in list)");
-            method.AppendLine("{");
-            method.AppendLine("this.insert" + GetEntityName() + "(i);");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OleDbInsertMethod.Text = method.ToString();
-
-        }
-
-
-        private void generateOleDbConnectionUpdateMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Update, false)]");
-            method.AppendLine("public Boolean  update" + GetEntityName() + "(" + modelName + " myItem){");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OleDbCommand command = new OleDbCommand();");
-            method.AppendLine("");
-            //method.AppendLine(" try");
-            //method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("//command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            StringBuilder updateSql = new StringBuilder();
-
-            for (int i = 0; i < kontrolList.Count; i++)
-            {
-                Kontrol_Icerik item = kontrolList[i];
-                if (!item.primaryKey)
-                {
-                    if (i != kontrolList.Count - 1)
-                    {
-                        updateSql.Append(item.columnName + "=@" + item.columnName + ", ");
-                    }
-                    else
-                    {
-                        updateSql.Append(item.columnName + "=@" + item.columnName);
-                    }
-                }
-            }
-
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            updateSql.Append("  WHERE " + prKey.columnName + "= @" + prKey.columnName + "");
-
-            method.AppendLine("command.CommandText = @\"UPDATE " + GetEntityName() + " SET  " + updateSql + "\";");
-
-
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("setParametersAddWithValue(command,myItem);");
-            method.AppendLine("command.Parameters.AddWithValue(\"@" + prKey.columnName + "\", myItem." + prKey.columnName + ");");
-
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" return true;");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Update, false)]");
-            method.AppendLine("public void update" + GetEntityName() + "ALL(List<" + modelName + "> list)");
-            method.AppendLine("{");
-            method.AppendLine("foreach (" + modelName + " i in list)");
-            method.AppendLine("{");
-            method.AppendLine("this.update" + GetEntityName() + "(i);");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OleDbUpdateMethod.Text = method.ToString();
-        }
-        private void generateOleDbConnectionDeleteMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Delete, false)]");
-            method.AppendLine("public Boolean  delete" + GetEntityName() + "(int ID){");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OleDbCommand command = new OleDbCommand();");
-            method.AppendLine("");
-            //method.AppendLine(" try");
-            //method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-
-            StringBuilder deleteSql = new StringBuilder();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            deleteSql.Append("WHERE " + prKey.columnName + "= @" + prKey.columnName + "");
-
-            method.AppendLine("command.CommandText = @\"Delete From " + GetEntityName() + " " + deleteSql + "\";");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.Parameters.AddWithValue(\"@" + prKey.columnName + "\",ID);");
-            method.AppendLine("");
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" return true;");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("");
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Delete, false)]");
-            method.AppendLine("public void delete" + GetEntityName() + "ALL(List<" + modelName + "> list)");
-            method.AppendLine("{");
-            method.AppendLine("foreach (" + modelName + " i in list)");
-            method.AppendLine("{");
-            method.AppendLine("this.delete" + GetEntityName() + "(i." + prKey.columnName + ");");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            method.AppendLine("public void delete" + GetEntityName() + "(" + modelName + " item)");
-            method.AppendLine("{");
-            method.AppendLine("this.delete" + GetEntityName() + "(item." + prKey.columnName + ");");
-            method.AppendLine("}");
-
-            TextBox_OleDbDeleteMethod.Text = method.ToString();
-        }
-        private void generateOleDbConnectionSelectMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (OleDbCommand oleDbCommand)");
-            method.AppendLine("{");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OleDbCommand command = oleDbCommand;");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("");
-            method.AppendLine("OleDbDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OleDbSelectMethod.Text = method.ToString();
-        }
-        private void generateOleDbConnectionSelectMethod2(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + "WithState(Boolean state,String lang)");
-            method.AppendLine(" {");
-            method.AppendLine("String sql = \"SELECT * FROM " + GetEntityName() + " WHERE STATE= @STATE AND LANG=@LANG ORDER BY ORDERING\";");
-            method.AppendLine("");
-            method.AppendLine(" List<OleDbParameter> list = new List<OleDbParameter>();");
-            method.AppendLine("");
-            method.AppendLine(" OleDbParameter param1 = new OleDbParameter();");
-            method.AppendLine("param1.ParameterName = \"@STATE\";");
-            method.AppendLine("param1.Value = state;");
-            method.AppendLine("param1.DbType = DbType.Boolean;");
-            method.AppendLine("list.Add(param1);");
-            method.AppendLine("");
-            method.AppendLine("param1 = new OleDbParameter();");
-            method.AppendLine("param1.ParameterName = \"@LANG\";");
-            method.AppendLine("param1.Value = lang;");
-            method.AppendLine("param1.DbType = DbType.String;");
-            method.AppendLine("list.Add(param1);");
-            method.AppendLine("");
-            method.AppendLine("return this.get" + GetEntityName() + "(sql, list.ToArray());");
-            method.AppendLine("}");
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (String sql,OleDbParameter [] values)");
-            method.AppendLine("{");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OleDbCommand command = new OleDbCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText =sql;");
-            method.AppendLine("command.Parameters.AddRange(values);");
-            method.AppendLine("OleDbDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OleDbSelectMethod2.Text = method.ToString();
-        }
-        private void generateOleDbConnectionSelectMethod3(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public " + modelName + " get" + GetEntityName() + " (int ID)");
-            method.AppendLine("{");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OleDbCommand command = new OleDbCommand();");
-            method.AppendLine("");
-            method.AppendLine("" + modelName + " item = null;");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText = \"SELECT * FROM " + GetEntityName() + " WHERE  " + prKey.columnName + "=@ID\";");
-            method.AppendLine("command.Parameters.AddWithValue(\"@ID\",ID);");
-            method.AppendLine("OleDbDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("if (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("item = get" + GetEntityName() + "CollectionFromReader(read);");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return item;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OleDbSelectMethod3.Text = method.ToString();
-        }
-
-        private void generateOleDbConnectionSelectMethod4(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (String sql)");
-            method.AppendLine("{");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OleDbCommand command = new OleDbCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText =sql;");
-            method.AppendLine("OleDbDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OleDbSelectMethod4.Text = method.ToString();
-        }
-        private void generateOleDbConnectionSelectMethod5(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> getAll" + GetEntityName() + "Items()");
-            method.AppendLine("{");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OleDbCommand command = new OleDbCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText = \"SELECT * FROM " + GetEntityName() + "\";");
-            method.AppendLine("OleDbDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OleDbSelectMethod5.Text = method.ToString();
-        }
-        private void generateOleDbConnectionSelectMethod6(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("[DataObjectMethod(DataObjectMethodType.Select, false)]");
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + "ItemsWithState()");
-            method.AppendLine("{");
-            method.AppendLine("using(OleDbConnection connect = new OleDbConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OleDbCommand command = new OleDbCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText = \"SELECT * FROM " + GetEntityName() + " WHERE State=@State  ORDER BY Ordering \";");
-            method.AppendLine("command.Parameters.AddWithValue(\"@State\", true);");
-            method.AppendLine("OleDbDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OleDbSelectMethod6.Text = method.ToString();
-        }
-        #endregion
-
-        #region Oracle Connection Methods -->Insert - Update - Delete - Select
-
-        private String generateOracleAddWithValue(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("private void setParametersAddWithValue(OracleCommand command," + modelName + " item)");
-            method.AppendLine(" {");
-            foreach (Kontrol_Icerik item in kontrolList)
-            {
-                if (!item.primaryKey)
-                {
-                    method.AppendLine("command.Parameters.AddWithValue(\"@" + item.columnName + "\", item." + item.columnName + ");");
-                }
-            }
-            method.AppendLine(" }");
-
-            return method.ToString();
-        }
-        private void generateOracleConnectionInsertMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public void  insert" + GetEntityName() + "(" + modelName + " myItem){");
-            method.AppendLine("using(OracleConnection connect = new OracleConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("OracleCommand command = new OracleCommand();");
-            method.AppendLine("");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("//command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            StringBuilder insertSql = new StringBuilder();
-            StringBuilder insertSql2 = new StringBuilder();
-            insertSql.Append("(");
-            insertSql2.Append("(");
-            for (int i = 0; i < kontrolList.Count; i++)
-            {
-                Kontrol_Icerik item = kontrolList[i];
-                if (!item.primaryKey)
-                {
-                    if (i != kontrolList.Count - 1)
-                    {
-                        insertSql.Append("@" + item.columnName + ", ");
-                        insertSql2.Append(item.columnName + ", ");
-                    }
-                    else
-                    {
-                        insertSql.Append("@" + item.columnName + "");
-                        insertSql2.Append(item.columnName + "");
-                    }
-                }
-            }
-
-
-            insertSql.Append(")");
-            insertSql2.Append(")");
-            method.AppendLine("command.CommandText = @\"INSERT INTO " + GetEntityName() + " " + insertSql2 + " values " + insertSql + "\";");
-
-
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("setParametersAddWithValue(command,myItem);");
-            method.AppendLine("");
-
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("     throw;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-
-            method.AppendLine(this.generateOleAddWithValue(kontrolList));
-            TextBox_OracleInsertMethod.Text = method.ToString();
-
-        }
-        private void generateOracleConnectionUpdateMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public void  update" + GetEntityName() + "(" + modelName + " myItem){");
-            method.AppendLine("using(OracleConnection connect = new OracleConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OracleCommand command = new OracleCommand();");
-            method.AppendLine("");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("//command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            StringBuilder updateSql = new StringBuilder();
-
-            for (int i = 0; i < kontrolList.Count; i++)
-            {
-                Kontrol_Icerik item = kontrolList[i];
-                if (!item.primaryKey)
-                {
-                    if (i != kontrolList.Count - 1)
-                    {
-                        updateSql.Append(item.columnName + "=@" + item.columnName + ", ");
-                    }
-                    else
-                    {
-                        updateSql.Append(item.columnName + "=@" + item.columnName);
-                    }
-                }
-            }
-
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            updateSql.Append("  WHERE " + prKey.columnName + "= @" + prKey.columnName + "");
-
-            method.AppendLine("command.CommandText = @\"UPDATE " + GetEntityName() + " SET  " + updateSql + "\";");
-
-
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("setParametersAddWithValue(command,myItem);");
-            method.AppendLine("");
-
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("     throw;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            TextBox_OracleUpdateMethod.Text = method.ToString();
-        }
-        private void generateOracleConnectionDeleteMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public void  delete" + GetEntityName() + "(int ID){");
-            method.AppendLine("using(OracleConnection connect = new OracleConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OracleCommand command = new OracleCommand();");
-            method.AppendLine("");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-
-            StringBuilder deleteSql = new StringBuilder();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            deleteSql.Append("WHERE " + prKey.columnName + "= @" + prKey.columnName + "");
-
-            method.AppendLine("command.CommandText = @\"Delete From " + GetEntityName() + " " + deleteSql + "\";");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.Parameters.AddWithValue(\"@" + prKey.columnName + "\", ID);");
-            method.AppendLine("");
-            method.AppendLine("int affectedRowNumber =  command.ExecuteNonQuery();");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("     throw;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-
-
-
-            TextBox_OracleDeleteMethod.Text = method.ToString();
-        }
-        private void generateOracleConnectionSelectMethod(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (OracleCommand sqlCommand)");
-            method.AppendLine("{");
-            method.AppendLine("using(OracleConnection connect = new OracleConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OracleCommand command = sqlCommand;");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("");
-            method.AppendLine("OracleDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("     throw;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OracleSelectMethod.Text = method.ToString();
-        }
-        private void generateOracleConnectionSelectMethod2(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public List<" + modelName + "> get" + GetEntityName() + " (String sql,SqlParameter [] values)");
-            method.AppendLine("{");
-            method.AppendLine("using(OracleConnection connect = new OracleConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OracleCommand command = new OracleCommand();");
-            method.AppendLine("");
-            method.AppendLine("List<" + modelName + "> listItem = new List<" + modelName + ">();");
-            method.AppendLine("");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText =sql;");
-            method.AppendLine("command.Parameters.AddRange(values);");
-            method.AppendLine("OracleDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("");
-            method.AppendLine("while (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("listItem.Add(get" + GetEntityName() + "CollectionFromReader(read));");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("     throw;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("return listItem;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OracleSelectMethod2.Text = method.ToString();
-        }
-        private void generateOracleConnectionSelectMethod3(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("public " + modelName + " get" + GetEntityName() + " (int ID)");
-            method.AppendLine("{");
-            method.AppendLine("using(OracleConnection connect = new OracleConnection(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString)){");
-            method.AppendLine("OracleCommand command = new OracleCommand();");
-            method.AppendLine("");
-            method.AppendLine("" + modelName + " item = null;");
-            method.AppendLine(" try");
-            method.AppendLine("{");
-            method.AppendLine("connect.Open();");
-            method.AppendLine("command.Connection = connect;");
-            method.AppendLine("command.CommandType = CommandType.Text;");
-            method.AppendLine("command.CommandText = \"SELECT * FROM " + GetEntityName() + " WHERE  ID=@ID\";");
-            method.AppendLine("command.Parameters.AddWithValue(\"@ID\", \"ID\");");
-            method.AppendLine("OracleDataReader read = command.ExecuteReader();");
-            method.AppendLine("");
-            method.AppendLine("if (read.Read())");
-            method.AppendLine("{");
-            method.AppendLine("item = get" + GetEntityName() + "CollectionFromReader(read);");
-            method.AppendLine(" }");
-            method.AppendLine(" }");
-            method.AppendLine("catch (Exception)");
-            method.AppendLine(" {");
-            method.AppendLine("     throw;");
-            method.AppendLine(" }");
-            method.AppendLine(" finally");
-            method.AppendLine(" {");
-            method.AppendLine("     connect.Close();");
-            method.AppendLine(" }");
-            method.AppendLine("return item;");
-            method.AppendLine("}");
-            method.AppendLine("}");
-            TextBox_OracleSelectMethod3.Text = method.ToString();
-        }
+        
+             
 
         private void GenerateTableRepository(List<Kontrol_Icerik> linkedList)
         {
@@ -5692,6 +4611,7 @@ namespace WebApplicationDAO
             String modelName = getModelName();
             String selectedTable = GetRealEntityName();
             String primaryKey = GetPrimaryKeys(linkedList);
+            string primaryKeyOrginal = primaryKey;
             primaryKey = FirstCharacterToLower(primaryKey);
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
 
@@ -5717,11 +4637,11 @@ namespace WebApplicationDAO
 
             method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm", "")));
             method.AppendLine("{");
+            method.AppendLine("private static string CacheKeyAllItems = \"" + modelName + "Cache\";");
             method.AppendLine("");
             method.AppendLine("public " + staticText + " List<" + modelName + "> Get" + modelName + "sFromCache()");
             method.AppendLine("{");
-            method.AppendLine("string cacheKey = \"" + modelName + "Cache\";");
-            method.AppendLine("var items = (List<" + modelName + ">)MemoryCache.Default.Get(cacheKey);");
+            method.AppendLine("var items = (List<" + modelName + ">)MemoryCache.Default.Get(CacheKeyAllItems);");
             method.AppendLine("if (items == null)");
             method.AppendLine("{");
             method.AppendLine("items = Get" + modelName + "s();");
@@ -5729,7 +4649,7 @@ namespace WebApplicationDAO
             method.AppendLine("policy = new CacheItemPolicy();");
             method.AppendLine("policy.Priority = CacheItemPriority.Default;");
             method.AppendLine(" policy.AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(Settings.CacheMediumSeconds);");
-            method.AppendLine("MemoryCache.Default.Set(cacheKey, items, policy);");
+            method.AppendLine("MemoryCache.Default.Set(CacheKeyAllItems, items, policy);");
             method.AppendLine("}");
             method.AppendLine(" return items;");
             method.AppendLine("}");
@@ -5740,15 +4660,23 @@ namespace WebApplicationDAO
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " int SaveOrUpdate" + modelName + "( " + modelName + " item)");
             method.AppendLine("{");
+            method.AppendLine("     RemoveCache();");
             method.AppendLine("     return DBDirectory.SaveOrUpdate" + modelName + "(item);");
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " " + modelName + " Get" + modelName + "(int " + primaryKey + ")");
             method.AppendLine("{");
+            method.AppendLine("var item = Get" + modelName + "sFromCache().FirstOrDefault(r => r." + primaryKeyOrginal + " == " + primaryKey + ");");
+            method.AppendLine("if (item != null) return item;");
             method.AppendLine("     return DBDirectory.Get" + modelName + "(" + primaryKey + ");");
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " void Delete" + modelName + "(int " + primaryKey + ")");
             method.AppendLine("{");
+            method.AppendLine("     RemoveCache();");
             method.AppendLine("     DBDirectory.Delete" + modelName + "(" + primaryKey + ");");
+            method.AppendLine("}");
+            method.AppendLine("public " + staticText + " void RemoveCache()");
+            method.AppendLine("{");
+            method.AppendLine("     MemoryCache.Default.Remove(CacheKeyAllItems);");
             method.AppendLine("}");
             foreach (var ki in linkedList)
             {
@@ -5799,7 +4727,86 @@ namespace WebApplicationDAO
 
 
         }
+        private void GenerateClassStringPatterns(List<Kontrol_Icerik> linkedList)
+        {
 
+            var method = new StringBuilder();
+            var method2 = new StringBuilder();
+            var method3 = new StringBuilder();
+            var method4 = new StringBuilder();
+            var method5 = new StringBuilder();
+            var method6 = new StringBuilder();
+            try
+            {
+
+                String entityType = "Base";
+                if (linkedList.Any(r => r.columnName.Equals("name", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    entityType = "BaseEntity";
+                }
+
+                if (linkedList.Any(r => r.columnName.Equals("description", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    entityType = "BaseContent";
+                }
+                String modelName = getModelName();
+                String selectedTable = GetRealEntityName();
+
+                String patternOriginal = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern1.txt")));
+                String patternOriginal2 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern2.txt")));
+                String patternOriginal3 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern3.txt")));
+                String patternOriginal4 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern4.txt")));
+                String patternOriginal5 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern5.txt")));
+                String patternOriginal6 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern6.txt")));
+
+
+                var pattern = patternOriginal.Replace("{className}", modelName);
+                pattern = pattern.Replace("{entityType}", entityType);
+                pattern = pattern.Replace("{realClassName}", selectedTable);
+                method.AppendLine(pattern);
+
+                var pattern2 = patternOriginal2.Replace("{className}", modelName);
+                pattern2 = pattern2.Replace("{entityType}", entityType);
+                pattern2 = pattern2.Replace("{realClassName}", selectedTable);
+                method2.AppendLine(pattern2);
+
+
+                var pattern3 = patternOriginal3.Replace("{className}", modelName);
+                pattern3 = pattern3.Replace("{entityType}", entityType);
+                pattern3 = pattern3.Replace("{realClassName}", selectedTable);
+                method3.AppendLine(pattern3);
+
+
+                var pattern4 = patternOriginal4.Replace("{className}", modelName);
+                pattern4 = pattern4.Replace("{entityType}", entityType);
+                pattern4 = pattern4.Replace("{realClassName}", selectedTable);
+                method4.AppendLine(pattern4);
+
+                var pattern5 = patternOriginal5.Replace("{className}", modelName);
+                pattern5 = pattern5.Replace("{entityType}", entityType);
+                pattern5 = pattern5.Replace("{realClassName}", selectedTable);
+                method5.AppendLine(pattern5);
+
+                var pattern6 = patternOriginal6.Replace("{className}", modelName);
+                pattern6 = pattern6.Replace("{entityType}", entityType);
+                pattern6 = pattern6.Replace("{realClassName}", selectedTable);
+                method6.AppendLine(pattern6);
+
+
+            }
+            catch (Exception ex)
+            {
+                method.AppendLine(ex.Message);
+            }
+
+            TextBox_ClassPatternOutput1.Text = method.ToString();
+            TextBox_ClassPatternOutput2.Text = method2.ToString();
+            TextBox_ClassPatternOutput3.Text = method3.ToString();
+            TextBox_ClassPatternOutput4.Text = method4.ToString();
+            TextBox_ClassPatternOutput5.Text = method5.ToString();
+            TextBox_ClassPatternOutput6.Text = method6.ToString();
+
+        }
         private void generateTableItem(List<Kontrol_Icerik> linkedList)
         {
             StringBuilder method = new StringBuilder();
@@ -6494,89 +5501,7 @@ namespace WebApplicationDAO
             DownloadGeneratedSourceCode(list);
 
         }
-        private void generateInfragisticSchema()
-        {
-            var lists = from s in Kontroller orderby s.order select s;
-            StringBuilder built = new StringBuilder();
-            String tableName = GetEntityName();
-            built.AppendLine(" var " + tableName + "Schema = new $.ig.DataSchema(\"json\", {");
-            built.AppendLine("       fields: [");
-
-            foreach (var item in lists)
-            {
-                built.AppendLine(" { name: \"" + item.columnName + "\", type: \"" + convertSqlDataTypeToInfragisticDataType(item.dataType) + "\" },");
-            }
-
-            built.AppendLine(" ]");
-            built.AppendLine(" });");
-
-
-            TextBox_Infragistic_Schema.Text = built.ToString();
-        }
-        private void generateInfragisticGrid()
-        {
-            var a = from s in Kontroller orderby s.order select s;
-            var lists = a.ToList<Kontrol_Icerik>();
-
-            StringBuilder built = new StringBuilder();
-            String tableName = GetEntityName();
-            built.AppendLine(" $(\"#grid" + tableName + "\").igGrid({");
-            built.AppendLine("      primaryKey: \"" + GetPrimaryKeys(lists) + "\",");
-            built.AppendLine("       columns: [");
-
-            foreach (var item in lists)
-            {
-                built.AppendLine("          { headerText: \"" + item.columnName + "\", key: \"" + item.columnName + "\", dataType: \"" + convertSqlDataTypeToInfragisticDataType(item.dataType) + "\" },");
-            }
-
-            built.AppendLine("  width: \"500px\",");
-            built.AppendLine("  dataSource: products, ");
-            built.AppendLine("  features: [ ");
-            built.AppendLine("  { ");
-            built.AppendLine("          name: \"Sorting\", ");
-            built.AppendLine("          type: \"local\" ");
-            built.AppendLine("    }, ");
-            built.AppendLine("    { ");
-            built.AppendLine("          name: \"Updating\", ");
-            built.AppendLine("          enableAddRow: true, ");
-            built.AppendLine("          editMode: \"row\", ");
-            built.AppendLine("          enableDeleteRow: true, ");
-            built.AppendLine("          columnSettings: [ ");
-            foreach (var item in lists)
-            {
-                built.AppendLine("          {   columnKey: \"" + item.columnName + "\",  editorOptions: { type:  \"" + convertSqlDataTypeToInfragisticDataType(item.dataType) + "\"} },");
-            }
-            built.AppendLine("      ] ");
-            built.AppendLine("    }, ");
-            built.AppendLine("   {");
-            built.AppendLine("            name: \"Tooltips\",");
-            built.AppendLine("           columnSettings: [");
-            foreach (var item in lists)
-            {
-                built.AppendLine("          {   columnKey: \"" + item.columnName + "\", , allowTooltips: false },");
-            }
-            built.AppendLine("    ],");
-            built.AppendLine("          visibility: \"always\",");
-            built.AppendLine("          showDelay: 1000,");
-            built.AppendLine("          hideDelay: 500");
-            built.AppendLine("  },");
-            built.AppendLine("  {");
-            built.AppendLine("          name: \"Resizing\",");
-            built.AppendLine("          deferredResizing: false,");
-            built.AppendLine("          allowDoubleClickToResize: true,");
-            built.AppendLine("          columnSettings: [");
-            foreach (var item in lists)
-            {
-                built.AppendLine("          {   columnKey: \"" + item.columnName + "\", , allowResizing: true, minimumWidth: 40 },");
-            }
-            built.AppendLine("      ]");
-            built.AppendLine("     }");
-            built.AppendLine("    ] ");
-            built.AppendLine(" });");
-
-
-            TextBox_Infragistic_igGrid.Text = built.ToString();
-        }
+       
         private String convertSqlDataTypeToCSharp(String key)
         {
             String result = "";
@@ -6755,7 +5680,7 @@ namespace WebApplicationDAO
         CustomValidator_
     }
     public enum Function_Adi
-    { 
+    {
         BOS_,
         Ei_Function_,
         HtmlEncode_,
@@ -6770,3 +5695,5 @@ namespace WebApplicationDAO
         Masked_
     }
 }
+
+ 

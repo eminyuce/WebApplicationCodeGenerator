@@ -1,0 +1,157 @@
+﻿@model List<{className}>
+@using EImece.Domain.Helpers;
+@using GridMvc.Html
+@using GridMvc.Sorting
+@using EImece.Domain;
+@using EImece.Domain.Entities;
+@using Resources;
+@using EImece.Domain.Helpers.Extensions;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    int pageSizeNumber = Request.QueryString["GridPageSize"].ToInt();
+    pageSizeNumber = pageSizeNumber == 0 ? Settings.GridPageSizeNumber : pageSizeNumber;
+    var controllerName = "{className}";
+    var title = "{className}";
+    var gridName = "{className}Grid";
+    var contents = Model;
+    var baseList = contents.DownCasting<{className}>();
+
+    var gridImagesText = AdminResource.GridImagesText;
+    var gridEditText = AdminResource.GridEditText;
+    var gridDeleteText = AdminResource.GridDeleteText;
+    var gridDetailText = AdminResource.GridDetailText;
+    var gridMainPageImageText = AdminResource.GridMainPageImageText;
+
+}
+
+<h2>{className}</h2>
+
+
+<div class="panel panel-info">
+    @Html.Partial("pGridOperations", new ViewDataDictionary(ViewData){
+            {"controllerName",controllerName}
+                     ,{"StateTypes","State,ImageState,MainPage"}
+           ,{"orderingButton",true}
+           ,{"selectAll",true}
+           ,{"deleteAll",true}
+            ,{"SetStateOnOrOff",true}})
+</div>
+<div class="panel panel-primary">
+    @Html.Partial("pGridDropDown", baseList)
+    @Html.Grid(contents).Named(gridName).Columns(columns =>
+{
+
+columns.Add().Encoded(false).
+        Sanitized(false).
+        SetWidth(10).
+        RenderValueAs(o => String.Format("<input gridkey-id='{0}'  class='gridCheckboxes'  name='checkboxGrid' type='checkbox'>", o.Id));
+
+columns.Add(o => o.Id, true);
+
+
+
+columns.Add()
+                           .Encoded(false)
+                           .Sanitized(false)
+                           .SetWidth(30)
+                           .RenderValueAs(d =>
+                        @<b>
+                            @Html.ActionLink(gridEditText, "SaveOrEdit", controllerName, new { id = d.Id }, new { @class = "btn btn-primary btn-sm     " })
+                        </b>);
+
+ 
+columns.Add()
+               .Encoded(false)
+               .Sanitized(false)
+               .SetWidth(30)
+               .RenderValueAs(d =>
+            @<b>
+                @Html.ActionLink(gridImagesText, "Media", controllerName, new { Id = d.Id }, new { @class = "btn btn-default  btn-sm" })
+            </b>);
+if (UserRoleHelper.IsDeletedEnableRoles())
+{
+    columns.Add()
+             .Encoded(false)
+             .Sanitized(false)
+             .SetWidth(30)
+             .RenderValueAs(d =>
+            @<b>
+                @Html.ActionLink(gridDeleteText, "Delete", controllerName, new { id = d.Id }, new { @class = "btn btn-danger btn-sm " })
+            </b>);
+
+}
+
+ 
+columns.Add(c => c.Name)
+          .Titled("Name")
+          .Filterable(true)
+           .Encoded(false)
+            .Sanitized(false)
+      .RenderValueAs(d =>
+    @<b>
+        @Html.ActionLink(d.Name, "Detail", "{className}", new { area = "", categoryName = GeneralHelper.GetUrlSeoString(d.{className}Category.Name), id = d.GetSeoUrl() }, new { @class = "btn btn-link", @target = "_blank" })
+    </b>);
+
+
+     
+    columns.Add(o => o.Position)
+       .Encoded(false).
+            Sanitized(false).
+            SetWidth(10).
+            RenderValueAs(o => String.Format("<input   gridkey-id='{0}' value='{1}'   class='GridOrderingTextbox input-xs' name='gridOrdering' type='type'>", o.Id, o.Position));
+
+    columns.Add(o => o.IsActive)
+           .Titled("State")
+           .Sortable(true)
+           .SortInitialDirection(GridSortDirection.Descending).Encoded(false).
+            Sanitized(false)
+           .RenderValueAs(o => String.Format("<span  gridkey-id='{0}' grid-data-value='{2}' {1}   name='spanState'> </span>",
+                                             o.Id, (o.IsActive ? Settings.OkStyle : Settings.CancelStyle), o.IsActive));
+
+
+    columns.Add(o => o.ImageState)
+           .Titled("ImageState")
+           .Sortable(true)
+           .SortInitialDirection(GridSortDirection.Descending).Encoded(false).
+            Sanitized(false)
+           .RenderValueAs(o => String.Format("<span  gridkey-id='{0}' grid-data-value='{2}'  {1}  name='spanImageState'></span>",
+                                             o.Id, (o.ImageState ? Settings.OkStyle : Settings.CancelStyle), o.ImageState));
+
+
+    columns.Add(o => o.MainPage)
+                .Titled("MainPage")
+                .Sortable(true)
+                .SortInitialDirection(GridSortDirection.Descending).Encoded(false).
+                 Sanitized(false)
+                .RenderValueAs(o => String.Format("<span  gridkey-id='{0}'  grid-data-value='{2}' {1} name='spanMainPage' ></span>",
+                                                  o.Id, (o.MainPage ? Settings.OkStyle : Settings.CancelStyle), o.MainPage));
+
+
+
+
+    columns.Add(o => o.CreatedDate)
+       .Titled("Date")
+       .Sortable(true)
+       .Css("gridDateClass")
+       .RenderValueAs(o => o.CreatedDate != null ? String.Format("{0}", o.CreatedDate.Value.ToShortDateString()) : null)
+       .SortInitialDirection(GridSortDirection.Descending);
+
+
+
+    columns.Add()
+           .Titled("Images")
+           .Encoded(false)
+           .Sanitized(false)
+
+           .SetWidth(30)
+           .RenderValueAs(d => Html.Partial("pGridImageMainPage", d));
+
+
+}).SetRowCssClasses(item => item.Id % 2 == 0 ? "warning" : string.Empty).WithPaging(pageSizeNumber).Sortable().Filterable().WithMultipleFilters().Selectable(false)
+
+</div>
+
+
