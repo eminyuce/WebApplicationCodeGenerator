@@ -1483,6 +1483,7 @@ namespace WebApplicationDAO
         }
         private void generateSPModel()
         {
+            #region Execute SP to get tables so that we can generate code
             string StoredProc_Exec = TextBox_StoredProc_Exec.Text;
 
             if (String.IsNullOrEmpty(StoredProc_Exec))
@@ -1498,15 +1499,31 @@ namespace WebApplicationDAO
 
                 StoredProc_Exec = StoredProc_Exec.Replace("]", "").Replace("[", "").Trim();
                 string[] m = StoredProc_Exec.Split("-".ToCharArray());
-                String tableNamesTxt = m.LastOrDefault();
 
-                if (!String.IsNullOrEmpty(tableNamesTxt))
-                {
-                    tableNames = Regex.Split(tableNamesTxt, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
-                }
                 sqlCommand = m.FirstOrDefault();
 
                 ds = GetDataSet(sqlCommand, connectionString);
+
+                String tableNamesTxt = m.LastOrDefault();
+
+                #region Entity names are coming from user input
+                // If no entity names are defined, we will generate table names
+                if (m.Length > 1)
+                {
+                    if (!String.IsNullOrEmpty(tableNamesTxt))
+                    {
+                        tableNames = Regex.Split(tableNamesTxt, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < ds.Tables.Count; i++)
+                    {
+                        tableNames.Add("Tablo" + i);
+                    }
+                }
+                #endregion
+
             }
             catch (Exception ex)
             {
@@ -1519,10 +1536,11 @@ namespace WebApplicationDAO
             {
                 return;
             }
-
-
+            #endregion
+            #region Generating ENTITY FROM datable coming from SP
             try
             {
+
                 var built2 = new StringBuilder();
                 for (int i = 0; i < ds.Tables.Count; i++)
                 {
@@ -1539,7 +1557,10 @@ namespace WebApplicationDAO
                             if (firstRow != null)
                             {
 
-                                dataType = firstRow[column].GetType().Name.ToLower().Replace("32", "").Replace("boolean", "bool").Replace("datetime", "DateTime");
+                                dataType = firstRow[column].GetType().Name.ToLower()
+                                    .Replace("32", "")
+                                    .Replace("boolean", "bool")
+                                    .Replace("datetime", "DateTime");
                                 if (firstRow[column].GetType().Name.Equals("DBNull"))
                                 {
                                     dataType = "string";
@@ -1558,13 +1579,31 @@ namespace WebApplicationDAO
                     built2.AppendLine(built.ToString());
 
                 }
-                TextBox_StoredProc_Exec_Model.Text = built2.ToString();
+                if (ds.Tables.Count == 1)
+                {
+                    TextBox_StoredProc_Exec_Model.Text = built2.ToString();
+                }
+                else
+                {
+                    built2.AppendLine("");
+                    built2.AppendLine("public class NwmResultItem {");
+                    for (int i = 0; i < tableNames.Count; i++)
+                    {
+                        built2.AppendLine(String.Format("public List<{1}> {0} ", tableNames[i], tableNames[i]) + "{ get; set;}");
+                    }
+                    built2.AppendLine("}");
+                    TextBox_StoredProc_Exec_Model.Text = built2.ToString();
+                }
+             
             }
             catch (Exception ex)
             {
                 TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
 
             }
+            #endregion
+
+            #region  Generating Table to Entity method code
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
             try
             {
@@ -1631,16 +1670,31 @@ namespace WebApplicationDAO
                     built2.AppendLine(method.ToString());
 
                 }
+
                 TextBox_StoredProc_Exec_Model_DataReader.Text = built2.ToString();
+
+            
+
+
+
             }
             catch (Exception ex)
             {
                 TextBox_StoredProc_Exec_Model_DataReader.Text = ex.StackTrace;
 
             }
+            #endregion
+            #region Generationg  calling SP method, main functionality
 
             try
             {
+                String modelName2 = "";
+                string returnTypeText = "";
+                if (ds.Tables.Count > 1)
+                {
+                    returnTypeText = "dbSpResult";
+                }
+
                 var method = new StringBuilder();
                 method.AppendLine("//" + sqlCommand);
                 var queryParts = Regex.Split(sqlCommand, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
@@ -1652,8 +1706,9 @@ namespace WebApplicationDAO
 
 
                 String modelName = String.Format("{0}", tableNames.Any() ? tableNames.LastOrDefault() : "Table" + (ds.Tables.Count + 1));
+                String returnOfMethodName = tableNames.Any() && tableNames.Count > 1 ? "NwmResultItem" : " List<" + modelName + ">";
                 String selectedTable = GetRealEntityName();
-                method.AppendLine(" public " + staticText + " List<" + modelName + "> Get" + modelName + "()");
+                method.AppendLine(" public " + staticText + " " + returnOfMethodName + " Get" + returnOfMethodName + "()");
                 method.AppendLine(" {");
                 String commandText = sp;
                 method.AppendLine(" string connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringKey].ConnectionString;");
@@ -1681,11 +1736,15 @@ namespace WebApplicationDAO
                 {
                     method.AppendLine(String.Format("[return_type]"));
                 }
+                else
+                {
+                    method.AppendLine(String.Format("var dbSpResult=new NwmResultItem();"));
+                }
 
                 method.AppendLine(" DataSet dataSet = DatabaseUtility.ExecuteDataSet(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
                 method.AppendLine(" if (dataSet.Tables.Count > 0)");
                 method.AppendLine(" {");
-                String modelName2 = "";
+
                 for (int i = 0; i < ds.Tables.Count; i++)
                 {
                     try
@@ -1706,6 +1765,11 @@ namespace WebApplicationDAO
                         method.AppendLine(String.Format(" var e = Get{0}FromDataRow(dr);", modelName2));
                         method.AppendLine(String.Format(" list{0}.Add(e);", i));
                         method.AppendLine(" }");
+                        if (ds.Tables.Count > 1)
+                        {
+                            method.AppendLine(" dbSpResult." + modelName2 + "=list" + i + ";");
+                        }
+
                         method.AppendLine(" }");
                         method.AppendLine(" ");
                         method.AppendLine(" ");
@@ -1717,10 +1781,19 @@ namespace WebApplicationDAO
                     }
 
                 }
+                returnTypeText = String.Format("var list{0}=new List<{1}>();", 0, modelName2);
 
-                method.Replace("[return_type]", String.Format("var list{0}=new List<{1}>();", 0, modelName2));
+                method.Replace("[return_type]", returnTypeText);
                 method.AppendLine(" }");
-                method.AppendLine(" return list0;");
+                if (ds.Tables.Count > 1)
+                {
+                    method.AppendLine(" return dbSpResult;");
+                }
+                else
+                {
+                    method.AppendLine(" return list0;");
+                }
+
 
 
                 method.AppendLine(" }");
@@ -1732,6 +1805,7 @@ namespace WebApplicationDAO
             {
                 TextBox_StoredProc_Exec.Text = ex.StackTrace;
             }
+            #endregion
 
         }
 
