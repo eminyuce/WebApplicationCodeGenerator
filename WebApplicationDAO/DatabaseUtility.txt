@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace PlaceHoldersEngine.Domain.DB
+namespace Nwm.Domain.DB
 {
 
     public class DatabaseUtility

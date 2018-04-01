@@ -1490,7 +1490,7 @@ namespace WebApplicationDAO
             {
                 return;
             }
-
+            string returnResultClass = "NwmResultItem";
             DataSet ds = null;
             String sqlCommand = "";
             List<string> tableNames = new List<string>();
@@ -1514,6 +1514,42 @@ namespace WebApplicationDAO
                     {
                         tableNames = Regex.Split(tableNamesTxt, @"\s+").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
                     }
+
+                    // we have more than one tables coming from SP
+                    if(ds.Tables.Count > 1)
+                    {
+                        // The last table names is the result of that method.
+                        // Table names should be more than number of returned table
+                        // 
+                        if (ds.Tables.Count + 1 == tableNames.Count)
+                        {
+                            returnResultClass = tableNames.LastOrDefault();
+                        }
+                        else if (ds.Tables.Count == tableNames.Count)
+                        {
+
+                        }
+                        else if (ds.Tables.Count > tableNames.Count)
+                        {
+                            int diff = ds.Tables.Count - tableNames.Count;
+                            for (int i = 0; i < diff; i++)
+                            {
+                                tableNames.Add("Tablo" + i);
+                            }
+                        }
+                        else if (ds.Tables.Count < tableNames.Count)
+                        {
+                            // number to remove is the difference between the current length
+                            // and the maximum length you want to allow.
+                            var count = tableNames.Count - ds.Tables.Count;
+                            if (count > 0)
+                            {
+                                // remove that number of items from the start of the list
+                                tableNames.RemoveRange(0, count);
+                            }
+                        }
+                   }
+
                 }
                 else
                 {
@@ -1521,6 +1557,7 @@ namespace WebApplicationDAO
                     {
                         tableNames.Add("Tablo" + i);
                     }
+
                 }
                 #endregion
 
@@ -1586,7 +1623,7 @@ namespace WebApplicationDAO
                 else
                 {
                     built2.AppendLine("");
-                    built2.AppendLine("public class NwmResultItem {");
+                    built2.AppendLine(String.Format("public class {0} ",returnResultClass)+"{");
                     for (int i = 0; i < tableNames.Count; i++)
                     {
                         built2.AppendLine(String.Format("public List<{1}> {0} ", tableNames[i], tableNames[i]) + "{ get; set;}");
@@ -1706,7 +1743,7 @@ namespace WebApplicationDAO
 
 
                 String modelName = String.Format("{0}", tableNames.Any() ? tableNames.LastOrDefault() : "Table" + (ds.Tables.Count + 1));
-                String returnOfMethodName = tableNames.Any() && tableNames.Count > 1 ? "NwmResultItem" : " List<" + modelName + ">";
+                String returnOfMethodName = tableNames.Any() && tableNames.Count > 1 ? returnResultClass : " List<" + modelName + ">";
                 String selectedTable = GetRealEntityName();
                 method.AppendLine(" public " + staticText + " " + returnOfMethodName + " Get" + returnOfMethodName + "()");
                 method.AppendLine(" {");
@@ -1738,7 +1775,7 @@ namespace WebApplicationDAO
                 }
                 else
                 {
-                    method.AppendLine(String.Format("var dbSpResult=new NwmResultItem();"));
+                    method.AppendLine(String.Format("var dbSpResult=new {0}();",returnResultClass));
                 }
 
                 method.AppendLine(" DataSet dataSet = DatabaseUtility.ExecuteDataSet(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
