@@ -1111,7 +1111,8 @@
                                     <td>
                                         <h3>Creating SP code</h3> 
                                         <div>
-                                         se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1 Table2
+                                         se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1EntityName Table2EntityName ResultClassName
+                                           NOTE: SP is returning two tables and the last one is to collect all table enitities in the result class 
                                         </div>
                                           <div>
                                         <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
