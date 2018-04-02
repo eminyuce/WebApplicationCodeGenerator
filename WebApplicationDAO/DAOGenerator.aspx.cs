@@ -1630,6 +1630,8 @@ namespace WebApplicationDAO
                     built2.AppendLine(String.Format("public class {0} ",returnResultClass)+"{");
                     for (int i = 0; i < tableNames.Count; i++)
                     {
+                        if (tableNames[i].Equals(returnResultClass, StringComparison.InvariantCultureIgnoreCase))
+                            continue;
                         built2.AppendLine(String.Format("public List<{1}> {0}List ", tableNames[i], tableNames[i]) + "{ get; set;}");
                     }
                     built2.AppendLine("}");
@@ -1763,14 +1765,14 @@ namespace WebApplicationDAO
                             var paraterValue = parameterParts.LastOrDefault();
                             var paramterName = parameterParts.FirstOrDefault().Replace("@", "");
                             var parameterName2 = paramterName.ToLower();
-                            if (paraterValue.Contains("'"))
+                            if (paramterName.ToLower().Contains("date"))
+                            {
+                                methodParameterBuilt.Append("DateTime ? " + parameterName2 + " =null,");
+                            }
+                            else if (paraterValue.Contains("'"))
                             {
                                 paraterValue= paraterValue.Replace("'","\"");
                                 methodParameterBuilt.Append("string " + parameterName2 + " = " + paraterValue+",");
-                            }
-                            else if (paramterName.ToLower().Contains("date"))
-                            {
-                                methodParameterBuilt.Append("DateTime " + parameterName2 + " = " + paraterValue + ",");
                             }
                             else  
                             {
@@ -1808,14 +1810,15 @@ namespace WebApplicationDAO
                         var paramterName = parameterParts.FirstOrDefault().Replace("@", "");
                         var parameterName2 = paramterName.ToLower();
                         string sqlDbType = "SqlDbType.Int";
-                        if (paraterValue.Contains("'"))
+                        if (paramterName.ToLower().Contains("date"))
+                        {
+                            method.AppendLine("if("+ parameterName2 + ".HasValue)");
+                            sqlDbType = "SqlDbType.DateTime";
+                        }
+                        else if (paraterValue.Contains("'"))
                         {
                             sqlDbType = "SqlDbType.NVarChar";
                             parameterName2 = parameterName2 + ".ToStr()";
-                        }
-                        else if (paramterName.ToLower().Contains("date"))
-                        {
-                            sqlDbType = "SqlDbType.DateTime";
                         }
                         else
                         {
