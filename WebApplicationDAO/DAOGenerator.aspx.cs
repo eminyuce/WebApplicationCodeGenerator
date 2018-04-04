@@ -1466,7 +1466,17 @@ namespace WebApplicationDAO
                     foreach (var item in queryParts2)
                     {
                         var parameterParts = Regex.Split(item, @"=").Select(r => r.Trim()).Where(s => !String.IsNullOrEmpty(s)).ToList();
-                        cmd.Parameters.Add(new SqlParameter(parameterParts.FirstOrDefault(), parameterParts.LastOrDefault().Replace("'", "")));
+                        var paraterValue = parameterParts.LastOrDefault().Replace("'", "");
+                        var paramterName = parameterParts.FirstOrDefault();
+                        if (paraterValue.ToLower().Equals("null", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            cmd.Parameters.Add(new SqlParameter(paramterName, DBNull.Value));
+                        }
+                        else
+                        {
+                            cmd.Parameters.Add(new SqlParameter(paramterName, paraterValue));
+                        }
+            
                     }
                 }
 
