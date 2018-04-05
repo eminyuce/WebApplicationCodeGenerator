@@ -2297,7 +2297,7 @@ namespace WebApplicationDAO
         {
             var item = ki;
             String result = "";
-            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1)
+            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
             {
                 result = "String";
             }
@@ -2331,7 +2331,7 @@ namespace WebApplicationDAO
 
             String result = "SqlDbType.{0}";
             var item = ki;
-            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1)
+            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
             {
                 result = String.Format(result, "NVarChar");
             }
@@ -2447,7 +2447,12 @@ namespace WebApplicationDAO
             foreach (Kontrol_Icerik item in kontrolList)
             {
                 var sqlParameter = GetUrlString(item.columnName);
-                if (item.dataType.IndexOf("varchar") > -1)
+                if (item.dataType.IndexOf("xml") > -1)
+                {
+                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
+                                      item.columnName + ".ToStr(),SqlDbType.Xml));");
+                }
+                else if (item.dataType.IndexOf("varchar") > -1)
                 {
                     method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
                                       item.columnName + ".ToStr(),SqlDbType.NVarChar));");
@@ -5099,7 +5104,7 @@ namespace WebApplicationDAO
 
 
 
-                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1)
+                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
                 {
                     if (CheckBox_ModelAttributesVisible.Checked)
                     {
@@ -5151,7 +5156,7 @@ namespace WebApplicationDAO
             StringBuilder method555 = new StringBuilder();
             foreach (Kontrol_Icerik item in linkedList)
             {
-                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1)
+                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
                 {
                     method555.Append("string " + FirstCharacterToLower(item.columnName) + ",");
                 }
@@ -5380,7 +5385,7 @@ namespace WebApplicationDAO
             foreach (Kontrol_Icerik item in kontrolList)
             {
 
-                if (item.dataType.IndexOf("varchar") > -1)
+                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("xml") > -1)
                 {
                     // method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? \"\" : read[\"" + item.columnName + "\"].ToString();");
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToStr();");
