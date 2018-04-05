@@ -1476,7 +1476,7 @@ namespace WebApplicationDAO
                         {
                             cmd.Parameters.Add(new SqlParameter(paramterName, paraterValue));
                         }
-            
+
                     }
                 }
 
@@ -1505,12 +1505,17 @@ namespace WebApplicationDAO
             }
             StoredProc_Exec = StoredProc_Exec.Replace("\r\n", " ").Trim();
             string returnResultClass = "NwmResultItem";
+            string storedProcName = "";
             DataSet ds = null;
             String sqlCommand = "";
             List<string> tableNames = new List<string>();
             try
             {
-
+                storedProcName = Regex.Split(StoredProc_Exec, @"\s+").Select(r => r.Trim()).FirstOrDefault();
+                String [] storedProcNameParts = Regex.Split(storedProcName, @"_").Select(r => r.Trim()).ToArray();
+                storedProcName = storedProcNameParts != null && storedProcNameParts.Any() ? storedProcNameParts[1] : storedProcName;
+                storedProcName = ToTitleCase(storedProcName);
+                //  storedProcName = StoredProc_Exec.Split("-".ToCharArray());
                 StoredProc_Exec = StoredProc_Exec.Replace("]", "").Replace("[", "").Trim();
                 string[] m = StoredProc_Exec.Split("-".ToCharArray());
 
@@ -1530,7 +1535,7 @@ namespace WebApplicationDAO
                     }
 
                     // we have more than one tables coming from SP
-                    if(ds.Tables.Count > 1)
+                    if (ds.Tables.Count > 1)
                     {
                         // The last table names is the result of that method.
                         // Table names should be more than number of returned table
@@ -1562,7 +1567,7 @@ namespace WebApplicationDAO
                                 tableNames.RemoveRange(0, count);
                             }
                         }
-                   }
+                    }
 
                 }
                 else
@@ -1637,7 +1642,8 @@ namespace WebApplicationDAO
                 else
                 {
                     built2.AppendLine("");
-                    built2.AppendLine(String.Format("public class {0} ",returnResultClass)+"{");
+                    //Generating the return result class and its related list classess 
+                    built2.AppendLine(String.Format("public class {0} ", returnResultClass) + "{");
                     for (int i = 0; i < tableNames.Count; i++)
                     {
                         if (tableNames[i].Equals(returnResultClass, StringComparison.InvariantCultureIgnoreCase))
@@ -1647,7 +1653,7 @@ namespace WebApplicationDAO
                     built2.AppendLine("}");
                     TextBox_StoredProc_Exec_Model.Text = built2.ToString();
                 }
-             
+
             }
             catch (Exception ex)
             {
@@ -1661,7 +1667,7 @@ namespace WebApplicationDAO
             try
             {
                 var built2 = new StringBuilder();
-
+                // generating entities from data row classes 
                 for (int i = 0; i < ds.Tables.Count; i++)
                 {
                     DataTable table = ds.Tables[i];
@@ -1726,7 +1732,7 @@ namespace WebApplicationDAO
 
                 TextBox_StoredProc_Exec_Model_DataReader.Text = built2.ToString();
 
-            
+
 
 
 
@@ -1781,10 +1787,10 @@ namespace WebApplicationDAO
                             }
                             else if (paraterValue.Contains("'"))
                             {
-                                paraterValue= paraterValue.Replace("'","\"");
-                                methodParameterBuilt.Append("string " + parameterName2 + " = " + paraterValue+",");
+                                paraterValue = paraterValue.Replace("'", "\"");
+                                methodParameterBuilt.Append("string " + parameterName2 + " = " + paraterValue + ",");
                             }
-                            else  
+                            else
                             {
                                 methodParameterBuilt.Append("int " + parameterName2 + " = " + paraterValue + ",");
                             }
@@ -1798,11 +1804,11 @@ namespace WebApplicationDAO
                         }
 
                     }
-                    methodParameterBuiltText =  methodParameterBuilt.ToString().Trim().TrimEnd(",".ToCharArray());
+                    methodParameterBuiltText = methodParameterBuilt.ToString().Trim().TrimEnd(",".ToCharArray());
                     methodParameterBuiltText = methodParameterBuiltText + ")";
                 }
-               
-                method.AppendLine(" public " + staticText + " " + returnOfMethodName + " Get" + returnOfMethodName + methodParameterBuiltText.ToString());
+
+                method.AppendLine(" public " + staticText + " " + returnOfMethodName + " Get" + storedProcName + methodParameterBuiltText.ToString());
                 method.AppendLine(" {");
                 String commandText = sp;
                 method.AppendLine(" string connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringKey].ConnectionString;");
@@ -1822,7 +1828,7 @@ namespace WebApplicationDAO
                         string sqlDbType = "SqlDbType.Int";
                         if (paramterName.ToLower().Contains("date"))
                         {
-                            method.AppendLine("if("+ parameterName2 + ".HasValue)");
+                            method.AppendLine("if(" + parameterName2 + ".HasValue)");
                             sqlDbType = "SqlDbType.DateTime";
                         }
                         else if (paraterValue.Contains("'"))
@@ -1832,10 +1838,10 @@ namespace WebApplicationDAO
                         }
                         else
                         {
-                        //    parameterName2 = parameterName2;
+                            //    parameterName2 = parameterName2;
                         }
-                        
-                        method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + paramterName + "\", " + parameterName2 + ","+ sqlDbType + "));");
+
+                        method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + paramterName + "\", " + parameterName2 + "," + sqlDbType + "));");
 
                     }
                     catch (Exception)
@@ -1851,7 +1857,7 @@ namespace WebApplicationDAO
                 }
                 else
                 {
-                    method.AppendLine(String.Format("var dbSpResult=new {0}();",returnResultClass));
+                    method.AppendLine(String.Format("var dbSpResult=new {0}();", returnResultClass));
                 }
 
                 method.AppendLine(" DataSet dataSet = DatabaseUtility.ExecuteDataSet(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
