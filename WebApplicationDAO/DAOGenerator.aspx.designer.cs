@@ -472,40 +472,40 @@ namespace WebApplicationDAO {
         protected global::System.Web.UI.WebControls.TextBox TextBox_IReader;
         
         /// <summary>
-        /// WizardStep21 control.
+        /// WizardStep239 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.WizardStep WizardStep21;
+        protected global::System.Web.UI.WebControls.WizardStep WizardStep239;
         
         /// <summary>
-        /// TextBox_Database_Utility_SaveOrUpdate control.
+        /// TextBox_AspMvcAction control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_Database_Utility_SaveOrUpdate;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_AspMvcAction;
         
         /// <summary>
-        /// TextBox_Database_Utility_DataSet control.
+        /// TextBox_AspMvcList2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_Database_Utility_DataSet;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_AspMvcList2;
         
         /// <summary>
-        /// TextBox_Database_Utility_List control.
+        /// TextBox_AspMvcAction2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_Database_Utility_List;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_AspMvcAction2;
         
         /// <summary>
         /// WizardStep22 control.
@@ -542,6 +542,42 @@ namespace WebApplicationDAO {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TextBox_AspMvcDetails;
+        
+        /// <summary>
+        /// WizardStep26 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.WizardStep WizardStep26;
+        
+        /// <summary>
+        /// TextBox_StoredProc_Exec control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox_StoredProc_Exec;
+        
+        /// <summary>
+        /// TextBox_StoredProc_Exec_Model control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox_StoredProc_Exec_Model;
+        
+        /// <summary>
+        /// TextBox_StoredProc_Exec_Model_DataReader control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox_StoredProc_Exec_Model_DataReader;
         
         /// <summary>
         /// WizardStep19 control.
@@ -724,42 +760,6 @@ namespace WebApplicationDAO {
         protected global::System.Web.UI.WebControls.TextBox TextBox_Sql_GroupBy3;
         
         /// <summary>
-        /// WizardStep239 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.WizardStep WizardStep239;
-        
-        /// <summary>
-        /// TextBox_AspMvcAction control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_AspMvcAction;
-        
-        /// <summary>
-        /// TextBox_AspMvcList2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_AspMvcList2;
-        
-        /// <summary>
-        /// TextBox_AspMvcAction2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_AspMvcAction2;
-        
-        /// <summary>
         /// WizardStep23 control.
         /// </summary>
         /// <remarks>
@@ -866,41 +866,5 @@ namespace WebApplicationDAO {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TextBox_ClassPatternOutput6;
-        
-        /// <summary>
-        /// WizardStep26 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.WizardStep WizardStep26;
-        
-        /// <summary>
-        /// TextBox_StoredProc_Exec control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_StoredProc_Exec;
-        
-        /// <summary>
-        /// TextBox_StoredProc_Exec_Model control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_StoredProc_Exec_Model;
-        
-        /// <summary>
-        /// TextBox_StoredProc_Exec_Model_DataReader control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_StoredProc_Exec_Model_DataReader;
     }
 }

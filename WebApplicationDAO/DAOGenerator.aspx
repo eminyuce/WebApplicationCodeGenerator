@@ -749,10 +749,10 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                  
-        
-                  
-                        <asp:WizardStep ID="WizardStep7" runat="server" Title="Sql Code and Random data">
+
+
+
+                        <asp:WizardStep ID="WizardStep7" runat="server" Title="Sql Save Or Update">
                             <table>
                                 <tr>
                                     <td>
@@ -778,9 +778,9 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                       
-                      
-                        <asp:WizardStep ID="WizardStep16" runat="server" Title="Item ve Ireader">
+
+
+                        <asp:WizardStep ID="WizardStep16" runat="server" Title="CRUD Operations">
                             <table>
                                 <tr>
                                     <td>
@@ -807,36 +807,34 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                     
-                        <asp:WizardStep ID="WizardStep21" runat="server" Title="Database Utility">
+
+                        
+                        <asp:WizardStep ID="WizardStep239" runat="server" Title="Asp.Net MVC Actions">
                             <table>
                                 <tr>
                                     <td>
-                                        <h3>SaveOrUpdate</h3>
-                                        <asp:TextBox ID="TextBox_Database_Utility_SaveOrUpdate" TextMode="MultiLine" CssClass="resultTextBox"
+                                        <h3>Asp MVC Actions</h3>
+                                        <asp:TextBox ID="TextBox_AspMvcAction" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
-                                        <br />
-                                        <input type="button" class="clipboardButton button" id="clipboardButtonDatabase_SaveOrUpdate" name="clipboardButtonDatabase_UtilityDataSet" value="Select" />
-
                                     </td>
                                     <td>
-                                        <h3>DataSet</h3>
-                                        <asp:TextBox ID="TextBox_Database_Utility_DataSet" TextMode="MultiLine" CssClass="resultTextBox"
+                                        <h3>Test</h3>
+                                        <asp:TextBox ID="TextBox_AspMvcList2" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
-                                        <br />
-                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="clipboardButtonDatabase_UtilityDataSet" value="Select" />
                                     </td>
                                     <td>
-                                        <h3>List
+                                        <h3>Test 2s
+                                            
+                                             
                                         </h3>
-                                        <asp:TextBox ID="TextBox_Database_Utility_List" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-                                        <br />
-                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="clipboardButtonDatabase_UtilityList" value="Select" />
+                                        <asp:TextBox ID="TextBox_AspMvcAction2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+
+
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep22" runat="server" Title="Asp.net MVC">
+                        <asp:WizardStep ID="WizardStep22" runat="server" Title="Asp.net MVC Views">
                             <table>
                                 <tr>
                                     <td>
@@ -857,6 +855,39 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
+                        <asp:WizardStep ID="WizardStep26" runat="server" Title="Creating Stored Proc Code">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h3>Creating SP code</h3>
+                                        <div>
+                                            se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0      
+                                            <br />
+                                            - Table1EntityName Table2EntityName ResultClassName
+                                            <br />
+                                            NOTE: SP is returning two tables and the last one is to collect      
+                                            <br />
+                                            all table enitities in the result class 
+                                        </div>
+                                        <div>
+                                            <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
+                                                runat="server"></asp:TextBox>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h3>Controller Class   </h3>
+                                        <asp:TextBox ID="TextBox_StoredProc_Exec_Model" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+
+                                    </td>
+                                    <td>
+                                        <h3>Index Page</h3>
+                                        <asp:TextBox ID="TextBox_StoredProc_Exec_Model_DataReader" TextMode="MultiLine" CssClass="resultTextBox"
+                                            runat="server"></asp:TextBox>
+                                    </td>
+                                </tr>
+                            </table>
+                        </asp:WizardStep>
+
                         <asp:WizardStep ID="WizardStep19" runat="server" Title="Column Utilities">
                             <table>
                                 <tr>
@@ -1013,31 +1044,6 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep239" runat="server" Title="Asp.Net MVC Actions">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Asp MVC Actions</h3>
-                                        <asp:TextBox ID="TextBox_AspMvcAction" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Test</h3>
-                                        <asp:TextBox ID="TextBox_AspMvcList2" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Test 2s
-                                            
-                                             
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_AspMvcAction2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-
-
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
                         <asp:WizardStep ID="WizardStep23" runat="server" Title="String patterns">
                             <table>
                                 <tr>
@@ -1105,34 +1111,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep26" runat="server" Title="Stored PROCEDURE Model">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Creating SP code</h3> 
-                                        <div>
-                                         se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0       <br /> - Table1EntityName Table2EntityName ResultClassName
-                                            <br />
-                                           NOTE: SP is returning two tables and the last one is to collect       <br /> all table enitities in the result class 
-                                        </div>
-                                          <div>
-                                        <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                                   </div>
-                                    </td>
-                                    <td>
-                                        <h3>Controller Class   </h3>
-                                        <asp:TextBox ID="TextBox_StoredProc_Exec_Model" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-
-                                    </td>
-                                    <td>
-                                        <h3>Index Page</h3>
-                                        <asp:TextBox ID="TextBox_StoredProc_Exec_Model_DataReader" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
+                        
                     </WizardSteps>
                     <StepStyle BorderWidth="0px" ForeColor="Gray" />
                     <SideBarButtonStyle BorderWidth="0px" Font-Names="Verdana" ForeColor="White" />

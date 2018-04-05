@@ -1380,9 +1380,9 @@ namespace WebApplicationDAO
                 built222.AppendLine(GenereateDataSetToList(linkedList));
                 built222.AppendLine(generateSqlIReader(linkedList));
 
-                TextBox_Database_Utility_DataSet.Text = "";
+                //TextBox_Database_Utility_DataSet.Text = "";
                 TextBox_IReader.Text = built222.ToString();
-                TextBox_Database_Utility_List.Text = "";
+                //TextBox_Database_Utility_List.Text = "";
                 //Label_Format.Text = "string format = \"MM/dd/yyyy; CultureInfo provider = CultureInfo.InvariantCulture;";
 
 
@@ -1404,24 +1404,13 @@ namespace WebApplicationDAO
 
                 #endregion
 
-                #region ListView...........................................
-
-                //TextBox_ListView_Label_Evals.Text = ListView_Labels_Evals(linkedList, selectedTable);
-                //TextBox_ListView_Evals.Text = ListView_Evals(linkedList, selectedTable);
-                //TextBox_ListView_Tables_Evals.Text = ListView_Tables_Evals(linkedList, selectedTable);
-                //TextBox_ListView_Kutu.Text = ListView_Kutulama_Evals(linkedList, selectedTable);
-                //TextBox_ListView_Defaut.Text = ListView_Evals_Default(linkedList, selectedTable);
-                //TextBox_ListView_Liste.Text = ListView_Evals_List(linkedList, selectedTable);
-                #endregion
-
-
-
+             
 
                 appendGridViewStateToAFile(gridState2);
 
                 generateASpNetMvcList(linkedList);
                 generateASpNetMvcList2(linkedList);
-                generateASpNetMvcList3(linkedList);
+              
                 generateASpNetMvcEditOrCreate(linkedList);
                 generateASpNetMvcDetails(linkedList);
 
@@ -1987,35 +1976,7 @@ namespace WebApplicationDAO
 
             TextBox_AspMvcAction.Text = built.ToString();
         }
-        private void generateASpNetMvcList3(List<Kontrol_Icerik> kontrolList)
-        {
-            try
-            {
-
-                String primaryKey = GetPrimaryKeys(kontrolList);
-                String modelName = getModelName();
-                var method = new StringBuilder();
-                method.AppendLine(String.Format("@model List<{0}>", modelName));
-                method.AppendLine("  @{");
-                method.AppendLine("  ViewBag.Title=\"Title\";");
-                method.AppendLine(" }");
-                method.AppendLine("       <div>");
-                method.AppendLine(String.Format(" @foreach ({0} item in Model)", modelName));
-                method.AppendLine("  {");
-                method.AppendLine(String.Format("    @Html.DisplayFor(modelItem => item,\"{0}\")  ", modelName));
-                method.AppendLine(" }");
-                method.AppendLine(" </div>");
-
-
-                TextBox_Database_Utility_List.Text = method.ToString();
-
-            }
-            catch (Exception ex)
-            {
-                TextBox_Database_Utility_List.Text = ex.Message;
-
-            }
-        }
+        
         private void generateASpNetMvcList2(List<Kontrol_Icerik> kontrolList)
         {
             try
@@ -4683,6 +4644,10 @@ namespace WebApplicationDAO
                 method.AppendLine(" </tr>");
                 method.AppendLine(" }");
                 method.AppendLine(" </table>");
+                method.AppendLine(" ");
+                method.AppendLine(" ");
+                method.AppendLine(" ");
+                method.AppendLine(" ");
 
 
                 TextBox_AspMvcList.Text = method.ToString();
