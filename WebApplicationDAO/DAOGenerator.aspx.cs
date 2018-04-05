@@ -233,7 +233,6 @@ namespace WebApplicationDAO
                 foreach (String tableName in list1)
                 {
                     DropDownList_Tables.Items.Add(tableName);
-                    ListBox_Tables.Items.Add(tableName);
                 }
                 con.Close();
                 Label_ERROR.Text = "Select a Table from dropdown. Hahahaha, do not forget to choose the table. ";
@@ -1404,20 +1403,16 @@ namespace WebApplicationDAO
 
                 #endregion
 
-             
+
 
                 appendGridViewStateToAFile(gridState2);
 
                 generateASpNetMvcList(linkedList);
                 generateASpNetMvcList2(linkedList);
-              
+
                 generateASpNetMvcEditOrCreate(linkedList);
                 generateASpNetMvcDetails(linkedList);
 
-                generateSqlQueriesDelete(linkedList);
-                generateSqlQueriesSelect(linkedList);
-                generateSqlQueriesOtherSql(linkedList);
-                generateSqlQueriesOtherSqlGroupBy(linkedList);
 
 
                 generateAspMvcActions(linkedList);
@@ -1501,7 +1496,7 @@ namespace WebApplicationDAO
             try
             {
                 storedProcName = Regex.Split(StoredProc_Exec, @"\s+").Select(r => r.Trim()).FirstOrDefault();
-                String [] storedProcNameParts = Regex.Split(storedProcName, @"_").Select(r => r.Trim()).ToArray();
+                String[] storedProcNameParts = Regex.Split(storedProcName, @"_").Select(r => r.Trim()).ToArray();
                 storedProcName = storedProcNameParts != null && storedProcNameParts.Any() ? storedProcNameParts[1] : storedProcName;
                 storedProcName = ToTitleCase(storedProcName);
                 //  storedProcName = StoredProc_Exec.Split("-".ToCharArray());
@@ -1976,7 +1971,7 @@ namespace WebApplicationDAO
 
             TextBox_AspMvcAction.Text = built.ToString();
         }
-        
+
         private void generateASpNetMvcList2(List<Kontrol_Icerik> kontrolList)
         {
             try
@@ -2028,214 +2023,7 @@ namespace WebApplicationDAO
             }
         }
 
-        private void generateSqlQueriesOtherSqlGroupBy(List<Kontrol_Icerik> kontrolList)
-        {
-            String selectedTable = GetRealEntityName();
-            String modifiedTableName = GetEntityName();
-            String entityPrefix = GetEntityPrefixName(selectedTable);
-            entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
-            String modelName = getModelName();
-            String primaryKey = GetPrimaryKeys(kontrolList);
-            var built = new StringBuilder();
-            var tables = TableNames.OrderBy(x => x).ToList();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-
-            foreach (var item in kontrolList)
-            {
-                if (item.dataType.IndexOf("varchar", System.StringComparison.InvariantCultureIgnoreCase) > -1)
-                {
-                    built.AppendLine(
-                        String.Format(
-                            "SELECT {0}, COUNT(*) cnt FROM {1} WHERE {0} <> ''  GROUP BY {0} HAVING COUNT(*) > 1 ORDER BY {0}",
-                            item.columnName, selectedTable));
-                }
-                else
-                {
-                    built.AppendLine(String.Format("SELECT {0}, COUNT(*) cnt FROM {1} GROUP BY {0} HAVING COUNT(*) > 1 ORDER BY {0}", item.columnName, selectedTable));
-                }
-            }
-
-            TextBox_Sql_GroupBy.Text = built.ToString();
-            built = new StringBuilder();
-            foreach (var item in kontrolList)
-            {
-
-                if (item.dataType.IndexOf("varchar", System.StringComparison.InvariantCultureIgnoreCase) > -1)
-                {
-                    built.AppendLine(String.Format("SELECT * FROM {1} WHERE {0} IN (SELECT {0} FROM {1} WHERE {0} <> '' GROUP BY {0} HAVING COUNT(*) > 1)", item.columnName, selectedTable));
-
-                }
-                else
-                {
-                    built.AppendLine(String.Format("SELECT * FROM {1} WHERE {0} IN (SELECT {0} FROM {1} GROUP BY {0} HAVING COUNT(*) > 1)", item.columnName, selectedTable));
-                }
-
-            }
-            TextBox_Sql_GroupBy2.Text = built.ToString();
-        }
-
-        private void generateSqlQueriesOtherSql(List<Kontrol_Icerik> kontrolList)
-        {
-            String selectedTable = GetRealEntityName();
-            String modifiedTableName = GetEntityName();
-            String entityPrefix = GetEntityPrefixName(selectedTable);
-            entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
-            String modelName = getModelName();
-            String primaryKey = GetPrimaryKeys(kontrolList);
-            var built = new StringBuilder();
-            var tables = TableNames.OrderBy(x => x).ToList();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
-            built.AppendLine("sp_help " + selectedTable + "");
-            built.AppendLine(" ");
-            built.AppendLine("CREATE PROCEDURE Search" + modifiedTableName + "(");
-            var listWithoutPrimaryKey = kontrolList.Where(r => !r.primaryKey).ToList();
-            var list = kontrolList;
-            for (int i = 0; i < listWithoutPrimaryKey.Count(); i++)
-            {
-                var item = listWithoutPrimaryKey[i];
-                if (i == listWithoutPrimaryKey.Count - 1)
-                {
-                    built.AppendLine("@" + item.columnName + " " + item.dataType_MaxChar + " = NULL");
-                }
-                else
-                {
-                    built.AppendLine("@" + item.columnName + " " + item.dataType_MaxChar + " = NULL,");
-                }
-
-            }
-            built.AppendLine(")");
-            built.AppendLine("AS SELECT * FROM " + selectedTable + " WHERE ");
-
-            for (int i = 0; i < listWithoutPrimaryKey.Count(); i++)
-            {
-                var item = listWithoutPrimaryKey[i];
-                var isFirst = i == 0;
-                if (item.dataType.IndexOf("varchar") > -1)
-                {
-                    built.AppendLine((isFirst ? "" : "AND") + " " + item.columnName + " LIKE '%' + ISNULL(@" + item.columnName + "," + item.columnName + ")+ '%'");
-                }
-                else if (item.dataType.IndexOf("int") > -1)
-                {
-                    built.AppendLine((isFirst ? "" : "AND") + " " + item.columnName + " LIKE '%' + ISNULL(@" + item.columnName + "," + item.columnName + ")+ '%'");
-                }
-                else if (item.dataType.IndexOf("date") > -1)
-                {
-                    built.AppendLine((isFirst ? "" : "AND") + " " + " @" + item.columnName + " IS NULL OR " + item.columnName + " > ISNULL(@" + item.columnName + "," + item.columnName + ")");
-                }
-                else if (item.dataType.IndexOf("bit") > -1)
-                {
-
-                }
-                else if (item.dataType.IndexOf("float") > -1)
-                {
-                    built.AppendLine((isFirst ? "" : "AND") + " " + item.columnName + " LIKE '%' + ISNULL(@" + item.columnName + "," + item.columnName + ")+ '%'");
-                }
-            }
-            built.AppendLine("RETURN");
-
-
-
-
-            built.AppendLine("CREATE PROCEDURE " + modifiedTableName + "Insert(");
-
-
-            list = list.Where(r => r.primaryKey == false).ToList<Kontrol_Icerik>();
-            foreach (var item in list)
-            {
-                built.AppendLine("@" + item.columnName + " " + item.dataType_MaxChar + ",");
-            }
-            built = built.Remove(built.Length - 3, 3);
-            built.Append(")");
-            built.AppendLine("");
-            built.AppendLine("AS INSERT INTO " + selectedTable + "(");
-            foreach (var item in list)
-            {
-                if (!item.primaryKey)
-                    built.Append(String.Format("[{0}],", item.columnName));
-
-            }
-            built = built.Remove(built.Length - 1, 1);
-            built.AppendLine(") VALUES (");
-            foreach (var item in list)
-            {
-                if (!item.primaryKey)
-                    built.Append("@" + item.columnName + ",");
-            }
-            built = built.Remove(built.Length - 1, 1);
-            built.AppendLine(")");
-            built.AppendLine("RETURN");
-            built.AppendLine(" ");
-
-
-
-            built.AppendLine("CREATE PROCEDURE " + modifiedTableName + "UPDATE(");
-            foreach (var item in list)
-            {
-                built.AppendLine("@" + item.columnName + " " + item.dataType_MaxChar + ",");
-            }
-            built = built.Remove(built.Length - 3, 3);
-            built.Append(")");
-            built.AppendLine("");
-            built.AppendLine("AS UPDATE " + selectedTable + " SET");
-            foreach (var item in list)
-            {
-                if (!item.primaryKey)
-                {
-                    built.AppendLine(item.columnName + " = @" + item.columnName + ",");
-                }
-            }
-            built = built.Remove(built.Length - 3, 2);
-            built.AppendLine("WHERE " + prKey.columnName + "=@" + prKey.columnName + ";");
-            built.AppendLine("RETURN");
-            built.AppendLine(" ");
-            built.AppendLine("CREATE PROCEDURE " + modifiedTableName + "Delete(");
-            built.AppendLine("@" + prKey.columnName + " " + prKey.dataType_MaxChar + "");
-            built.AppendLine(")");
-            built.AppendLine("AS DELETE FROM " + selectedTable + " WHERE " + prKey.columnName + " = @" + prKey.columnName + ";");
-            built.AppendLine("RETURN");
-            built.AppendLine(" ");
-            built.AppendLine("CREATE PROCEDURE " + modifiedTableName + "Select(");
-            built.AppendLine("@" + prKey.columnName + " " + prKey.dataType_MaxChar + "");
-            built.AppendLine(")");
-            built.AppendLine("AS SELECT * FROM " + selectedTable + " WHERE " + prKey.columnName + " =CASE WHEN @" + prKey.columnName + " > 0 THEN  @" + prKey.columnName + " ELSE [" + prKey.columnName + "] END " +
-                             " AND  " + prKey.columnName + " =CASE WHEN @" + prKey.columnName + " > 0 THEN  @" + prKey.columnName + " ELSE [" + prKey.columnName + "] END");
-            built.AppendLine("RETURN");
-            built.AppendLine(" ");
-
-
-            TextBox_Sql_Search2.Text = built.ToString();
-
-        }
-
-        private void generateSqlQueriesSelect(List<Kontrol_Icerik> kontrolList)
-        {
-            String modelName = getModelName();
-            String selectedTable = GetRealEntityName();
-            String primaryKey = GetPrimaryKeys(kontrolList);
-            var method = new StringBuilder();
-            var tables = TableNames.OrderBy(x => x).ToList();
-            foreach (var n in tables)
-            {
-                method.AppendLine("SELECT * FROM " + n);
-            }
-
-            TextBox_Sql_Select.Text = method.ToString();
-        }
-
-        private void generateSqlQueriesDelete(List<Kontrol_Icerik> kontrolList)
-        {
-            String modelName = getModelName();
-            String selectedTable = GetRealEntityName();
-            String primaryKey = GetPrimaryKeys(kontrolList);
-            var method = new StringBuilder();
-            var tables = TableNames.OrderBy(x => x).ToList();
-            foreach (var n in tables)
-            {
-                method.AppendLine("DELETE FROM " + n);
-            }
-
-            TextBox_Sql_Delete.Text = method.ToString();
-        }
+ 
         private string GenereateDataSetToList(List<Kontrol_Icerik> kontrolList)
         {
             StringBuilder method = new StringBuilder();
@@ -5090,64 +4878,75 @@ namespace WebApplicationDAO
 
             foreach (Kontrol_Icerik item in linkedList)
             {
-                if (item.primaryKey && CheckBox_ModelAttributesVisible.Checked)
+                try
                 {
-                    method2.AppendLine("[Key]");
-                }
-                if (CheckBox_ModelAttributesVisible.Checked)
-                {
-                    //method2.AppendLine("[Required]");
-                    method2.AppendLine(string.Format("[Display(Name =\"{0}\")]", item.columnName));
-                    method2.AppendLine(string.Format("[Column(\"{0}\")]", item.columnName));
-                    method2.AppendLine(string.Format("[Required(ErrorMessage =\"{0}\")]", item.columnName));
-                }
 
 
-
-                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
-                {
+                    if (item.primaryKey && CheckBox_ModelAttributesVisible.Checked)
+                    {
+                        method2.AppendLine("[Key]");
+                    }
                     if (CheckBox_ModelAttributesVisible.Checked)
                     {
-                        method2.AppendLine(string.Format("[StringLength({0}, ErrorMessage = \"{1} cannot be longer than {0} characters.\")]", item.dataType_MaxChar, item.columnName));
+                        //method2.AppendLine("[Required]");
+                        method2.AppendLine(string.Format("[Display(Name =\"{0}\")]", item.columnName));
+                        method2.AppendLine(string.Format("[Column(\"{0}\")]", item.columnName));
+                
+                        method2.AppendLine(string.Format("[Required(ErrorMessage =\"{0}\")]", item.columnName));
                     }
 
-                    method.AppendLine("public string " + item.columnName + " { get; set; }");
-                    method2.AppendLine("public string " + item.columnName + " { get; set; }");
-                }
-                else if (item.dataType.IndexOf("int") > -1)
-                {
-                    method.AppendLine("public int " + item.columnName + " { get; set; }");
-                    method2.AppendLine("public int " + item.columnName + " { get; set; }");
-                }
-                else if (item.dataType.IndexOf("date") > -1)
-                {
-                    if (CheckBox_ModelAttributesVisible.Checked)
+
+
+                    if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
                     {
-                        method2.AppendLine(string.Format("[DataType(DataType.Date)]"));
-                        method2.AppendLine(
-                            string.Format(
-                                " [DisplayFormat(DataFormatString = \"{0:yyyy-MM-dd}\", ApplyFormatInEditMode = true)]"));
+                        if (CheckBox_ModelAttributesVisible.Checked)
+                        {
+                            method2.AppendLine(string.Format("[DataType(DataType.Text)]"));
+                            method2.AppendLine(string.Format("[StringLength({0}, ErrorMessage = \"{1} cannot be longer than {0} characters.\")]", item.dataType_MaxChar, item.columnName));
+                        }
 
+                        method.AppendLine("public string " + item.columnName + " { get; set; }");
+                        method2.AppendLine("public string " + item.columnName + " { get; set; }");
                     }
-                    method.AppendLine("public DateTime " + item.columnName + " { get; set; }");
-                    method2.AppendLine("public DateTime " + item.columnName + " { get; set; }");
-                }
-                else if (item.dataType.IndexOf("bit") > -1)
-                {
-                    method.AppendLine("public Boolean " + item.columnName + " { get; set; }");
-                    method2.AppendLine("public Boolean " + item.columnName + " { get; set; }");
-                }
-                else if (item.dataType.IndexOf("float") > -1)
-                {
-                    method.AppendLine("public float " + item.columnName + " { get; set; }");
-                    method2.AppendLine("public float " + item.columnName + " { get; set; }");
-                }
-                else if (item.dataType.IndexOf("char") > -1)
-                {
-                    method.AppendLine("public char " + item.columnName + " { get; set; }");
-                    method2.AppendLine("public char " + item.columnName + " { get; set; }");
-                }
+                    else if (item.dataType.IndexOf("int") > -1)
+                    {
+                        method.AppendLine("public int " + item.columnName + " { get; set; }");
+                        method2.AppendLine("public int " + item.columnName + " { get; set; }");
+                    }
+                    else if (item.dataType.IndexOf("date") > -1)
+                    {
+                        if (CheckBox_ModelAttributesVisible.Checked)
+                        {
+                            method2.AppendLine(string.Format("[DataType(DataType.Date)]"));
+                            method2.AppendLine(
+                                string.Format(
+                                    " [DisplayFormat(DataFormatString = \"{{0:yyyy/MM/dd}}\", ApplyFormatInEditMode = true)]"));
 
+                        }
+                        method.AppendLine("public DateTime " + item.columnName + " { get; set; }");
+                        method2.AppendLine("public DateTime " + item.columnName + " { get; set; }");
+                    }
+                    else if (item.dataType.IndexOf("bit") > -1)
+                    {
+                        method.AppendLine("public Boolean " + item.columnName + " { get; set; }");
+                        method2.AppendLine("public Boolean " + item.columnName + " { get; set; }");
+                    }
+                    else if (item.dataType.IndexOf("float") > -1)
+                    {
+                        method.AppendLine("public float " + item.columnName + " { get; set; }");
+                        method2.AppendLine("public float " + item.columnName + " { get; set; }");
+                    }
+                    else if (item.dataType.IndexOf("char") > -1)
+                    {
+                        method.AppendLine("public char " + item.columnName + " { get; set; }");
+                        method2.AppendLine("public char " + item.columnName + " { get; set; }");
+                    }
+                }
+                catch (Exception ex)
+                {
+
+
+                }
             }
 
             method2.AppendLine("public  " + modelName + "(){");
@@ -5557,157 +5356,9 @@ namespace WebApplicationDAO
             return GetEntityName() + tableItemName;
         }
 
-        protected void Button_Kolon_Ekle_Click(object sender, EventArgs e)
-        {
-
-            createColumn();
-            LoadColumnName();
-        }
-        public void createColumn()
-        {
-            if (ListBox_Tables.SelectedItem == null)
-                return;
-            if (TextBox_dataType.Text.Equals(""))
-                return;
-            if (TextBox_ColumnName.Text.Equals(""))
-                return;
-
-
-
-            Label_ERROR.Text = "";
-            List<Kontrol_Icerik> lists = KontrollerColumns;
-            if (lists == null)
-                return;
-
-            foreach (Kontrol_Icerik item in lists)
-            {
-                if (item.columnName.Equals(TextBox_ColumnName.Text))
-                {
-                    Label_ERROR.Text = "Aynı isimde başka bir veritabanı alanı var.Eklemek istediğiniz alanın ismi özel olmalıdır.";
-                    return;
-                }
-            }
-
-
-            using (SqlConnection connect = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand();
-
-                connect.Open();
-                command.CommandType = CommandType.Text;
-                if (CheckBox_NULL.Checked)
-                {
-                    command.CommandText = @"ALTER TABLE " + ListBox_Tables.SelectedItem.Text + " ADD " + TextBox_ColumnName.Text + " " + TextBox_dataType.Text + " NOT NULL;";
-                }
-                else
-                {
-                    command.CommandText = @"ALTER TABLE " + ListBox_Tables.SelectedItem.Text + " ADD " + TextBox_ColumnName.Text + " " + TextBox_dataType.Text + " NULL;";
-                }
-                command.Connection = connect;
-
-                int affectedRowNumber = command.ExecuteNonQuery();
-
-                connect.Close();
-
-                Label_ERROR.Text = ListBox_Tables.SelectedItem.Text + " tablosuna " + TextBox_ColumnName.Text + " alanı eklendi.";
-            }
-        }
-        public void deleteColumn()
-        {
-            if (ListBox_Tables.SelectedItem == null)
-                return;
-            using (SqlConnection connect = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand();
-
-                connect.Open();
-                command.CommandType = CommandType.Text;
-                command.CommandText = @"ALTER TABLE " + ListBox_Tables.SelectedItem.Text + " DROP COLUMN " + TextBox_ColumnName.Text + ";";
-                command.Connection = connect;
-
-                int affectedRowNumber = command.ExecuteNonQuery();
-
-                connect.Close();
-
-                Label_ERROR.Text = ListBox_Tables.SelectedItem.Text + " tablosuna " + TextBox_ColumnName.Text + " alanı silindi.";
-            }
-        }
-
-        protected void Button_Kolon_Sil_Click(object sender, EventArgs e)
-        {
-            deleteColumn();
-            LoadColumnName();
-        }
-        private void LoadColumnName()
-        {
-            if (ListBox_Tables.SelectedItem == null)
-                return;
-            SqlConnectionStringBuilder builder =
-    new SqlConnectionStringBuilder
-    (connectionString);
-            SqlConnection con =
-                            new SqlConnection(builder.ConnectionString);
-            con.Open();
-            string[] objArrRestrict;
-            objArrRestrict = new string[] { null, null, ListBox_Tables.SelectedItem.Text, null };
-            DataTable tbl = con.GetSchema(SqlClientMetaDataCollectionNames.Columns, objArrRestrict);
-
-            SqlDataAdapter da = new SqlDataAdapter();
-
-            #region Get Primary Key
-            DataTable ttt = new DataTable();
-            SqlCommand cmd = new SqlCommand("select * from " + ListBox_Tables.SelectedItem.Text);
-            cmd.Connection = con;
-            SqlDataAdapter daa = new SqlDataAdapter();
-            daa.SelectCommand = cmd;
-            //da.Fill(tl);
-            daa.FillSchema(ttt, SchemaType.Mapped);
-
-
-            #endregion
-
-            int i = 0;
-
-            List<Kontrol_Icerik> list = new List<Kontrol_Icerik>();
-            foreach (DataRow rowTable in tbl.Rows)
-            {
-                String columnName = rowTable["COLUMN_NAME"].ToString();
-                String isN = rowTable["IS_NULLABLE"].ToString();
-                String dataType = rowTable["DATA_TYPE"].ToString();
-                String maxChar = rowTable["CHARACTER_MAXIMUM_LENGTH"].ToString();
-                String order = rowTable["ORDINAL_POSITION"].ToString();
-
-                Kontrol_Icerik k = new Kontrol_Icerik();
-                k.columnName = columnName;
-                k.dataType = dataType;
-                k.isNull = isN;
-                k.maxChar = maxChar;
-                k.dataType_MaxChar = k.dataType;
-                if (k.dataType.Contains("varchar"))
-                {
-                    k.dataType_MaxChar = k.dataType + "(" + k.maxChar + ")";
-                }
-                k.order = Convert.ToInt32(order);
-                k.ID = ++i;
-                list.Add(k);
-            }
-            con.Close();
-
-            var lists = from s in list orderby s.order select s;
-            KontrollerColumns = list.ToList<Kontrol_Icerik>();
-
-            GridView_ColumnNames.DataSource = lists;
-            GridView_ColumnNames.DataBind();
-        }
-        protected void ListBoxdatatype_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            TextBox_dataType.Text = ListBox_datatype.SelectedItem.Text;
-        }
-        protected void ListBox_Tables_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            LoadColumnName();
-        }
-
+       
+       
+        
 
         protected void Button_BackUp_Click(object sender, EventArgs e)
         {
@@ -5852,6 +5503,7 @@ namespace WebApplicationDAO
         }
 
     }
+
     public class Kontrol_Icerik
     {
         public String columnName { set; get; }

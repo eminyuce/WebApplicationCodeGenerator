@@ -752,7 +752,7 @@
 
 
 
-                        <asp:WizardStep ID="WizardStep7" runat="server" Title="Sql Save Or Update">
+                        <asp:WizardStep ID="WizardStep7" runat="server" Title="SQL Save Or Update">
                             <table>
                                 <tr>
                                     <td>
@@ -780,7 +780,7 @@
                         </asp:WizardStep>
 
 
-                        <asp:WizardStep ID="WizardStep16" runat="server" Title="CRUD Operations">
+                        <asp:WizardStep ID="WizardStep16" runat="server" Title="Repository-Entity-DB CRUD">
                             <table>
                                 <tr>
                                     <td>
@@ -887,163 +887,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-
-                        <asp:WizardStep ID="WizardStep19" runat="server" Title="Column Utilities">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <asp:Label ID="Label1" Font-Bold="true" ForeColor="Red" runat="server" Text="Eklenecek Kolon İsmi"></asp:Label>
-                                        <br />
-                                        <asp:TextBox ID="TextBox_ColumnName" runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <asp:Button CssClass="button" Visible="False" ID="Button_Kolon_Ekle" runat="server" OnClick="Button_Kolon_Ekle_Click"
-                                            Text="Kolon Ekle" />
-                                        <asp:Button CssClass="button" Visible="False" ID="Button_Kolon_Sil" runat="server" Text="Kolon Sil"
-                                            OnClick="Button_Kolon_Sil_Click" />
-                                        <asp:CheckBox ID="CheckBox_NULL" Text="NULL Değil!" runat="server" />
-                                    </td>
-                                    <td>
-                                        <asp:Label ID="Label2" ForeColor="Red" Font-Bold="true" runat="server" Text="Eklenecek Kolon Veri Tipi"></asp:Label>
-                                        <br />
-                                        <asp:TextBox ID="TextBox_dataType" runat="server"></asp:TextBox>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <asp:ListBox ID="ListBox_Tables" runat="server" Height="629px" Width="187px" AutoPostBack="True"
-                                            OnSelectedIndexChanged="ListBox_Tables_SelectedIndexChanged"></asp:ListBox>
-                                    </td>
-                                    <td>
-                                        <asp:Panel ID="Panel_Grid" CssClass="Ei_Grid" runat="server">
-                                            <asp:GridView ID="GridView_ColumnNames" runat="server" ForeColor="#333333" AutoGenerateColumns="False"
-                                                CellPadding="4" GridLines="None">
-                                                <RowStyle BackColor="#E3EAEB" />
-                                                <Columns>
-                                                    <asp:TemplateField>
-                                                        <HeaderTemplate>
-                                                            <th>
-                                                                <asp:Label ID="Label2" Font-Bold="true" runat="server" Text="İsim"></asp:Label>
-                                                            </th>
-                                                            <th class="hideCss">
-                                                                <asp:Label ID="Label4" Font-Bold="true" runat="server" Text="Max"></asp:Label>
-                                                            </th>
-                                                            <th>
-                                                                <asp:Label ID="Label14" Font-Bold="true" runat="server" Text="Max Char"></asp:Label>
-                                                            </th>
-                                                            <th>
-                                                                <asp:Label ID="Label6" Font-Bold="true" runat="server" Text="Data Tipi"></asp:Label>
-                                                            </th>
-                                                            <th>
-                                                                <asp:Label ID="Label31" Font-Bold="true" runat="server" Text="Null"></asp:Label>
-                                                            </th>
-                                                        </HeaderTemplate>
-                                                        <ItemTemplate>
-                                                            <td>
-                                                                <asp:Label ID="Label_Name" Font-Bold="true" runat="server" Text='<%# Eval("columnName") %>'></asp:Label>
-                                                            </td>
-                                                            <td>
-                                                                <asp:Label ID="Label_Max" Font-Bold="true" runat="server" Text='<%# Eval("maxChar") %>'></asp:Label>
-                                                            </td>
-                                                            <td>
-                                                                <asp:Label ID="Label_dataType" Font-Bold="true" runat="server" Text='<%# Eval("dataType") %>'></asp:Label>
-                                                            </td>
-                                                            <td>
-                                                                <asp:Label ID="Label5" Font-Bold="true" runat="server" Text='<%# Eval("isNull") %>'></asp:Label>
-                                                            </td>
-                                                        </ItemTemplate>
-                                                    </asp:TemplateField>
-                                                </Columns>
-                                                <FooterStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                                                <EditRowStyle BackColor="#7C6F57" />
-                                                <AlternatingRowStyle BackColor="White" />
-                                            </asp:GridView>
-                                        </asp:Panel>
-                                    </td>
-                                    <td>
-                                        <asp:ListBox ID="ListBox_datatype" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ListBoxdatatype_SelectedIndexChanged"
-                                            Height="629px">
-                                            <asp:ListItem>nvarchar(500)</asp:ListItem>
-                                            <asp:ListItem>int</asp:ListItem>
-                                            <asp:ListItem>bit</asp:ListItem>
-                                            <asp:ListItem>ntext</asp:ListItem>
-                                            <asp:ListItem>smalldatetime</asp:ListItem>
-                                            <asp:ListItem>datetime</asp:ListItem>
-                                            <asp:ListItem>bigint</asp:ListItem>
-                                            <asp:ListItem>numeric</asp:ListItem>
-                                            <asp:ListItem>smallint</asp:ListItem>
-                                            <asp:ListItem>decimal</asp:ListItem>
-                                            <asp:ListItem>smallmoney</asp:ListItem>
-                                            <asp:ListItem>tinyint</asp:ListItem>
-                                            <asp:ListItem>money</asp:ListItem>
-                                            <asp:ListItem>float</asp:ListItem>
-                                            <asp:ListItem>real</asp:ListItem>
-                                            <asp:ListItem>date</asp:ListItem>
-                                            <asp:ListItem>time</asp:ListItem>
-                                            <asp:ListItem>char(500)</asp:ListItem>
-                                            <asp:ListItem>varchar(500)</asp:ListItem>
-                                            <asp:ListItem>text</asp:ListItem>
-                                            <asp:ListItem>nchar(500)</asp:ListItem>
-                                            <asp:ListItem>binary</asp:ListItem>
-                                            <asp:ListItem>varbinary</asp:ListItem>
-                                        </asp:ListBox>
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep23_Sql" runat="server" Title="Sql Queries">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Sql Delete</h3>
-                                        <asp:TextBox ID="TextBox_Sql_Delete" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Sql Select</h3>
-                                        <asp:TextBox ID="TextBox_Sql_Select" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Sql
-                                            
-                                            <input id="formattedSql2" type="button" value="Formatted Sql">
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Sql_Search2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-
-
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep235" runat="server" Title="Sql Queries 2">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h3>Sql Delete</h3>
-                                        <asp:TextBox ID="TextBox_Sql_GroupBy" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Sql Select</h3>
-                                        <asp:TextBox ID="TextBox_Sql_GroupBy2" TextMode="MultiLine" CssClass="resultTextBox"
-                                            runat="server"></asp:TextBox>
-                                    </td>
-                                    <td>
-                                        <h3>Sql
-                                            
-                                            <input id="TextBox_Sql_GroupBy3ss" type="button" value="Formatted Sql">
-                                        </h3>
-                                        <asp:TextBox ID="TextBox_Sql_GroupBy3" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-
-
-                                    </td>
-                                </tr>
-                            </table>
-                        </asp:WizardStep>
+                        
                         <asp:WizardStep ID="WizardStep23" runat="server" Title="String patterns">
                             <table>
                                 <tr>
