@@ -1240,7 +1240,6 @@ namespace WebApplicationDAO
                 StringBuilder labels = new StringBuilder();
                 StringBuilder label_item = new StringBuilder();
                 StringBuilder boundField = new StringBuilder();
-                StringBuilder gridState = new StringBuilder();
                 StringBuilder gridState2 = new StringBuilder();
 
                 String selectedTable = GetEntityName();
@@ -1302,7 +1301,6 @@ namespace WebApplicationDAO
                         {
                             Kullanilmayanlar(item, insert);
                         }
-                        setGridState(item, gridState, gridState2);
                     }
                 }
 
@@ -1360,18 +1358,8 @@ namespace WebApplicationDAO
                 createGridView(linkedList, boundField, selectedTable);
                 Genereate_XML(linkedList);
                 Kontroller = linkedList;
-                //  TextBox_Edit.Text = built.ToString().Replace(ajaxControls, "");
-                //  TextBox_In.Text = edit.ToString();
-                //  TextBox_Insert.Text = insert.ToString();
-                //  TextBox_Labels.Text = labels.ToString();
-                //  TextBox_Label_ONLY.Text = sadeceLabels(linkedList);
-                //  TextBox__labelsCodeBehind.Text = label_item.ToString();
-                //  TextBox_GridView.Text = boundField.ToString();
                 TextBox_Veri.Text = generateData();
-                //  GridView_String = TextBox_GridView.Text;
-                //   Controls_String = TextBox_Edit.Text;
                 TextBox_SP.Text = generate_StoredProcedure();
-                TextBox_State.Text = gridState.ToString();
 
                 StringBuilder built222 = new StringBuilder();
                 built222.AppendLine(GenereateSaveOrUpdateDatabaseUtility(linkedList));
@@ -2273,13 +2261,7 @@ namespace WebApplicationDAO
 
             }
         }
-
-        private void setGridState(Kontrol_Icerik kontrol, StringBuilder gridState, StringBuilder gridState2)
-        {
-            gridState.AppendLine(kontrol.ToString());
-            gridState2.AppendLine(kontrol.columnName + "    ----->    " + kontrol.control.ToString());
-
-        }
+      
         private void Kontrolleri_Goster(String built)
         {
             if (CheckBox_isControlVisible.Checked)
@@ -4054,8 +4036,8 @@ namespace WebApplicationDAO
         {
             StringBuilder built = new StringBuilder();
             String selectedTable = GetEntityName();
-            built.AppendLine("protected void generate" + selectedTable + "Data(int max){");
-            built.AppendLine("E_CommerceDataContext data = new E_CommerceDataContext(ConfigurationManager.ConnectionStrings[\"ConnectionString\"].ConnectionString);");
+            String modelName = getModelName();
+            built.AppendLine("public void generate" + selectedTable + "Data(int max){");
             built.AppendLine("Random rand = new Random();");
             built.AppendLine("String path = \"\";");
             built.AppendLine("for (int i = 0; i < max; i++){");
@@ -4107,9 +4089,8 @@ namespace WebApplicationDAO
 
                 }
             }
-            built.AppendLine("data." + selectedTable + "s.InsertOnSubmit(item);");
+            built.AppendLine(String.Format("{0}Repository.SaveOrUpdate{0}(item);", modelName));
             built.AppendLine("}");
-            built.AppendLine("data.SubmitChanges();");
             built.AppendLine("}");
             return built.ToString();
         }
@@ -4688,7 +4669,7 @@ namespace WebApplicationDAO
             //}
 
             //return surveys;
-
+          
             method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm", "")));
             method.AppendLine("{");
             method.AppendLine("private static readonly Logger Logger = LogManager.GetCurrentClassLogger();");
