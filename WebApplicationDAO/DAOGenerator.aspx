@@ -513,10 +513,7 @@
                             <asp:Button CssClass="button" ID="Button_Olustur" CausesValidation="false" runat="server"
                                 Text="Create Codes" OnClick="Button_Olustur_Click" />
                         </td>
-                        <td>
-                            <asp:Button CssClass="button" ID="Button_Admin_Page" runat="server" Text="Create Admin Pages"
-                                OnClick="Button_Admin_Page_Click" />
-                        </td>
+                    
                         <td>
                             <asp:Button CssClass="button" ID="Button_Download" runat="server" OnClick="Button_Download_Click"
                                 Text="Download TextBoxes Content" />
@@ -531,9 +528,7 @@
                         <td>
                             <asp:CheckBox ID="CheckBox_ModelAttributesVisible" Font-Bold="True" ForeColor="Blue" Text="Model Attributes Visible" runat="server" />
                         </td>
-                        <td>
-                            <asp:CheckBox ID="CheckBox_Downlaod" Font-Bold="True" ForeColor="Blue" Text="Download File" runat="server" />
-                        </td>
+                        
                     </tr>
                     <asp:Panel ID="Panel_Unused_Functions" Visible="false" runat="server">
                         <asp:Button CssClass="button" ID="Button_BackUp" runat="server" Text="Back Up Database"

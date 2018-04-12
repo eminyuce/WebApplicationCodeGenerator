@@ -222,21 +222,27 @@ namespace WebApplicationDAO
                                            SqlClientMetaDataCollectionNames.Tables);
 
                 DropDownList_Tables.Items.Clear();
-                var list = new List<String>();
+                var list = new List<ListItem>();
                 foreach (DataRow rowDatabase in tblDatabases.Rows)
                 {
                     var i = new ListItem();
-                    i.Text = rowDatabase["table_name"].ToString();
-                    list.Add(rowDatabase["table_name"].ToString());
+                    string TableCatalog = rowDatabase["table_catalog"].ToString();
+                    string TableSchema = rowDatabase["table_schema"].ToString();
+                    string TableName = rowDatabase["table_name"].ToString();
+                    string TableType = rowDatabase["table_type"].ToString();
+
+                    i.Value = String.Format("{0}.{1}.{2}", TableCatalog, TableSchema, TableName);
+                    i.Text = rowDatabase["table_schema"].ToString() +"."+ rowDatabase["table_name"].ToString();
+                    list.Add(i);
                 }
-                var list1 = from s in list orderby s select s;
-                foreach (String tableName in list1)
+                var list1 = from s in list orderby s.Text select s;
+                foreach (ListItem tableName in list1)
                 {
                     DropDownList_Tables.Items.Add(tableName);
                 }
                 con.Close();
                 Label_ERROR.Text = "Select a Table from dropdown. Hahahaha, do not forget to choose the table. ";
-                TableNames = list;
+                TableNames = list.Select(t=>t.Text).ToList();
             }
             catch (Exception e)
             {
@@ -258,8 +264,17 @@ namespace WebApplicationDAO
             databaseName = con.Database;
 
             string[] objArrRestrict;
-            objArrRestrict = new string[] { null, null, DropDownList_Tables.SelectedItem.Text, null };
-            DataTable tbl = con.GetSchema(SqlClientMetaDataCollectionNames.Columns, objArrRestrict);
+            string selectedTableValue = DropDownList_Tables.SelectedItem.Value;
+            var tParts = selectedTableValue.Split(".".ToCharArray());
+
+            objArrRestrict = new string[] {
+                tParts[0],
+                tParts[1],
+                tParts[2],
+                null };
+            DataTable tbl = con.GetSchema(
+                SqlClientMetaDataCollectionNames.Columns,
+                objArrRestrict);
 
             SqlDataAdapter da = new SqlDataAdapter();
 
@@ -269,7 +284,9 @@ namespace WebApplicationDAO
             #region Get Primary Key
             String primaryKey = "";
             DataTable ttt = new DataTable();
-            SqlCommand cmd = new SqlCommand("select * from " + DropDownList_Tables.SelectedItem.Text);
+            string cmdText = "select * from " + 
+                DropDownList_Tables.SelectedItem.Value;
+            SqlCommand cmd = new SqlCommand(cmdText);
             cmd.Connection = con;
             SqlDataAdapter daa = new SqlDataAdapter();
             daa.SelectCommand = cmd;
@@ -3639,26 +3656,6 @@ namespace WebApplicationDAO
             }
 
         }
-        protected void Button_Admin_Page_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                String fileName = GetEntityName() + "_admin";
-                if (File.Exists(Server.MapPath(fileName)))
-                {
-                    File.Delete(Server.MapPath(fileName));
-                }
-
-
-                generate_AspxFile();
-                generate_CS_File();
-                Label_ERROR.Text = GetEntityName() + " admin page is created.";
-            }
-            catch (Exception ex)
-            {
-                Label_ERROR.Text = "ERROR: " + ex.StackTrace;
-            }
-        }
         private void DownloadGeneratedSourceCode(List<TextBox> textBoxs)
         {
             //String[] filesName;
@@ -3727,311 +3724,7 @@ namespace WebApplicationDAO
             Response.Write(text);
             Response.End();
         }
-        /// <summary>
-        /// Admin sayfasının aspx kısmını yazıyor...
-        /// </summary>
-        private void generate_AspxFile()
-        {
-
-            String line = "";
-            StringReader reader = new StringReader(File.ReadAllText(Server.MapPath("templateASPX.txt")));
-            StringBuilder pageBuilt = new StringBuilder();
-            StringWriter wr = new StringWriter();
-            String selectedTable = GetEntityName();
-            String fileName = selectedTable + "_admin";
-            while ((line = reader.ReadLine()) != null)
-            {
-                if (!String.IsNullOrEmpty(line))
-                {
-                    String result = aspx_Maping(line);
-                    if (String.IsNullOrEmpty(result))
-                    {
-                        pageBuilt.AppendLine(line);
-                    }
-                    else
-                    {
-                        pageBuilt.AppendLine(result);
-                    }
-                }
-            }
-            reader.Close();
-
-            createFile(pageBuilt, fileName + ".aspx");
-
-        }
-        private string aspx_Maping(String line)
-        {
-            String selectedTable = GetEntityName();
-            String fileName = selectedTable + "_admin";
-            String masterPage = "~/Ei-admin/admin.master";
-            String saveButton, editButton, onayMesaj, aramaButton,
-                tumu, hicbiri, silButton, yayinALButton, yayındaKaldirButton, aramaYap_Mesaj,
-                sira, durum, anaSayfa, resim;
-            if (CheckBox_Dil.Checked)
-            {
-                saveButton = "<%=Ei_Sabit.Get[\"Admin_Save\"]%>";
-                editButton = "<%=Ei_Sabit.Get[\"Admin_Edit\"]%>";
-                onayMesaj = "<%=Ei_Sabit.Get[\"Admin_OnayMesaj\"]%>";
-                aramaButton = "<%=Ei_Sabit.Get[\"Admin_Arama\"]%>";
-                tumu = "<%=Ei_Sabit.Get[\"Admin_tumu\"]%>";
-                hicbiri = "<%=Ei_Sabit.Get[\"Admin_hicbiri\"]%>";
-                silButton = "<%=Ei_Sabit.Get[\"Admin_Sil\"]%>";
-                yayinALButton = "<%=Ei_Sabit.Get[\"Admin_yayinAl\"]%>";
-                yayındaKaldirButton = "<%=Ei_Sabit.Get[\"Admin_yayindaKaldir\"]%>";
-                aramaYap_Mesaj = "'<%=Ei_Sabit.Get[\"Admin_aramaMesaj\"]%>'";
-                sira = "<%=Ei_Sabit.Get[\"Admin_Sira\"]%>";
-                durum = "'<%=Ei_Sabit.Get[\"Admin_Durum\"]%>'";
-                anaSayfa = "'<%=Ei_Sabit.Get[\"Admin_AnaSayfa\"]%>'";
-                resim = "'<%=Ei_Sabit.Get[\"Admin_Resim\"]%>'";
-            }
-            else
-            {
-                saveButton = "Kaydet";
-                editButton = "Düzenle";
-                onayMesaj = "Seçilen öğeleri silmek istediğinize emin misiniz?";
-                aramaButton = "Arama";
-                tumu = "Hepsi";
-                hicbiri = "Hiçbiri";
-                silButton = "Sil";
-                yayinALButton = "Yayına Al";
-                yayındaKaldirButton = "Yayından Kaldır";
-                aramaYap_Mesaj = "\"Verilerde Ara\"";
-                sira = "Sıralama";
-                durum = "\"Durumu\"";
-                anaSayfa = "\"Ana Sayfa\"";
-                resim = "\"Resim Durumu\"";
-            }
-
-
-            Dictionary<String, String> map = new Dictionary<String, String>();
-            map.Add("${controls}", Controls_String);
-            map.Add("${gridView}", GridView_String);
-            map.Add("${masterPage}", masterPage);
-            map.Add("${aspxFileName}", fileName);
-            map.Add("${sqldatasource}", "");
-            map.Add("${save}", saveButton);
-            map.Add("${edit}", editButton);
-            map.Add("${arama}", aramaButton);
-            map.Add("${onayMesaj}", onayMesaj);
-            map.Add("${tümü}", tumu);
-            map.Add("${hicbiri}", hicbiri);
-            map.Add("${sil}", silButton);
-            map.Add("${yayınaAl}", yayinALButton);
-            map.Add("${yayınaKaldır}", yayındaKaldirButton);
-            map.Add("${aramaYapın}", aramaYap_Mesaj);
-            map.Add("${sira}", sira);
-            map.Add("${durum}", durum);
-            map.Add("${resim}", resim);
-            map.Add("${anaSayfa}", anaSayfa);
-            foreach (var item in map)
-            {
-                if (line.Contains(item.Key))
-                {
-                    line = line.Replace(item.Key, item.Value);
-                }
-            }
-            return line;
-
-        }
-        /// <summary>
-        /// Admin Sayfasının Cs tarafını yazıyor...
-        /// </summary>
-        private void generate_CS_File()
-        {
-
-            String line = "";
-            StringReader reader = new StringReader(File.ReadAllText(Server.MapPath("templateCS.txt")));
-            StringBuilder pageBuilt = new StringBuilder();
-            StringWriter wr = new StringWriter();
-            String selectedTable = GetEntityName();
-            String fileName = selectedTable + "_admin";
-
-            while ((line = reader.ReadLine()) != null)
-            {
-
-                if (!String.IsNullOrEmpty(line))
-                {
-                    String result = cs_Maping(line);
-                    if (String.IsNullOrEmpty(result))
-                    {
-                        pageBuilt.AppendLine(line);
-                    }
-                    else
-                    {
-                        pageBuilt.AppendLine(result);
-                    }
-                }
-            }
-            reader.Close();
-
-            createFile(pageBuilt, fileName + ".aspx.cs");
-
-        }
-        private string cs_Maping(String line)
-        {
-            String selectedTable = GetEntityName();
-            String fileName = selectedTable + "_admin";
-            string initMethod = ""; // TextBox_Insert.Text;
-            string retrieveMethod = "";// TextBox_In.Text;
-            string singleORdefault = "" + selectedTable + " item = db." + selectedTable + "s.SingleOrDefault(r=>r." + this.GetPrimaryKeys(Kontroller) + " == columnID);";
-            string initItem = "initialize(item,Label_Warning)";
-            string retrieveItem = "retrieveData(item,Label_Warning)";
-            String ValidLoad, UnValidLoad, UnValidUpDate, ValidUpDate, Delete, ERROR;
-            if (CheckBox_Dil.Checked)
-            {
-                Delete = "Ei_Sabit.Get[\"Delete\"]";
-                ValidLoad = "Ei_Sabit.Get[\"ValidLoad\"]";
-                UnValidLoad = "Ei_Sabit.Get[\"UnValidLoad\"]";
-                UnValidUpDate = "Ei_Sabit.Get[\"UnValidUpDate\"]";
-                ValidUpDate = "Ei_Sabit.Get[\"ValidUpDate\"]";
-                ERROR = "Ei_Sabit.Get[\"ERROR\"]";
-            }
-            else
-            {
-                Delete = "Ei_Message.Delete";
-                ValidLoad = "Ei_Message.ValidLoad";
-                UnValidLoad = "Ei_Message.UnValidLoad";
-                UnValidUpDate = "Ei_Message.UnValidUpDate";
-                ValidUpDate = "Ei_Message.ValidUpDate";
-                ERROR = "Ei_Message.ERROR";
-            }
-
-            Dictionary<String, String> map = new Dictionary<String, String>();
-            map.Add("${initMethod}", initMethod);
-            map.Add("${tableName}", selectedTable);
-            map.Add("${retrieveItem}", retrieveItem);
-            map.Add("${initItem}", initItem);
-            map.Add("${aspxFileName}", fileName);
-            map.Add("${SingleOrDefault}", singleORdefault);
-            map.Add("${retrieveMethod}", retrieveMethod);
-            map.Add("${ifStatement}", generate_ifStatement());
-            map.Add("${sql_Query}", generate_Sql_Query());
-            map.Add("${ValidLoad}", ValidLoad);
-            map.Add("${UnValidLoad}", UnValidLoad);
-            map.Add("${UnValidUpDate}", UnValidUpDate);
-            map.Add("${ValidUpDate}", ValidUpDate);
-            map.Add("${Delete}", Delete);
-            map.Add("${ERROR}", ERROR);
-            foreach (var item in map)
-            {
-                if (line.Contains(item.Key))
-                {
-                    line = line.Replace(item.Key, item.Value);
-                }
-            }
-            return line;
-        }
-        private String generate_ifStatement()
-        {
-            StringBuilder result = new StringBuilder();
-
-            List<Kontrol_Icerik> ifList = Kontroller;
-            ifList = ifList.Where(r => r.if_Statement == true).ToList<Kontrol_Icerik>();
-            String k = "";
-            if (ifList.Count > 0)
-            {
-                foreach (Kontrol_Icerik item in ifList)
-                {
-                    switch (item.control)
-                    {
-                        case Control_Adi.BOS:
-                            break;
-                        case Control_Adi.Label_:
-                            break;
-                        case Control_Adi.Button_:
-                            break;
-                        case Control_Adi.CheckBox_:
-                            break;
-                        case Control_Adi.RadioButton_:
-                            break;
-                        case Control_Adi.TextBoxMax_:
-                            result.AppendLine("!String.IsNullOrEmpty(" + item.controlID + ".Text)&&");
-                            break;
-                        case Control_Adi.TextBox_MultiLine:
-                            result.AppendLine("!String.IsNullOrEmpty(" + item.controlID + ".Text)&&");
-                            break;
-                        case Control_Adi.LinkButton_:
-                            break;
-                        case Control_Adi.ImageButton_:
-                            break;
-                        case Control_Adi.FileUpload_:
-                            result.AppendLine("" + item.controlID + ".HasFile&&");
-                            break;
-                        case Control_Adi.DropDownList_:
-                            result.AppendLine("" + item.controlID + ".SelectedItem != null&&!String.IsNullOrEmpty(" + item.controlID + ".SelectedValue)&&");
-                            break;
-                        case Control_Adi.CheckBoxList_:
-                            break;
-                        case Control_Adi.RadioButtonList_:
-                            break;
-                        case Control_Adi.ListBox_:
-                            break;
-                        case Control_Adi.TextBox_Password_:
-                            result.AppendLine("!String.IsNullOrEmpty(" + item.controlID + ".Text)&&");
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                k = result.ToString();
-                if (k.Length > 4)
-                {
-                    k = k.Remove(k.Length - 4, 4);
-                }
-            }
-            else
-            {
-                Kontrol_Icerik i = Kontroller.SingleOrDefault(r => r.ID == 2);
-                if (i != null)
-                {
-                    k = "!String.IsNullOrEmpty(" + i.controlID + ".Text)&&";
-                }
-            }
-            return k;
-        }
-        private String generate_Sql_Query()
-        {
-            String result = "";
-            String sql = "";
-            String selectedTable = GetEntityName();
-            sql = "SELECT * FROM " + selectedTable + " Where ( Name Like '%{0}%' or Email Like '%{0}%' ) And Lang='{1}'";
-            List<Kontrol_Icerik> list = Kontroller;
-
-            if (list != null)
-            {
-                list = list.Where(r => r.sql == true).ToList<Kontrol_Icerik>();
-                if (list.Count > 1)
-                {
-                    StringBuilder k = new StringBuilder();
-                    k.Append("SELECT * FROM " + selectedTable + " WHERE (");
-
-                    foreach (Kontrol_Icerik item in list)
-                    {
-                        k.Append(item.columnName + " LIKE '%{0}%' or ");
-                    }
-
-                    k.Append(")");
-                    if (k.Length > 4)
-                    {
-                        k = k.Remove(k.Length - 4, 2);
-                        result = k.ToString();
-                    }
-                    else
-                    {
-                        return sql;
-                    }
-                }
-                else
-                {
-                    return sql;
-                }
-            }
-            else
-            {
-                return sql;
-            }
-            return result;
-        }
+             
         private String generateData()
         {
             StringBuilder built = new StringBuilder();
@@ -5151,8 +4844,6 @@ namespace WebApplicationDAO
         }
         private void DownloadText(StringBuilder method, String fileName = "text.txt")
         {
-            if (!CheckBox_Downlaod.Checked)
-                return;
 
             try
             {

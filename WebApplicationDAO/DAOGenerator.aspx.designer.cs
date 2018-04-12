@@ -184,15 +184,6 @@ namespace WebApplicationDAO {
         protected global::System.Web.UI.WebControls.Button Button_Olustur;
         
         /// <summary>
-        /// Button_Admin_Page control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button_Admin_Page;
-        
-        /// <summary>
         /// Button_Download control.
         /// </summary>
         /// <remarks>
@@ -227,15 +218,6 @@ namespace WebApplicationDAO {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox CheckBox_ModelAttributesVisible;
-        
-        /// <summary>
-        /// CheckBox_Downlaod control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox_Downlaod;
         
         /// <summary>
         /// Panel_Unused_Functions control.
