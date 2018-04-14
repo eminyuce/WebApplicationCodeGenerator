@@ -3841,7 +3841,7 @@ namespace WebApplicationDAO
             built.Append(")");
             built.AppendLine("AS");
             built.AppendLine("BEGIN");
-            built.AppendLine("IF NOT EXISTS(SELECT  " + prKey.columnName + " FROM [dbo].[" + selectedTable + "] WHERE " + prKey.columnName + "=@" + prKey.columnName + ") ");
+            built.AppendLine("IF NOT EXISTS(SELECT  " + prKey.columnName + " FROM " + selectedTable + " WHERE " + prKey.columnName + "=@" + prKey.columnName + ") ");
             built.AppendLine("BEGIN");
             built.AppendLine("INSERT INTO " + selectedTable + "(");
             foreach (var item in list)
