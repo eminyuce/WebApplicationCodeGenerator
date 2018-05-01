@@ -1945,7 +1945,7 @@ namespace WebApplicationDAO
             built.AppendLine("}");
 
 
-            built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}(int id)", modelName));
+            built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}(int id=0)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id;", primaryKey.ToLower()));
             built.AppendLine(String.Format("var {0} = new {1}();", modelName.ToLower(), modelName));
