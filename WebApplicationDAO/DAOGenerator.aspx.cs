@@ -2090,7 +2090,7 @@ namespace WebApplicationDAO
         {
             var item = ki;
             String result = "";
-            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
+            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
             {
                 result = "String";
             }
@@ -2124,7 +2124,7 @@ namespace WebApplicationDAO
 
             String result = "SqlDbType.{0}";
             var item = ki;
-            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
+            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
             {
                 result = String.Format(result, "NVarChar");
             }
@@ -4394,6 +4394,9 @@ namespace WebApplicationDAO
             method.AppendLine("Logger.Error(ex, ex.Message);");
             method.AppendLine("}");
             method.AppendLine("      return " + modelName.ToLower() + "Result;");
+            method.AppendLine(" #if DEBUG");
+            method.AppendLine("             throw ex;");
+            method.AppendLine(" #endif");
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " int SaveOrUpdate" + modelName + "( " + modelName + " item)");
             method.AppendLine("{");
@@ -4404,6 +4407,9 @@ namespace WebApplicationDAO
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
+            method.AppendLine(" #if DEBUG");
+            method.AppendLine("             throw ex;");
+            method.AppendLine(" #endif");
             method.AppendLine("}");
             method.AppendLine("      return -1;");
             method.AppendLine("}");
@@ -4418,6 +4424,9 @@ namespace WebApplicationDAO
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
+            method.AppendLine(" #if DEBUG");
+            method.AppendLine("             throw ex;");
+            method.AppendLine(" #endif");
             method.AppendLine("}");
             method.AppendLine("      return item;");
             method.AppendLine("}");
@@ -4430,6 +4439,9 @@ namespace WebApplicationDAO
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
+            method.AppendLine(" #if DEBUG");
+            method.AppendLine("             throw ex;");
+            method.AppendLine(" #endif");
             method.AppendLine("}");
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " void RemoveCache()");
@@ -4601,7 +4613,7 @@ namespace WebApplicationDAO
 
 
 
-                    if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
+                    if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
                     {
                         if (CheckBox_ModelAttributesVisible.Checked)
                         {
@@ -4659,7 +4671,7 @@ namespace WebApplicationDAO
             StringBuilder method555 = new StringBuilder();
             foreach (Kontrol_Icerik item in linkedList)
             {
-                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
+                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
                 {
                     method555.Append("string " + FirstCharacterToLower(item.columnName) + ",");
                 }
@@ -4886,7 +4898,7 @@ namespace WebApplicationDAO
             foreach (Kontrol_Icerik item in kontrolList)
             {
 
-                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("xml") > -1)
+                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("xml") > -1)
                 {
                     // method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? \"\" : read[\"" + item.columnName + "\"].ToString();");
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToStr();");
