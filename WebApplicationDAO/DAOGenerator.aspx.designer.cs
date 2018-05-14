@@ -409,13 +409,13 @@ namespace WebApplicationDAO {
         protected global::System.Web.UI.WebControls.TextBox TextBox_SP;
         
         /// <summary>
-        /// TextBox_State control.
+        /// TextBox_MergeSqlStatement control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_State;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_MergeSqlStatement;
         
         /// <summary>
         /// WizardStep16 control.

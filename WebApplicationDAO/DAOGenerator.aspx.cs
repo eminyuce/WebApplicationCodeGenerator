@@ -1376,6 +1376,7 @@ namespace WebApplicationDAO
                 Genereate_XML(linkedList);
                 Kontroller = linkedList;
                 TextBox_Veri.Text = generateData();
+                GenerateMergeSqlStoredProcedure();
                 TextBox_SP.Text = generate_StoredProcedure();
 
                 StringBuilder built222 = new StringBuilder();
@@ -3817,6 +3818,111 @@ namespace WebApplicationDAO
             }
             return new String(list.ToArray()).Replace(" ", "_");
         }
+        public void GenerateMergeSqlStoredProcedure()
+        {
+
+            StringBuilder built = new StringBuilder();
+
+ 
+            try
+            {
+
+                List<Kontrol_Icerik> list = Kontroller;
+                String selectedTable = GetRealEntityName();
+                String modifiedTableName = GetEntityName();
+                String entityPrefix = GetEntityPrefixName(selectedTable);
+
+                Kontrol_Icerik prKey = GetPrimaryKeysItem();
+                entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
+
+
+
+                entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
+                var primaryKey = prKey.columnName;
+
+
+                built = new StringBuilder();
+                built.AppendLine("CREATE PROCEDURE  " + entityPrefix + "Merge" + modifiedTableName + "(");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var comma = (i != (list.Count - 1) ? "," : "");
+                    built.AppendLine("@" + GetUrlString(item.columnName) + " " + item.dataType_MaxChar + " = " + (String.IsNullOrEmpty(item.columnDefaultValue) ? "NULL" : item.columnDefaultValue) + comma);
+                }
+
+                built.Append(")");
+                built.AppendLine("AS");
+                built.AppendLine("BEGIN");
+                built.AppendLine("DECLARE @Output TABLE ( ActionType VARCHAR(20), SourcePrimaryKey INT);");
+                built.AppendLine("MERGE " + selectedTable + " TRGT  ");
+                built.AppendLine("USING (");
+                built.AppendLine("    SELECT ");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var comma = (i != (list.Count - 1) ? "," : "");
+                    built.AppendLine(String.Format("@{0} {0} {1}", GetUrlString(item.columnName), comma));
+                }
+
+                built.AppendLine(") SRC ");
+                built.AppendLine(" ON TRGT." + primaryKey + "=SRC." + primaryKey);
+                built.AppendLine(" WHEN NOT MATCHED BY TARGET THEN INSERT (");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var comma = (i != (list.Count - 1) ? "," : "");
+                    if (!item.primaryKey)
+                        built.AppendLine(item.columnName + comma);
+                }
+
+                built.AppendLine(")");
+                built.AppendLine("VALUES (");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var comma = (i != (list.Count - 1) ? "," : "");
+                    if (!item.primaryKey)
+                    {
+                        built.AppendLine("SRC." + GetUrlString(item.columnName) + comma);
+                    }
+                }
+                built.AppendLine(")");
+                built.AppendLine("WHEN MATCHED AND ");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var OR = (i != (list.Count - 1) ? " OR " : "");
+                    if (!item.primaryKey)
+                    {
+                        built.AppendLine(String.Format("TRGT.{0}", item.columnName) + " <> SRC." + GetUrlString(item.columnName) + OR);
+                    }
+                }
+                built.AppendLine("THEN UPDATE SET");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var comma = (i != (list.Count - 1) ? "," : "");
+                    if (!item.primaryKey)
+                    {
+                        built.AppendLine(String.Format("[{0}]", item.columnName) + " = SRC." + GetUrlString(item.columnName) + comma);
+                    }
+                }
+                built.AppendLine("--WHEN NOT MATCHED BY SOURCE THEN ");
+                built.AppendLine("--DELETE");
+                built.AppendLine(" OUTPUT $action,");
+                built.AppendLine(" INSERTED." + primaryKey + " AS " + primaryKey + " INTO @Output;");
+                built.AppendLine(" SELECT TOP 1 SourcePrimaryKey from @Output");
+                built.AppendLine(" END");
+                built.AppendLine(" GO");
+                TextBox_MergeSqlStatement.Text = built.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                TextBox_MergeSqlStatement.Text = ex.Message;
+            }
+        }
+
         private String generate_StoredProcedure()
         {
 
@@ -3881,7 +3987,7 @@ namespace WebApplicationDAO
         }
         protected void Button_State_Click(object sender, EventArgs e)
         {
-            String state = TextBox_State.Text;
+            String state = "";
             StringReader reader = new StringReader(state);
             String line = "";
             String[] ww = { ";" };
@@ -4331,8 +4437,7 @@ namespace WebApplicationDAO
         }
 
 
-
-
+     
         private void GenerateTableRepository(List<Kontrol_Icerik> linkedList)
         {
             StringBuilder method = new StringBuilder();

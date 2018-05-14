@@ -765,9 +765,9 @@
 
                                     </td>
                                     <td>
-                                        <h3>Durum Bilgisi
+                                        <h3>Merge Sql Statement
                                         </h3>
-                                        <asp:TextBox ID="TextBox_State" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="TextBox_MergeSqlStatement" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
                                         <br />
                                     </td>
                                 </tr>
