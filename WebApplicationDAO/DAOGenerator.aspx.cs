@@ -3853,7 +3853,9 @@ namespace WebApplicationDAO
                 built.Append(")");
                 built.AppendLine("AS");
                 built.AppendLine("BEGIN");
-                built.AppendLine("DECLARE @Output TABLE ( ActionType VARCHAR(20), SourcePrimaryKey INT);");
+                built.AppendLine("DECLARE @Output TABLE ( ActionType NVARCHAR(20)," +
+                        " SourcePrimaryKey  INT NOT NULL --PRIMARY KEY NONCLUSTERED");
+                built.AppendLine(");");
                 built.AppendLine("MERGE " + selectedTable + " TRGT  ");
                 built.AppendLine("USING (");
                 built.AppendLine("    SELECT ");
@@ -4497,11 +4499,12 @@ namespace WebApplicationDAO
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
-            method.AppendLine("}");
-            method.AppendLine("      return " + modelName.ToLower() + "Result;");
             method.AppendLine(" #if DEBUG");
             method.AppendLine("             throw ex;");
             method.AppendLine(" #endif");
+            method.AppendLine("}");
+            method.AppendLine("      return " + modelName.ToLower() + "Result;");
+ 
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " int SaveOrUpdate" + modelName + "( " + modelName + " item)");
             method.AppendLine("{");
