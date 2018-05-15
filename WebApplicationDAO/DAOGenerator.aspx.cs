@@ -353,12 +353,16 @@ namespace WebApplicationDAO
         }
         private string GetCleanEntityName(string m)
         {
+            if (m.Contains("."))
+            {
+                m = m.Split(new string[] { "." }, StringSplitOptions.None).Skip(1).FirstOrDefault();
+            }
             if (!String.IsNullOrEmpty(m))
             {
                 var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
                 if (parts.Length > 1)
                 {
-                    m = "Nwm" + UppercaseFirst(parts[0]) + "" + UppercaseFirst(parts[1].TrimEnd('s'));
+                    m = "Nwm" + UppercaseFirst(parts[1].Replace("ies", "y").TrimEnd('s'));
                 }
                 else
                 {
@@ -1380,11 +1384,24 @@ namespace WebApplicationDAO
                 TextBox_SP.Text = generate_StoredProcedure();
 
                 StringBuilder built222 = new StringBuilder();
+                String modelName = getModelName();
+                string dbDirectory = String.Format("Db{0}", modelName.Replace("Nwm", ""));
+                built222.AppendLine("using NLog;");
+                built222.AppendLine("using System;");
+                built222.AppendLine("using System.Collections.Generic;");
+                built222.AppendLine("using System.Linq;");
+                built222.AppendLine("using System.Runtime.Caching;");
+                built222.AppendLine("using System.Text;");
+                built222.AppendLine("using System.Threading.Tasks;");
+                built222.AppendLine("using HelpersProject;");
+                built222.AppendLine("");
+                built222.AppendLine("");
+                built222.AppendLine("public class " + dbDirectory + " {");
                 built222.AppendLine(GenereateSaveOrUpdateDatabaseUtility(linkedList));
                 built222.AppendLine(GenereateDataSetToModel(linkedList));
                 built222.AppendLine(GenereateDataSetToList(linkedList));
                 built222.AppendLine(generateSqlIReader(linkedList));
-
+                built222.AppendLine("}");
                 //TextBox_Database_Utility_DataSet.Text = "";
                 TextBox_IReader.Text = built222.ToString();
                 //TextBox_Database_Utility_List.Text = "";
@@ -2219,7 +2236,9 @@ namespace WebApplicationDAO
             String entityPrefix = GetEntityPrefixName(realEntityName);
             entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
             String primaryKey = GetPrimaryKeys(kontrolList);
+    
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
+     
             method.AppendLine("public " + staticText + " int SaveOrUpdate" + modelName + "( " + modelName + " item)");
             method.AppendLine(" {");
             GetDatabaseUtilityParameters(kontrolList, method, entityPrefix + "SaveOrUpdate" + modifiedTableName, true);
@@ -4467,9 +4486,18 @@ namespace WebApplicationDAO
 
             //    MemoryCache.Default.Set(key, surveys, policy);
             //}
-
+            method.AppendLine("using NLog;");
+            method.AppendLine("using System;");
+            method.AppendLine("using System.Collections.Generic;");
+            method.AppendLine("using System.Linq;");
+            method.AppendLine("using System.Runtime.Caching;");
+            method.AppendLine("using System.Text;");
+            method.AppendLine("using System.Threading.Tasks;");
+            method.AppendLine("using HelpersProject;");
+            method.AppendLine("");
+            method.AppendLine("");
             //return surveys;
-          
+            string dbDirectory = String.Format("Db{0}", modelName.Replace("Nwm", ""));
             method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm", "")));
             method.AppendLine("{");
             method.AppendLine("private static readonly Logger Logger = LogManager.GetCurrentClassLogger();");
@@ -4495,7 +4523,7 @@ namespace WebApplicationDAO
             method.AppendLine("      var "+modelName.ToLower()+"Result = new  List <" + modelName + ">();");
             method.AppendLine("try");
             method.AppendLine("{");
-            method.AppendLine("      " + modelName.ToLower() + "Result = DBDirectory.Get" + modelName + "s();");
+            method.AppendLine("      " + modelName.ToLower() + "Result = "+ dbDirectory + ".Get" + modelName + "s();");
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
@@ -4511,7 +4539,7 @@ namespace WebApplicationDAO
             method.AppendLine("try");
             method.AppendLine("{");
             method.AppendLine("     RemoveCache();");
-            method.AppendLine("     return DBDirectory.SaveOrUpdate" + modelName + "(item);");
+            method.AppendLine("     return  " + dbDirectory + ".SaveOrUpdate" + modelName + "(item);");
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
@@ -4528,7 +4556,7 @@ namespace WebApplicationDAO
             method.AppendLine("{");
             method.AppendLine("item = Get" + modelName + "sFromCache().FirstOrDefault(r => r." + primaryKeyOrginal + " == " + primaryKey + ");");
             method.AppendLine("if (item != null) return item;");
-            method.AppendLine("     item = DBDirectory.Get" + modelName + "(" + primaryKey + ");");
+            method.AppendLine("     item =  " + dbDirectory + ".Get" + modelName + "(" + primaryKey + ");");
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
@@ -4543,7 +4571,7 @@ namespace WebApplicationDAO
             method.AppendLine("try");
             method.AppendLine("{");
             method.AppendLine("     RemoveCache();");
-            method.AppendLine("     DBDirectory.Delete" + modelName + "(" + primaryKey + ");");
+            method.AppendLine("      " + dbDirectory + ".Delete" + modelName + "(" + primaryKey + ");");
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
@@ -5434,5 +5462,7 @@ namespace WebApplicationDAO
         Filter_,
         Masked_
     }
+
+
 }
 
