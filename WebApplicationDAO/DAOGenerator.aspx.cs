@@ -1396,7 +1396,7 @@ namespace WebApplicationDAO
                 built222.AppendLine("using System.Data; ");
 
                 built222.AppendLine("");
-                built222.AppendLine("namespace ProjectName.Domain {");
+                built222.AppendLine("namespace ProjectName.Domain.DB {");
                 built222.AppendLine("public class " + dbDirectory + " {");
                 built222.AppendLine(GenereateSaveOrUpdateDatabaseUtility(linkedList));
                 built222.AppendLine(GenereateDataSetToModel(linkedList));
