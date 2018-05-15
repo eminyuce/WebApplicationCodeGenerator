@@ -1390,17 +1390,19 @@ namespace WebApplicationDAO
                 built222.AppendLine("using System;");
                 built222.AppendLine("using System.Collections.Generic;");
                 built222.AppendLine("using System.Linq;");
-                built222.AppendLine("using System.Runtime.Caching;");
-                built222.AppendLine("using System.Text;");
-                built222.AppendLine("using System.Threading.Tasks;");
                 built222.AppendLine("using HelpersProject;");
+                built222.AppendLine("using System.Configuration;");
+                built222.AppendLine("using System.Data.SqlClient; ");
+                built222.AppendLine("using System.Data; ");
+
                 built222.AppendLine("");
-                built222.AppendLine("");
+                built222.AppendLine("namespace ProjectName.Domain {");
                 built222.AppendLine("public class " + dbDirectory + " {");
                 built222.AppendLine(GenereateSaveOrUpdateDatabaseUtility(linkedList));
                 built222.AppendLine(GenereateDataSetToModel(linkedList));
                 built222.AppendLine(GenereateDataSetToList(linkedList));
                 built222.AppendLine(generateSqlIReader(linkedList));
+                built222.AppendLine("}");
                 built222.AppendLine("}");
                 //TextBox_Database_Utility_DataSet.Text = "";
                 TextBox_IReader.Text = built222.ToString();
@@ -4496,6 +4498,7 @@ namespace WebApplicationDAO
             method.AppendLine("using HelpersProject;");
             method.AppendLine("");
             method.AppendLine("");
+            method.AppendLine("namespace ProjectName.Domain.Repositories {");
             //return surveys;
             string dbDirectory = String.Format("Db{0}", modelName.Replace("Nwm", ""));
             method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm", "")));
@@ -4597,6 +4600,7 @@ namespace WebApplicationDAO
                     method.AppendLine("}");
                 }
             }
+            method.AppendLine("}");
             method.AppendLine("}");
             TextBox_MyTableItem.Text = method.ToString();
         }
