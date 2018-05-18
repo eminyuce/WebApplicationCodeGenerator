@@ -1338,7 +1338,7 @@ namespace WebApplicationDAO
                 generateTableItem(linkedList);
                 GenerateTableRepository(linkedList);
                 GenerateStringPatterns(linkedList);
-                GenerateClassStringPatterns(linkedList);
+             //   GenerateClassStringPatterns(linkedList);
                 //Eğer istersek DAO dosyalarını oluştursun..
                 if (CheckBox_All_DAO.Checked)
                 {
@@ -3068,7 +3068,7 @@ namespace WebApplicationDAO
             {
                 a.AppendLine("//item." + i.columnName + "=String.Empty;");
             }
-            else if (i.dataType.Contains("datetime"))
+            else if (i.dataType.Contains("date"))
             {
 
                 a.AppendLine("//item." + i.columnName + "=DateTime.Now;");
@@ -3788,6 +3788,9 @@ namespace WebApplicationDAO
                         built.AppendLine("item." + item.columnName + "= DateTime.Now;");
                         break;
                     case "datetime":
+                        built.AppendLine("item." + item.columnName + "= DateTime.Now;");
+                        break;
+                    case "datetime2":
                         built.AppendLine("item." + item.columnName + "= DateTime.Now;");
                         break;
                     case "int":
@@ -4637,86 +4640,86 @@ namespace WebApplicationDAO
 
 
         }
-        private void GenerateClassStringPatterns(List<Kontrol_Icerik> linkedList)
-        {
+        //private void GenerateClassStringPatterns(List<Kontrol_Icerik> linkedList)
+        //{
 
-            var method = new StringBuilder();
-            var method2 = new StringBuilder();
-            var method3 = new StringBuilder();
-            var method4 = new StringBuilder();
-            var method5 = new StringBuilder();
-            var method6 = new StringBuilder();
-            try
-            {
+        //    var method = new StringBuilder();
+        //    var method2 = new StringBuilder();
+        //    var method3 = new StringBuilder();
+        //    var method4 = new StringBuilder();
+        //    var method5 = new StringBuilder();
+        //    var method6 = new StringBuilder();
+        //    try
+        //    {
 
-                String entityType = "Base";
-                if (linkedList.Any(r => r.columnName.Equals("name", StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    entityType = "BaseEntity";
-                }
+        //        String entityType = "Base";
+        //        if (linkedList.Any(r => r.columnName.Equals("name", StringComparison.InvariantCultureIgnoreCase)))
+        //        {
+        //            entityType = "BaseEntity";
+        //        }
 
-                if (linkedList.Any(r => r.columnName.Equals("description", StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    entityType = "BaseContent";
-                }
-                String modelName = getModelName();
-                String selectedTable = GetRealEntityName();
+        //        if (linkedList.Any(r => r.columnName.Equals("description", StringComparison.InvariantCultureIgnoreCase)))
+        //        {
+        //            entityType = "BaseContent";
+        //        }
+        //        String modelName = getModelName();
+        //        String selectedTable = GetRealEntityName();
 
-                String patternOriginal = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern1.txt")));
-                String patternOriginal2 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern2.txt")));
-                String patternOriginal3 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern3.txt")));
-                String patternOriginal4 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern4.txt")));
-                String patternOriginal5 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern5.txt")));
-                String patternOriginal6 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern6.txt")));
-
-
-                var pattern = patternOriginal.Replace("{className}", modelName);
-                pattern = pattern.Replace("{entityType}", entityType);
-                pattern = pattern.Replace("{realClassName}", selectedTable);
-                method.AppendLine(pattern);
-
-                var pattern2 = patternOriginal2.Replace("{className}", modelName);
-                pattern2 = pattern2.Replace("{entityType}", entityType);
-                pattern2 = pattern2.Replace("{realClassName}", selectedTable);
-                method2.AppendLine(pattern2);
+        //        String patternOriginal = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern1.txt")));
+        //        String patternOriginal2 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern2.txt")));
+        //        String patternOriginal3 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern3.txt")));
+        //        String patternOriginal4 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern4.txt")));
+        //        String patternOriginal5 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern5.txt")));
+        //        String patternOriginal6 = String.Format("{0}", File.ReadAllText(Server.MapPath("ClassPattern6.txt")));
 
 
-                var pattern3 = patternOriginal3.Replace("{className}", modelName);
-                pattern3 = pattern3.Replace("{entityType}", entityType);
-                pattern3 = pattern3.Replace("{realClassName}", selectedTable);
-                method3.AppendLine(pattern3);
+        //        var pattern = patternOriginal.Replace("{className}", modelName);
+        //        pattern = pattern.Replace("{entityType}", entityType);
+        //        pattern = pattern.Replace("{realClassName}", selectedTable);
+        //        method.AppendLine(pattern);
+
+        //        var pattern2 = patternOriginal2.Replace("{className}", modelName);
+        //        pattern2 = pattern2.Replace("{entityType}", entityType);
+        //        pattern2 = pattern2.Replace("{realClassName}", selectedTable);
+        //        method2.AppendLine(pattern2);
 
 
-                var pattern4 = patternOriginal4.Replace("{className}", modelName);
-                pattern4 = pattern4.Replace("{entityType}", entityType);
-                pattern4 = pattern4.Replace("{realClassName}", selectedTable);
-                method4.AppendLine(pattern4);
-
-                var pattern5 = patternOriginal5.Replace("{className}", modelName);
-                pattern5 = pattern5.Replace("{entityType}", entityType);
-                pattern5 = pattern5.Replace("{realClassName}", selectedTable);
-                method5.AppendLine(pattern5);
-
-                var pattern6 = patternOriginal6.Replace("{className}", modelName);
-                pattern6 = pattern6.Replace("{entityType}", entityType);
-                pattern6 = pattern6.Replace("{realClassName}", selectedTable);
-                method6.AppendLine(pattern6);
+        //        var pattern3 = patternOriginal3.Replace("{className}", modelName);
+        //        pattern3 = pattern3.Replace("{entityType}", entityType);
+        //        pattern3 = pattern3.Replace("{realClassName}", selectedTable);
+        //        method3.AppendLine(pattern3);
 
 
-            }
-            catch (Exception ex)
-            {
-                method.AppendLine(ex.Message);
-            }
+        //        var pattern4 = patternOriginal4.Replace("{className}", modelName);
+        //        pattern4 = pattern4.Replace("{entityType}", entityType);
+        //        pattern4 = pattern4.Replace("{realClassName}", selectedTable);
+        //        method4.AppendLine(pattern4);
 
-            TextBox_ClassPatternOutput1.Text = method.ToString();
-            TextBox_ClassPatternOutput2.Text = method2.ToString();
-            TextBox_ClassPatternOutput3.Text = method3.ToString();
-            TextBox_ClassPatternOutput4.Text = method4.ToString();
-            TextBox_ClassPatternOutput5.Text = method5.ToString();
-            TextBox_ClassPatternOutput6.Text = method6.ToString();
+        //        var pattern5 = patternOriginal5.Replace("{className}", modelName);
+        //        pattern5 = pattern5.Replace("{entityType}", entityType);
+        //        pattern5 = pattern5.Replace("{realClassName}", selectedTable);
+        //        method5.AppendLine(pattern5);
 
-        }
+        //        var pattern6 = patternOriginal6.Replace("{className}", modelName);
+        //        pattern6 = pattern6.Replace("{entityType}", entityType);
+        //        pattern6 = pattern6.Replace("{realClassName}", selectedTable);
+        //        method6.AppendLine(pattern6);
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        method.AppendLine(ex.Message);
+        //    }
+
+        //    TextBox_ClassPatternOutput1.Text = method.ToString();
+        //    TextBox_ClassPatternOutput2.Text = method2.ToString();
+        //    TextBox_ClassPatternOutput3.Text = method3.ToString();
+        //    TextBox_ClassPatternOutput4.Text = method4.ToString();
+        //    TextBox_ClassPatternOutput5.Text = method5.ToString();
+        //    TextBox_ClassPatternOutput6.Text = method6.ToString();
+
+        //}
         private void generateTableItem(List<Kontrol_Icerik> linkedList)
         {
             StringBuilder method = new StringBuilder();
@@ -5308,6 +5311,7 @@ namespace WebApplicationDAO
             map.Add("float", "double");
             map.Add("smalldatetime", "DateTime");
             map.Add("datetime", "DateTime");
+            map.Add("datetime2", "DateTime");
             map.Add("timestamp", "DateTime");
             map.Add("xml", "String");
 
@@ -5319,24 +5323,7 @@ namespace WebApplicationDAO
             return result;
 
         }
-        private String convertSqlDataTypeToInfragisticDataType(String key)
-        {
-            String result = "";
-
-            StringDictionary map = new StringDictionary();
-            map.Add("nvarchar", "string");
-            map.Add("datetime", "date");
-            map.Add("int", "number");
-            map.Add("bit", "bool");
-
-            if (map.ContainsKey(key))
-            {
-                return map[key];
-            }
-
-            return result;
-
-        }
+        
         private String GetEntityName()
         {
             String entityName = TextBox_EntityName.Text.Trim();

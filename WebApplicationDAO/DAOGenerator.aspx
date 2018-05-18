@@ -908,7 +908,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        <asp:WizardStep ID="WizardStep24" runat="server" Title="EF Repository">
+                 <%--       <asp:WizardStep ID="WizardStep24" runat="server" Title="EF Repository">
                             <table>
                                 <tr>
 
@@ -950,7 +950,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        
+                        --%>
                     </WizardSteps>
                     <StepStyle BorderWidth="0px" ForeColor="Gray" />
                     <SideBarButtonStyle BorderWidth="0px" Font-Names="Verdana" ForeColor="White" />
