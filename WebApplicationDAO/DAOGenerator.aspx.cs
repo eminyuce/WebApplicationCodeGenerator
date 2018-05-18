@@ -4730,7 +4730,13 @@ namespace WebApplicationDAO
             method2.AppendLine("public class " + modelName + "");
             method2.AppendLine("{");
 
-
+            String testColumnName = "TestColumnName";
+            method2.AppendLine(string.Format("// Entity annotions"));
+            method2.AppendLine(string.Format("//[DataType(DataType.Text)]"));
+            method2.AppendLine(string.Format("//[StringLength({0}, ErrorMessage = \"{1} cannot be longer than {0} characters.\")]", 100, testColumnName));
+            method2.AppendLine(string.Format("//[Display(Name =\"{0}\")]", testColumnName));
+            method2.AppendLine(string.Format("//[Required(ErrorMessage =\"{0}\")]", testColumnName));
+            method2.AppendLine(string.Format("//[AllowHtml]"));
 
             foreach (Kontrol_Icerik item in linkedList)
             {
