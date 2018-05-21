@@ -15,6 +15,7 @@ using System.Collections;
 using System.Resources;
 using System.IO;
 using System.Globalization;
+using DirectoryMTD.Domain.Helpers;
 
 namespace WebApplicationDAO
 {
@@ -29,6 +30,7 @@ namespace WebApplicationDAO
     public partial class DAOGenerator : Page
     {
         private String tableItemName = "";
+        private static String ClassNameConvention = "Nwm";
         //private static String databaseName = "";
 
         public String databaseName
@@ -321,7 +323,7 @@ namespace WebApplicationDAO
                     k.maxChar = maxChar.Equals("-1") ? "4000" : maxChar;
                     k.dataType_MaxChar = k.dataType + "(" + k.maxChar + ")";
                 }
-                k.order = Convert.ToInt32(order);
+                k.order = System.Convert.ToInt32(order);
                 k.ID = ++i;
                 k.primaryKey = columnName == primaryKey;
                 itt.Add(k);
@@ -362,11 +364,11 @@ namespace WebApplicationDAO
                 var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
                 if (parts.Length > 1)
                 {
-                    m = "Nwm" + UppercaseFirst(parts[1].Replace("ies", "y").TrimEnd('s'));
+                    m = ClassNameConvention + UppercaseFirst(parts[1].Replace("ies", "y").TrimEnd('s'));
                 }
                 else
                 {
-                    m = parts[0];
+                    m = ClassNameConvention + parts[0].ToStr().TrimEnd('s');
                 }
             }
             return m;
@@ -641,7 +643,7 @@ namespace WebApplicationDAO
                         if (dataType.IndexOf("int") != -1)
                         {
                             insert.AppendLine("if (" + controlID + ".SelectedItem != null && func.isInteger(" + controlID + ".SelectedValue)){");
-                            //insert.AppendLine("item." + columnName + "= Convert.ToInt32(" + controlID + ".SelectedValue);}");
+                            //insert.AppendLine("item." + columnName + "= System.Convert.ToInt32(" + controlID + ".SelectedValue);}");
                         }
                         else if (dataType.IndexOf("varchar") != -1)
                         {
@@ -699,7 +701,7 @@ namespace WebApplicationDAO
                         if (dataType.IndexOf("int") != -1)
                         {
                             insert.AppendLine("if (" + controlID + ".SelectedItem != null && func.isInteger(" + controlID + ".SelectedValue)){");
-                            insert.AppendLine("item." + columnName + "= Convert.ToInt32(" + controlID + ".SelectedValue);}");
+                            insert.AppendLine("item." + columnName + "= System.Convert.ToInt32(" + controlID + ".SelectedValue);}");
                         }
                         else if (dataType.IndexOf("varchar") != -1)
                         {
@@ -750,7 +752,7 @@ namespace WebApplicationDAO
                         if (dataType.IndexOf("int") != -1)
                         {
                             insert.AppendLine("if (" + controlID + ".SelectedItem != null && func.isInteger(" + controlID + ".SelectedValue)){");
-                            insert.AppendLine("item." + columnName + "= Convert.ToInt32(" + controlID + ".SelectedValue);}");
+                            insert.AppendLine("item." + columnName + "= System.Convert.ToInt32(" + controlID + ".SelectedValue);}");
                         }
                         else if (dataType.IndexOf("varchar") != -1)
                         {
@@ -829,7 +831,7 @@ namespace WebApplicationDAO
                         if (dataType.IndexOf("int") != -1)
                         {
                             insert.AppendLine("if(func.isInteger(" + controlID + ".Text))");
-                            insert.AppendLine("item." + columnName + "= Convert.ToInt32(" + controlID + ".Text.Trim());");
+                            insert.AppendLine("item." + columnName + "= System.Convert.ToInt32(" + controlID + ".Text.Trim());");
 
                         }
                         else if (dataType.IndexOf("varchar") != -1 || dataType.IndexOf("text") != -1)
@@ -975,7 +977,7 @@ namespace WebApplicationDAO
                         if (dataType.IndexOf("int") != -1)
                         {
                             insert.AppendLine("if (" + controlID + ".SelectedItem != null)");
-                            insert.AppendLine("item." + columnName + "=Convert.ToInt32(" + controlID + ".SelectedValue);");
+                            insert.AppendLine("item." + columnName + "=System.Convert.ToInt32(" + controlID + ".SelectedValue);");
                         }
                         else if (dataType.IndexOf("varchar") != -1 || dataType.IndexOf("text") != -1)
                         {
@@ -1079,7 +1081,7 @@ namespace WebApplicationDAO
                     }
                     if (txtOrder != null && this.isInteger(txtOrder.Text))
                     {
-                        order = Convert.ToInt32(txtOrder.Text);
+                        order = System.Convert.ToInt32(txtOrder.Text);
                     }
                     if (cssClass != null && cssClass.SelectedValue != "-1")
                     {
@@ -1385,7 +1387,7 @@ namespace WebApplicationDAO
 
                 StringBuilder built222 = new StringBuilder();
                 String modelName = getModelName();
-                string dbDirectory = String.Format("Db{0}", modelName.Replace("Nwm", ""));
+                string dbDirectory = String.Format("Db{0}", modelName.Replace(ClassNameConvention, ""));
                 built222.AppendLine("using NLog;");
                 built222.AppendLine("using System;");
                 built222.AppendLine("using System.Collections.Generic;");
@@ -1712,7 +1714,7 @@ namespace WebApplicationDAO
                         }
                         else if (dataType.IndexOf("int") > -1)
                         {
-                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
+                            //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : System.Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
                             method.AppendLine("item." + column.ColumnName + " = dr[\"" + column.ColumnName + "\"].ToInt();");
                         }
                         else if (dataType.IndexOf("date") > -1)
@@ -1952,7 +1954,7 @@ namespace WebApplicationDAO
             built.AppendLine("//[OutputCache(CacheProfile = \"Cache1Hour\")]");
             built.AppendLine("public ActionResult Index()");
             built.AppendLine("{");
-            built.AppendLine(String.Format("var items = {0}Repository.Get{1}s();", modelName.Replace("Nwm", ""), modelName));
+            built.AppendLine(String.Format("var items = {0}Repository.Get{1}s();", modelName.Replace(ClassNameConvention, ""), modelName));
             built.AppendLine("return View(items);");
             built.AppendLine("}");
 
@@ -1960,7 +1962,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("public ActionResult {0}Detail(String id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id.Split('-').Last().ToInt();", primaryKey.ToLower()));
-            built.AppendLine(String.Format("var {0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""), primaryKey.ToLower(), modelName));
+            built.AppendLine(String.Format("var {0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace(ClassNameConvention, ""), primaryKey.ToLower(), modelName));
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
             built.AppendLine("}");
 
@@ -1972,7 +1974,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("if({0} == 0)", primaryKey.ToLower()));
             built.AppendLine("{");
             built.AppendLine("}else{");
-            built.AppendLine(String.Format("{0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace("Nwm", ""),
+            built.AppendLine(String.Format("{0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace(ClassNameConvention, ""),
                 primaryKey.ToLower(), modelName));
             built.AppendLine("}");
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
@@ -1981,14 +1983,14 @@ namespace WebApplicationDAO
             built.AppendLine("[HttpPost]");
             built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}({0} {1})", modelName, modelName.ToLower()));
             built.AppendLine("{");
-            built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{3}({2});", primaryKey.ToLower(), modelName.Replace("Nwm", ""), modelName.ToLower(), modelName));
+            built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{3}({2});", primaryKey.ToLower(), modelName.Replace(ClassNameConvention, ""), modelName.ToLower(), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
             built.AppendLine(String.Format("public ActionResult Delete{0}(int id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id;", FirstCharacterToLower(primaryKey)));
-            built.AppendLine(String.Format("{0}Repository.Delete{2}({1});", modelName.Replace("Nwm", ""), FirstCharacterToLower(primaryKey), modelName));
+            built.AppendLine(String.Format("{0}Repository.Delete{2}({1});", modelName.Replace(ClassNameConvention, ""), FirstCharacterToLower(primaryKey), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
@@ -4035,9 +4037,9 @@ namespace WebApplicationDAO
                     control.valid = (Validator_Adi)Enum.Parse(typeof(Validator_Adi), featuresOfControl[i++]);
                     control.func = (Function_Adi)Enum.Parse(typeof(Function_Adi), featuresOfControl[i++]);
                     control.ajaxControl = (Ajax_Adi)Enum.Parse(typeof(Ajax_Adi), featuresOfControl[i++]);
-                    control.order = Convert.ToInt32(featuresOfControl[i++]);
+                    control.order = System.Convert.ToInt32(featuresOfControl[i++]);
                     control.use = Boolean.Parse(featuresOfControl[i++]);
-                    control.ID = Convert.ToInt32(featuresOfControl[i++]);
+                    control.ID = System.Convert.ToInt32(featuresOfControl[i++]);
                     control.primaryKey = Boolean.Parse(featuresOfControl[i++]);
                     control.gridViewFields = Boolean.Parse(featuresOfControl[i++]);
                     control.sql = Boolean.Parse(featuresOfControl[i++]);
@@ -4503,8 +4505,8 @@ namespace WebApplicationDAO
             method.AppendLine("");
             method.AppendLine("namespace ProjectName.Domain.Repositories {");
             //return surveys;
-            string dbDirectory = String.Format("Db{0}", modelName.Replace("Nwm", ""));
-            method.AppendLine(String.Format("public class {0}Repository", modelName.Replace("Nwm", "")));
+            string dbDirectory = String.Format("Db{0}", modelName.Replace(ClassNameConvention, ""));
+            method.AppendLine(String.Format("public class {0}Repository", modelName.Replace(ClassNameConvention, "")));
             method.AppendLine("{");
             method.AppendLine("private static readonly Logger Logger = LogManager.GetCurrentClassLogger();");
             method.AppendLine("private static string CacheKeyAllItems = \"" + modelName + "Cache\";");
@@ -4916,7 +4918,7 @@ namespace WebApplicationDAO
                 }
                 else if (item.dataType.IndexOf("int") > -1)
                 {
-                    //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
+                    //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : System.Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
                     method.AppendLine("item." + item.columnName + " = 1;");
                 }
                 else if (item.dataType.IndexOf("date") > -1)
@@ -5054,7 +5056,7 @@ namespace WebApplicationDAO
                 }
                 else if (item.dataType.IndexOf("int") > -1)
                 {
-                    //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
+                    //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : System.Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToInt();");
                 }
                 else if (item.dataType.IndexOf("date") > -1)
