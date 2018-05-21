@@ -4905,6 +4905,7 @@ namespace WebApplicationDAO
             String selectedTable = GetRealEntityName();
             String modelName = getModelName();
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
+            String primaryKey = GetPrimaryKeys(kontrolList);
 
             method.AppendLine("var item = new " + modelName + "();");
             method.AppendLine("");
@@ -4942,63 +4943,72 @@ namespace WebApplicationDAO
                     method.AppendLine("item." + item.columnName + " = \"\";");
                 }
             }
-
-
+    
+            method.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{1}(item);", primaryKey.ToLower(), modelName));
             method.AppendLine("");
             method.AppendLine("");
             method.AppendLine("");
 
-            method.AppendLine(String.Format("public  class {0}Repository : GenericRepository<{2}Entities, {1}>, I{0}Repository", modelName, selectedTable, databaseName));
-            method.AppendLine("{");
-            method.AppendLine("}");
+            // NO USAGE FOR FAR.
+            try
+            {
+                StringBuilder method12 = new StringBuilder();
 
-            method.AppendLine("");
-            method.AppendLine("");
+                method12.AppendLine(String.Format("public  class {0}Repository : GenericRepository<{2}Entities, {1}>, I{0}Repository", modelName, selectedTable, databaseName));
+                method12.AppendLine("{");
+                method12.AppendLine("}");
 
-            method.AppendLine(String.Format("public interface I{0}Repository : IGenericRepository<{1}>", modelName, selectedTable));
-            method.AppendLine("{");
-            method.AppendLine("}");
+                method12.AppendLine("");
+                method12.AppendLine("");
 
-            method.AppendLine("");
-            method.AppendLine("");
-            method.AppendLine("");
+                method12.AppendLine(String.Format("public interface I{0}Repository : IGenericRepository<{1}>", modelName, selectedTable));
+                method12.AppendLine("{");
+                method12.AppendLine("}");
 
-            StringBuilder method12 = new StringBuilder();
+                method12.AppendLine("");
+                method12.AppendLine("");
+                method12.AppendLine("");
+
+                method12.AppendLine("using GenericRepository.EntityFramework;");
+                method12.AppendLine("namespace MyProject.Service.Repositories");
+                method12.AppendLine("{");
+                method12.AppendLine(String.Format("public  class {0}Repository : EntityRepository<{0}, int>, I{0}Repository", modelName));
+                method12.AppendLine("{");
+                method12.AppendLine(String.Format("private I{0}Context dbContext;", databaseName));
+                method12.AppendLine(String.Format("public {1}Repository(I{0}Context dbContext) : base(dbContext)", databaseName, modelName));
+                method12.AppendLine("{");
+                method12.AppendLine("    this.dbContext = dbContext;");
+                method12.AppendLine("}");
+                method12.AppendLine("}");
+                method12.AppendLine("}");
+
+                method12.AppendLine("");
+                method12.AppendLine("");
 
 
-            method12.AppendLine("using GenericRepository.EntityFramework;");
-            method12.AppendLine("namespace MyProject.Service.Repositories");
-            method12.AppendLine("{");
-            method12.AppendLine(String.Format("public  class {0}Repository : EntityRepository<{0}, int>, I{0}Repository", modelName));
-            method12.AppendLine("{");
-            method12.AppendLine(String.Format("private I{0}Context dbContext;", databaseName));
-            method12.AppendLine(String.Format("public {1}Repository(I{0}Context dbContext) : base(dbContext)", databaseName, modelName));
-            method12.AppendLine("{");
-            method12.AppendLine("    this.dbContext = dbContext;");
-            method12.AppendLine("}");
-            method12.AppendLine("}");
-            method12.AppendLine("}");
+                StringBuilder method11 = new StringBuilder();
+                method11.AppendLine("using GenericRepository.EntityFramework;");
+                method11.AppendLine("namespace MyProject.Service.Repositories.Interfaces");
+                method11.AppendLine("{");
+                method11.AppendLine(String.Format("public interface I{0}Repository : IEntityRepository<{0}, int>", modelName));
+                method11.AppendLine("{");
+                method11.AppendLine("}");
+                method11.AppendLine("}");
+            }
+            catch (Exception)
+            {
 
-            method12.AppendLine("");
-            method12.AppendLine("");
-
-
-            StringBuilder method11 = new StringBuilder();
-            method11.AppendLine("using GenericRepository.EntityFramework;");
-            method11.AppendLine("namespace MyProject.Service.Repositories.Interfaces");
-            method11.AppendLine("{");
-            method11.AppendLine(String.Format("public interface I{0}Repository : IEntityRepository<{0}, int>", modelName));
-            method11.AppendLine("{");
-            method11.AppendLine("}");
-            method11.AppendLine("}");
+      
+            }
+          
 
             // createFile(method, String.Format("{0}Repository", modelName));
 
-            method.AppendLine(method11.ToString());
-            method.AppendLine(method12.ToString());
+            //method.AppendLine(method11.ToString());
+            //method.AppendLine(method12.ToString());
 
-            DownloadText(method11, String.Format("I{0}Repository.cs", modelName));
-            DownloadText(method12, String.Format("{0}Repository.cs", modelName));
+            //DownloadText(method11, String.Format("I{0}Repository.cs", modelName));
+            //DownloadText(method12, String.Format("{0}Repository.cs", modelName));
 
             TextBox_AspMvcAction2.Text = method.ToString();
 
