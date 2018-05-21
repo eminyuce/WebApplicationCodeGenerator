@@ -32,7 +32,14 @@ namespace WebApplicationDAO
         private String tableItemName = "";
         private static String ClassNameConvention = "Nwm";
         //private static String databaseName = "";
-
+        public string NameSpace
+        {
+            get
+            {
+                var i = TextBox_NameSpace_Name.Text.ToStr().Trim();
+                return String.IsNullOrEmpty(i) ? "ProjectNameSpace" : i;
+            }
+        }
         public String databaseName
         {
             get { return ViewState["databaseName"] as String; }
@@ -234,7 +241,7 @@ namespace WebApplicationDAO
                     string TableType = rowDatabase["table_type"].ToString();
 
                     i.Value = String.Format("{0}.{1}.{2}", TableCatalog, TableSchema, TableName);
-                    i.Text = rowDatabase["table_schema"].ToString() +"."+ rowDatabase["table_name"].ToString();
+                    i.Text = rowDatabase["table_schema"].ToString() + "." + rowDatabase["table_name"].ToString();
                     list.Add(i);
                 }
                 var list1 = from s in list orderby s.Text select s;
@@ -244,7 +251,7 @@ namespace WebApplicationDAO
                 }
                 con.Close();
                 Label_ERROR.Text = "Select a Table from dropdown. Hahahaha, do not forget to choose the table. ";
-                TableNames = list.Select(t=>t.Text).ToList();
+                TableNames = list.Select(t => t.Text).ToList();
             }
             catch (Exception e)
             {
@@ -286,7 +293,7 @@ namespace WebApplicationDAO
             #region Get Primary Key
             String primaryKey = "";
             DataTable ttt = new DataTable();
-            string cmdText = "select * from " + 
+            string cmdText = "select * from " +
                 DropDownList_Tables.SelectedItem.Value;
             SqlCommand cmd = new SqlCommand(cmdText);
             cmd.Connection = con;
@@ -1340,7 +1347,7 @@ namespace WebApplicationDAO
                 generateTableItem(linkedList);
                 GenerateTableRepository(linkedList);
                 GenerateStringPatterns(linkedList);
-             //   GenerateClassStringPatterns(linkedList);
+                //   GenerateClassStringPatterns(linkedList);
                 //Eğer istersek DAO dosyalarını oluştursun..
                 if (CheckBox_All_DAO.Checked)
                 {
@@ -1398,7 +1405,7 @@ namespace WebApplicationDAO
                 built222.AppendLine("using System.Data; ");
 
                 built222.AppendLine("");
-                built222.AppendLine("namespace ProjectName.Domain.DB {");
+                built222.AppendLine("namespace " + NameSpace + ".Domain.DB {");
                 built222.AppendLine("public class " + dbDirectory + " {");
                 built222.AppendLine(GenereateSaveOrUpdateDatabaseUtility(linkedList));
                 built222.AppendLine(GenereateDataSetToModel(linkedList));
@@ -2050,7 +2057,7 @@ namespace WebApplicationDAO
             }
         }
 
- 
+
         private string GenereateDataSetToList(List<Kontrol_Icerik> kontrolList)
         {
             StringBuilder method = new StringBuilder();
@@ -2240,9 +2247,9 @@ namespace WebApplicationDAO
             String entityPrefix = GetEntityPrefixName(realEntityName);
             entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
             String primaryKey = GetPrimaryKeys(kontrolList);
-    
+
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
-     
+
             method.AppendLine("public " + staticText + " int SaveOrUpdate" + modelName + "( " + modelName + " item)");
             method.AppendLine(" {");
             GetDatabaseUtilityParameters(kontrolList, method, entityPrefix + "SaveOrUpdate" + modifiedTableName, true);
@@ -2302,7 +2309,7 @@ namespace WebApplicationDAO
 
             }
         }
-      
+
         private void Kontrolleri_Goster(String built)
         {
             if (CheckBox_isControlVisible.Checked)
@@ -3748,7 +3755,7 @@ namespace WebApplicationDAO
             Response.Write(text);
             Response.End();
         }
-             
+
         private String generateData()
         {
             StringBuilder built = new StringBuilder();
@@ -3849,7 +3856,7 @@ namespace WebApplicationDAO
 
             StringBuilder built = new StringBuilder();
 
- 
+
             try
             {
 
@@ -4465,7 +4472,7 @@ namespace WebApplicationDAO
         }
 
 
-     
+
         private void GenerateTableRepository(List<Kontrol_Icerik> linkedList)
         {
             StringBuilder method = new StringBuilder();
@@ -4503,7 +4510,7 @@ namespace WebApplicationDAO
             method.AppendLine("using HelpersProject;");
             method.AppendLine("");
             method.AppendLine("");
-            method.AppendLine("namespace ProjectName.Domain.Repositories {");
+            method.AppendLine("namespace " + NameSpace + ".Domain.Repositories {");
             //return surveys;
             string dbDirectory = String.Format("Db{0}", modelName.Replace(ClassNameConvention, ""));
             method.AppendLine(String.Format("public class {0}Repository", modelName.Replace(ClassNameConvention, "")));
@@ -4528,10 +4535,10 @@ namespace WebApplicationDAO
             method.AppendLine("");
             method.AppendLine("public " + staticText + " List<" + modelName + "> Get" + modelName + "s()");
             method.AppendLine("{");
-            method.AppendLine("      var "+modelName.ToLower()+"Result = new  List <" + modelName + ">();");
+            method.AppendLine("      var " + modelName.ToLower() + "Result = new  List <" + modelName + ">();");
             method.AppendLine("try");
             method.AppendLine("{");
-            method.AppendLine("      " + modelName.ToLower() + "Result = "+ dbDirectory + ".Get" + modelName + "s();");
+            method.AppendLine("      " + modelName.ToLower() + "Result = " + dbDirectory + ".Get" + modelName + "s();");
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
             method.AppendLine("Logger.Error(ex, ex.Message);");
@@ -4540,7 +4547,7 @@ namespace WebApplicationDAO
             method.AppendLine(" #endif");
             method.AppendLine("}");
             method.AppendLine("      return " + modelName.ToLower() + "Result;");
- 
+
             method.AppendLine("}");
             method.AppendLine("public " + staticText + " int SaveOrUpdate" + modelName + "( " + modelName + " item)");
             method.AppendLine("{");
@@ -4728,6 +4735,23 @@ namespace WebApplicationDAO
             String modelName = getModelName();
             String selectedTable = GetRealEntityName();
             StringBuilder method2 = new StringBuilder();
+       
+
+            method2.AppendLine("using HelpersProject;");
+            method2.AppendLine("using " + NameSpace + ".Domain.Entities;");
+            method2.AppendLine("using " + NameSpace + ".Domain.Repositories;");
+            method2.AppendLine("using System;");
+            method2.AppendLine("using System.Collections.Generic;");
+            method2.AppendLine("using System.ComponentModel.DataAnnotations;");
+            method2.AppendLine("using System.Linq;");
+            method2.AppendLine("using System.Text;");
+            method2.AppendLine("  ");
+            method2.AppendLine("  ");
+            method2.AppendLine("  ");
+            method2.AppendLine("  ");
+            method2.AppendLine(" namespace  " + NameSpace + ".Domain.Entities");
+            method2.AppendLine(" {");
+            method2.AppendLine("[Serializable]");
             if (CheckBox_ModelAttributesVisible.Checked)
             {
                 method2.AppendLine("[Table(\"" + selectedTable + "\")]");
@@ -4758,7 +4782,7 @@ namespace WebApplicationDAO
                         //method2.AppendLine("[Required]");
                         method2.AppendLine(string.Format("[Display(Name =\"{0}\")]", item.columnName));
                         method2.AppendLine(string.Format("[Column(\"{0}\")]", item.columnName));
-                
+
                         method2.AppendLine(string.Format("[Required(ErrorMessage =\"{0}\")]", item.columnName));
                     }
 
@@ -4892,6 +4916,7 @@ namespace WebApplicationDAO
             method2.AppendLine("}");
             // TextBox_MyTableItem.Text = method.ToString();
             DownloadText(method2, String.Format("{0}.cs", modelName));
+            method2.AppendLine("}");
             TextBox_MyTableItem2.Text = method2.ToString();
         }
         private String getObject(String name)
@@ -4943,7 +4968,7 @@ namespace WebApplicationDAO
                     method.AppendLine("item." + item.columnName + " = \"\";");
                 }
             }
-    
+
             method.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{1}(item);", primaryKey.ToLower(), modelName));
             method.AppendLine("");
             method.AppendLine("");
@@ -4998,9 +5023,9 @@ namespace WebApplicationDAO
             catch (Exception)
             {
 
-      
+
             }
-          
+
 
             // createFile(method, String.Format("{0}Repository", modelName));
 
@@ -5231,9 +5256,9 @@ namespace WebApplicationDAO
             return GetEntityName() + tableItemName;
         }
 
-       
-       
-        
+
+
+
 
         protected void Button_BackUp_Click(object sender, EventArgs e)
         {
@@ -5335,7 +5360,7 @@ namespace WebApplicationDAO
             return result;
 
         }
-        
+
         private String GetEntityName()
         {
             String entityName = TextBox_EntityName.Text.Trim();

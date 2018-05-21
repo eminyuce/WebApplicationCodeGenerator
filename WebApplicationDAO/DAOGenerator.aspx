@@ -455,14 +455,25 @@
                         <td>
                             <asp:TextBox ID="TextBox_ConnectionString" runat="server" Width="698px"></asp:TextBox>
                         </td>
+                        <td>
 
+                        </td>
+                         <td>
+
+                        </td>
                     </tr>
                     <tr>
                         <td>
                             <asp:Label ID="Label21" CssClass="labelYazi" runat="server" Text="String Pattern"></asp:Label>
                         </td>
                         <td>
-                            <asp:TextBox ID="TextBox_StringPattern" Text="public {1} {0}  {get;set}" runat="server" Width="698px"></asp:TextBox>
+                            <asp:TextBox ID="TextBox_StringPattern" Text="public {1} {0}  {get;set}" runat="server" Width="250px"></asp:TextBox>
+                        </td>
+                         <td>
+                            <asp:Label ID="Label23" CssClass="labelYazi" runat="server" Text="Project NameSpace:"></asp:Label>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="TextBox_NameSpace_Name" ToolTip="Project NameSpace" runat="server" Width="250px"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
@@ -473,6 +484,7 @@
                             <asp:TextBox ID="TextBox_DownloadPath" Text="C:\ASP_NET_Codes" runat="server" Width="698px"></asp:TextBox>
                         </td>
                     </tr>
+                    
                 </table>
                 <table>
                     <tr>
