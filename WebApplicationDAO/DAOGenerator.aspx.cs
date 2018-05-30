@@ -1958,6 +1958,24 @@ namespace WebApplicationDAO
             var tables = TableNames.OrderBy(x => x).ToList();
             Kontrol_Icerik prKey = GetPrimaryKeysItem();
 
+            built.AppendLine("using HelpersProject;");
+            built.AppendLine("using " + NameSpace + ".Domain.Entities;");
+            built.AppendLine("using " + NameSpace + ".Domain.Repositories;");
+            built.AppendLine("using System;");
+            built.AppendLine("using System.Collections.Generic;");
+            built.AppendLine("using System.ComponentModel.DataAnnotations;");
+            built.AppendLine("using System.Linq;");
+            built.AppendLine("using System.Text;");
+            built.AppendLine("using System;");
+            built.AppendLine("using System.Web;");
+            built.AppendLine("using System.Web.Mvc;");
+            built.AppendLine("  ");
+            built.AppendLine("  ");
+            built.AppendLine("  ");
+            built.AppendLine("  ");
+            built.AppendLine(" namespace  " + NameSpace + ".Controllers");
+            built.AppendLine(" {");
+
             built.AppendLine("//[OutputCache(CacheProfile = \"Cache1Hour\")]");
             built.AppendLine("public ActionResult Index()");
             built.AppendLine("{");
@@ -2011,7 +2029,7 @@ namespace WebApplicationDAO
             built.AppendLine("}");
 
 
-
+            built.AppendLine("}");
             TextBox_AspMvcAction.Text = built.ToString();
         }
 
@@ -4744,6 +4762,7 @@ namespace WebApplicationDAO
             String modelName = getModelName();
             String selectedTable = GetRealEntityName();
             StringBuilder method2 = new StringBuilder();
+
 
 
             method2.AppendLine("using HelpersProject;");
