@@ -1990,6 +1990,15 @@ namespace WebApplicationDAO
             built.AppendLine("[HttpPost]");
             built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}({0} {1})", modelName, modelName.ToLower()));
             built.AppendLine("{");
+
+
+            built.AppendLine("//if (String.IsNullOrEmpty(story.Title.ToStr().Trim()))");
+            built.AppendLine("//{");
+            built.AppendLine("//   ModelState.AddModelError(\"Title\", \"Title is required.\");");
+            built.AppendLine(String.Format("//  return View({0});", modelName.ToLower()));
+            built.AppendLine("//}");
+
+
             built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{3}({2});", primaryKey.ToLower(), modelName.Replace(ClassNameConvention, ""), modelName.ToLower(), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
@@ -4735,7 +4744,7 @@ namespace WebApplicationDAO
             String modelName = getModelName();
             String selectedTable = GetRealEntityName();
             StringBuilder method2 = new StringBuilder();
-       
+
 
             method2.AppendLine("using HelpersProject;");
             method2.AppendLine("using " + NameSpace + ".Domain.Entities;");
