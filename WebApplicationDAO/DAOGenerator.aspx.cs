@@ -2261,7 +2261,7 @@ namespace WebApplicationDAO
             method.AppendLine(" }");
             method.AppendLine(" }");
             method.AppendLine(" }");
-            method.AppendLine(" return null;");
+            method.AppendLine(" return new "+ modelName + "();");
             method.AppendLine(" }");
             return method.ToString();
         }
