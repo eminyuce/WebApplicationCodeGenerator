@@ -386,6 +386,7 @@
             clipboardData("CopytoClipboard_AspMvcList", 'Wizard1_TextBox_AspMvcList');
             clipboardData("CopytoClipboard_AspMvcCreateOrEdit", 'Wizard1_TextBox_AspMvcCreateOrEdit');
             clipboardData("CopytoClipboard_AspMvcDetails", 'Wizard1_TextBox_AspMvcDetails');
+            clipboardData("CopytoClipboard_StoredProc_Exec", 'Wizard1_TextBox_StoredProc_Exec');
             clipboardData("CopytoClipboard_StoredProc_Exec_Model", 'Wizard1_TextBox_StoredProc_Exec_Model');
             clipboardData("CopytoClipboard_StoredProc_Exec_Model_DataReader", 'Wizard1_TextBox_StoredProc_Exec_Model_DataReader');
             clipboardData("CopytoClipboard_IReader", 'Wizard1_TextBox_IReader');
@@ -909,6 +910,9 @@
                                         <div>
                                             <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
                                                 runat="server"></asp:TextBox>
+                                                 <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_StoredProc_Exec" value="Copy" />
+
                                         </div>
                                     </td>
                                     <td>
