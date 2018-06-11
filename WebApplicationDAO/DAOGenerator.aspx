@@ -7,8 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>Code Generator 1.0</title>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script type="text/javascript" src="Scripts/ZeroClipboard.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
     <style type="text/css">
         body {
@@ -375,10 +374,20 @@
 
 
 
+
             console.log("It is clicked.111");
-            clipboardData("clipboardButtonDatabase_SaveOrUpdate", 'Wizard1_TextBox_Database_Utility_SaveOrUpdate');
-            clipboardData("clipboardButtonDatabase_UtilityDataSet", 'Wizard1_TextBox_Database_Utility_DataSet');
-            clipboardData("clipboardButtonDatabase_UtilityList", 'Wizard1_TextBox_Database_Utility_List');
+
+            clipboardData("CopytoClipboard_SP", 'Wizard1_TextBox_SP');
+            clipboardData("CopytoClipboard_Veri", 'Wizard1_TextBox_Veri');
+            clipboardData("CopytoClipboard_MergeSqlStatement", 'Wizard1_TextBox_MergeSqlStatement');
+            clipboardData("CopytoClipboard_AspMvcAction", 'Wizard1_TextBox_AspMvcAction');
+            clipboardData("CopytoClipboard_AspMvcList2", 'Wizard1_TextBox_AspMvcList2');
+            clipboardData("CopytoClipboard_AspMvcAction2", 'Wizard1_TextBox_AspMvcAction2');
+            clipboardData("CopytoClipboard_AspMvcList", 'Wizard1_TextBox_AspMvcList');
+            clipboardData("CopytoClipboard_AspMvcCreateOrEdit", 'Wizard1_TextBox_AspMvcCreateOrEdit');
+            clipboardData("CopytoClipboard_AspMvcDetails", 'Wizard1_TextBox_AspMvcDetails');
+            clipboardData("CopytoClipboard_StoredProc_Exec_Model", 'Wizard1_TextBox_StoredProc_Exec_Model');
+            clipboardData("CopytoClipboard_StoredProc_Exec_Model_DataReader", 'Wizard1_TextBox_StoredProc_Exec_Model_DataReader');
             clipboardData("CopytoClipboard_IReader", 'Wizard1_TextBox_IReader');
             clipboardData("CopytoClipboard_Repository", 'Wizard1_TextBox_MyTableItem');
             clipboardData("CopytoClipboard_Item", 'Wizard1_TextBox_MyTableItem2');
@@ -389,12 +398,17 @@
                     var myTextToCopy = $('#' + textBoxId).val();
                     $('#' + textBoxId).focus();
                     $('#' + textBoxId).select();
-                    // Usage example
-                    // copyTextToClipboard('This text will be copied to the clipboard.');
-                    // copyToClipboard(myTextToCopy);
+                    copyToClipboard($('#' + textBoxId));
                 });
             }
-
+            function copyToClipboard(element) {
+                var $temp = $('<textarea   />');  // $("<input>");
+                $("body").append($temp);
+                $temp.val($(element).text()).select();
+                document.execCommand("copy");
+                $temp.remove();
+                $(element).select();
+            }
 
             var $txt = $('input[id$=TextBox_Filter]');
             var $ddl = $('select[id$=DropDownList_Tables]');
@@ -455,12 +469,8 @@
                         <td>
                             <asp:TextBox ID="TextBox_ConnectionString" runat="server" Width="698px"></asp:TextBox>
                         </td>
-                        <td>
-
-                        </td>
-                         <td>
-
-                        </td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>
@@ -469,7 +479,7 @@
                         <td>
                             <asp:TextBox ID="TextBox_StringPattern" Text="public {1} {0}  {get;set}" runat="server" Width="250px"></asp:TextBox>
                         </td>
-                         <td>
+                        <td>
                             <asp:Label ID="Label23" CssClass="labelYazi" runat="server" Text="Project NameSpace:"></asp:Label>
                         </td>
                         <td>
@@ -484,7 +494,7 @@
                             <asp:TextBox ID="TextBox_DownloadPath" Text="C:\ASP_NET_Codes" runat="server" Width="698px"></asp:TextBox>
                         </td>
                     </tr>
-                    
+
                 </table>
                 <table>
                     <tr>
@@ -525,7 +535,7 @@
                             <asp:Button CssClass="button" ID="Button_Olustur" CausesValidation="false" runat="server"
                                 Text="Create Codes" OnClick="Button_Olustur_Click" />
                         </td>
-                    
+
                         <td>
                             <asp:Button CssClass="button" ID="Button_Download" runat="server" OnClick="Button_Download_Click"
                                 Text="Download TextBoxes Content" />
@@ -540,7 +550,7 @@
                         <td>
                             <asp:CheckBox ID="CheckBox_ModelAttributesVisible" Font-Bold="True" ForeColor="Blue" Text="Model Attributes Visible" runat="server" />
                         </td>
-                        
+
                     </tr>
                     <asp:Panel ID="Panel_Unused_Functions" Visible="false" runat="server">
                         <asp:Button CssClass="button" ID="Button_BackUp" runat="server" Text="Back Up Database"
@@ -767,6 +777,8 @@
                                         </h3>
                                         <asp:TextBox ID="TextBox_Veri" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
                                         <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_Veri" value="Copy" />
+
                                     </td>
                                     <td>
                                         <h3>Insert-Update-Delete StoredProcedure                      
@@ -774,6 +786,8 @@
                                         </h3>
                                         <asp:TextBox ID="TextBox_SP" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
                                         <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_SP" value="Copy" />
+
 
                                     </td>
                                     <td>
@@ -781,6 +795,8 @@
                                         </h3>
                                         <asp:TextBox ID="TextBox_MergeSqlStatement" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
                                         <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_MergeSqlStatement" value="Copy" />
+
                                     </td>
                                 </tr>
                             </table>
@@ -795,27 +811,27 @@
                                         <asp:TextBox ID="TextBox_MyTableItem" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                         <br />
-                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_Repository" value="Select" />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_Repository" value="Copy" />
                                     </td>
                                     <td>
                                         <h3>&nbsp;</h3>
                                         <asp:TextBox ID="TextBox_MyTableItem2" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
                                         <br />
-                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_Item" value="Select" />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_Item" value="Copy" />
                                     </td>
                                     <td>
                                         <h3>Ireader Method
                                         </h3>
                                         <asp:TextBox ID="TextBox_IReader" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
                                         <br />
-                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_IReader" value="Select" />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_IReader" value="Copy" />
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
 
-                        
+
                         <asp:WizardStep ID="WizardStep239" runat="server" Title="Asp.Net MVC Actions">
                             <table>
                                 <tr>
@@ -823,11 +839,15 @@
                                         <h3>Asp MVC Actions</h3>
                                         <asp:TextBox ID="TextBox_AspMvcAction" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
+                                        <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_AspMvcAction" value="Copy" />
                                     </td>
                                     <td>
                                         <h3>Test</h3>
                                         <asp:TextBox ID="TextBox_AspMvcList2" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
+                                        <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_AspMvcList2" value="Copy" />
                                     </td>
                                     <td>
                                         <h3>Test 2s
@@ -835,7 +855,8 @@
                                              
                                         </h3>
                                         <asp:TextBox ID="TextBox_AspMvcAction2" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
-
+                                        <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_AspMvcAction2" value="Copy" />
 
                                     </td>
                                 </tr>
@@ -848,16 +869,25 @@
                                         <h3>Asp Mvc List</h3>
                                         <asp:TextBox ID="TextBox_AspMvcList" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
+                                        <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_AspMvcList" value="Copy" />
+
                                     </td>
                                     <td>
                                         <h3>Asp Mvc Create Or Edit</h3>
                                         <asp:TextBox ID="TextBox_AspMvcCreateOrEdit" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
+                                        <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_AspMvcCreateOrEdit" value="Copy" />
+
                                     </td>
                                     <td>
                                         <h3>Asp Mvc Details
                                         </h3>
                                         <asp:TextBox ID="TextBox_AspMvcDetails" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+                                        <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_AspMvcDetails" value="Copy" />
+
                                     </td>
                                 </tr>
                             </table>
@@ -884,17 +914,22 @@
                                     <td>
                                         <h3>Controller Class   </h3>
                                         <asp:TextBox ID="TextBox_StoredProc_Exec_Model" TextMode="MultiLine" CssClass="resultTextBox" runat="server"></asp:TextBox>
+                                        <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_StoredProc_Exec_Model" value="Copy" />
 
                                     </td>
                                     <td>
                                         <h3>Index Page</h3>
                                         <asp:TextBox ID="TextBox_StoredProc_Exec_Model_DataReader" TextMode="MultiLine" CssClass="resultTextBox"
                                             runat="server"></asp:TextBox>
+                                        <br />
+                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_StoredProc_Exec_Model_DataReader" value="Copy" />
+
                                     </td>
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                        
+
                         <asp:WizardStep ID="WizardStep23" runat="server" Title="String patterns">
                             <table>
                                 <tr>
@@ -920,7 +955,7 @@
                                 </tr>
                             </table>
                         </asp:WizardStep>
-                 <%--       <asp:WizardStep ID="WizardStep24" runat="server" Title="EF Repository">
+                        <%--       <asp:WizardStep ID="WizardStep24" runat="server" Title="EF Repository">
                             <table>
                                 <tr>
 
