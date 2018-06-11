@@ -3976,7 +3976,11 @@ namespace WebApplicationDAO
                 built.AppendLine(" SELECT TOP 1 SourcePrimaryKey from @Output");
                 built.AppendLine(" END");
                 built.AppendLine(" GO");
-                TextBox_MergeSqlStatement.Text = built.ToString();
+
+                var resultString = built.ToString();
+                resultString = resultString.Replace("nvarchar(4000)", "nvarchar(max)");
+
+                TextBox_MergeSqlStatement.Text = resultString;
 
             }
             catch (Exception ex)
@@ -4045,7 +4049,10 @@ namespace WebApplicationDAO
             built.AppendLine("SELECT @" + prKey.columnName + " as " + prKey.columnName + "");
             built.AppendLine("END");
 
-            return built.ToString();
+            var resultString = built.ToString();
+            resultString = resultString.Replace("nvarchar(4000)", "nvarchar(max)");
+
+            return resultString;
         }
         protected void Button_State_Click(object sender, EventArgs e)
         {
