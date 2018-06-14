@@ -2281,6 +2281,7 @@ namespace WebApplicationDAO
             method.AppendLine(" {");
             GetDatabaseUtilityParameters(kontrolList, method, entityPrefix + "SaveOrUpdate" + modifiedTableName, true);
             method.AppendLine(" int id = DatabaseUtility.ExecuteScalar(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray()).ToInt();");
+            method.AppendLine(String.Format("item.{0}=id;", primaryKey));
             method.AppendLine(" return id;");
             method.AppendLine(" }");
             return method.ToString();
