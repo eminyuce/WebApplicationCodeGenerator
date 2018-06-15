@@ -17,6 +17,7 @@ using System.IO;
 using System.Globalization;
 using DirectoryMTD.Domain.Helpers;
 
+
 namespace WebApplicationDAO
 {
     //public partial class DAOGenerator : System.Web.UI.Page
@@ -3980,8 +3981,7 @@ namespace WebApplicationDAO
 
                 var resultString = built.ToString();
                 resultString = resultString.Replace("nvarchar(4000)", "nvarchar(max)");
-
-                TextBox_MergeSqlStatement.Text = resultString;
+                TextBox_MergeSqlStatement.Text = FormatSql(resultString); 
 
             }
             catch (Exception ex)
@@ -3989,7 +3989,76 @@ namespace WebApplicationDAO
                 TextBox_MergeSqlStatement.Text = ex.Message;
             }
         }
+        //microsoft.data.schema.scriptdom.sql.dll
+        //microsoft.data.schema.scriptdom.dll
+        //C:\Program Files (x86)\Microsoft Visual Studio 11.0\VSTSDB\Microsoft.Data.Schema.ScriptDom.Sql.dll
+        private static string FormatSql(string resultString)
+        {
+         //       TSql100Parser _parser;
+         //Sql100ScriptGenerator _scriptGen;
 
+         //    bool fQuotedIdenfifiers = false;
+         //   _parser = new TSql100Parser(fQuotedIdenfifiers);
+
+         //   SqlScriptGeneratorOptions scriptOptions = new SqlScriptGeneratorOptions()
+         //   {
+         //       AlignClauseBodies = true,
+         //       AlignColumnDefinitionFields = true,
+         //       AlignSetClauseItem = true,
+         //       AsKeywordOnOwnLine = true,
+         //       IncludeSemicolons = true,
+         //       IndentationSize = 4,
+         //       IndentSetClause = true,
+         //       IndentViewBody = true,
+         //       KeywordCasing = KeywordCasing.Uppercase,
+         //       MultilineInsertSourcesList = true,
+         //       MultilineInsertTargetsList = true,
+         //       MultilineSelectElementsList = true,
+         //       MultilineSetClauseItems = true,
+         //       MultilineViewColumnsList = true,
+         //       MultilineWherePredicatesList = true,
+         //       NewLineBeforeCloseParenthesisInMultilineList = true,
+         //       NewLineBeforeFromClause = true,
+         //       NewLineBeforeGroupByClause = true,
+         //       NewLineBeforeHavingClause = true,
+         //       NewLineBeforeJoinClause = true,
+         //       NewLineBeforeOpenParenthesisInMultilineList = true,
+         //       NewLineBeforeOrderByClause = true,
+         //       NewLineBeforeOutputClause = true,
+         //       NewLineBeforeWhereClause = true,
+         //       SqlVersion = SqlVersion.Sql100
+         //   };
+
+         //   _scriptGen = new Sql100ScriptGenerator(scriptOptions);
+
+
+         //   string inputScript = resultString;
+         //   IScriptFragment fragment;
+         //   IList<ParseError> errors;
+         //   using (StringReader sr = new StringReader(inputScript))
+         //   {
+         //       fragment = _parser.Parse(sr, out errors);
+         //   }
+
+         //   if (errors != null && errors.Count > 0)
+         //   {
+         //       StringBuilder sb = new StringBuilder();
+         //       foreach (var error in errors)
+         //       {
+         //           sb.AppendLine(error.Message);
+         //           sb.AppendLine("offset " + error.Offset.ToString());
+         //       }
+         //       resultString = sb.ToString();
+         //   }
+         //   else
+         //   {
+         //       String script;
+         //       _scriptGen.GenerateScript(fragment, out script);
+         //       resultString = script;
+         //   }
+
+            return resultString;
+        }
         private String generate_StoredProcedure()
         {
 
@@ -4053,7 +4122,7 @@ namespace WebApplicationDAO
             var resultString = built.ToString();
             resultString = resultString.Replace("nvarchar(4000)", "nvarchar(max)");
 
-            return resultString;
+            return FormatSql(resultString); 
         }
         protected void Button_State_Click(object sender, EventArgs e)
         {

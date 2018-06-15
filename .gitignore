@@ -155,3 +155,7 @@ $RECYCLE.BIN/
 # Mac desktop service store files
 .DS_Store
 /WebApplicationDAO/GridView_State.txt
+/packages/NSQLFormatter.2.0.0/lib/net45/NSQLFormatter.dll
+/packages/NSQLFormatter.2.0.0/lib/netstandard1.3/NSQLFormatter.Standard.dll
+/packages/NSQLFormatter.2.0.0/lib/portable-net45+wp8+win8/NSQLFormatter.Portable.dll
+/packages/NSQLFormatter.2.0.0/NSQLFormatter.2.0.0.nupkg
