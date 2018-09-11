@@ -6,11 +6,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DirectoryMTD.Domain.Entities;
-using DirectoryMTD.Domain.Helpers;
 
 
-namespace DirectoryMTD.Domain.DB
+namespace WebApplicationDAO
 {
     public class DBDirectory
     {

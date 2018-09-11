@@ -1,35 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.Common;
+using System.Data.Odbc;
+using System.Data.OleDb;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace WebApplicationDAO
 {
 
-    public class DatabaseUtility
+    public class OleDbDatabaseUtility
     {
-        private DatabaseUtility() { } // This class is non-creatable.
+        private OleDbDatabaseUtility() { } // This class is non-creatable.
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         //// PUBLIC PROPERTIES ////
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        static SqlConnection defaultConnection;
+        static OleDbConnection defaultConnection;
         static string defaultDatabase;
         static System.Data.CommandType defaultCommandType = System.Data.CommandType.Text;
-
+        public static int SqlCommandTimeout { get; set; }
         ///An open connection to a SQL Server database.
 
-        ///Set this property to omit passing a SqlConnection object into each query method. If this property is unset,
-        /// the SqlConnection object MUST be passed into each query method.
+        ///Set this property to omit passing a OleDbConnection  object into each query method. If this property is unset,
+        /// the OleDbConnection  object MUST be passed into each query method.
 
 
-        ///The SqlConnection can be either opened or closed. If the SqlConnection is closed, after the query is run, 
-        /// it will be closed again. The SqlConnection will remain open if it is open prior to the query running.
+        ///The OleDbConnection  can be either opened or closed. If the OleDbConnection  is closed, after the query is run, 
+        /// it will be closed again. The OleDbConnection  will remain open if it is open prior to the query running.
 
 
         /// 
-        public static SqlConnection Connection
+        public static OleDbConnection Connection
         {
             get { return defaultConnection; }
             set { defaultConnection = value; }
@@ -37,8 +43,8 @@ namespace WebApplicationDAO
 
         ///Changes the default database.
 
-        /// Set this property to change the database from the default database specified in the SqlConnection.
-        /// Set the value to null (Nothing in Visual Basic) to use the default database specified in the SqlConnection.
+        /// Set this property to change the database from the default database specified in the OleDbConnection .
+        /// Set the value to null (Nothing in Visual Basic) to use the default database specified in the OleDbConnection .
         public static string DefaultDatabase
         {
             get { return defaultDatabase; }
@@ -66,17 +72,17 @@ namespace WebApplicationDAO
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -93,17 +99,17 @@ namespace WebApplicationDAO
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -117,27 +123,27 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new SqlParameter("@CategoryName", "New Category")
+        ///     new OleDbCommand("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new SqlParameter("@CategoryName", "New Category") _
+        ///     new OleDbCommand("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -145,35 +151,35 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(string commandText, params SqlParameter[] parameters) { return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static int ExecuteNonQuery(string commandText, params OleDbParameter[] parameters) { return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CategoryName", "New Category")
+        ///     new OleDbCommand("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CategoryName", "New Category") _
+        ///     new OleDbCommand("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -181,28 +187,28 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static int ExecuteNonQuery(string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, commandType, parameters);
         }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -218,22 +224,22 @@ namespace WebApplicationDAO
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -249,32 +255,32 @@ namespace WebApplicationDAO
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new SqlParameter("@CategoryName", "New Category")
+        ///     new OleDbCommand("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new SqlParameter("@CategoryName", "New Category") _
+        ///     new OleDbCommand("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -282,39 +288,39 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(string database, string commandText, params SqlParameter[] parameters)
+        public static int ExecuteNonQuery(string database, string commandText, params OleDbParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new SqlParameter("@CategoryName", "New Category")
+        ///     new OleDbCommand("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new SqlParameter("@CategoryName", "New Category") _
+        ///     new OleDbCommand("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -322,7 +328,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static int ExecuteNonQuery(string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, database, commandText, commandType, parameters);
         }
@@ -333,17 +339,17 @@ namespace WebApplicationDAO
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -352,7 +358,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(SqlConnection connection, string commandText)
+        public static int ExecuteNonQuery(OleDbConnection connection, string commandText)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
@@ -364,17 +370,17 @@ namespace WebApplicationDAO
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -383,7 +389,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(SqlConnection connection, string commandText, CommandType commandType)
+        public static int ExecuteNonQuery(OleDbConnection connection, string commandText, CommandType commandType)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, commandType, null);
         }
@@ -392,29 +398,29 @@ namespace WebApplicationDAO
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new SqlParameter("@CategoryName", "New Category")
+        ///     new OleDbCommand("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     New SqlParameter("@CategoryName", "New Category")
+        ///     New OleDbCommand("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -422,7 +428,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(SqlConnection connection, string commandText, params SqlParameter[] parameters)
+        public static int ExecuteNonQuery(OleDbConnection connection, string commandText, params OleDbParameter[] parameters)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
@@ -432,31 +438,31 @@ namespace WebApplicationDAO
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CategoryName", "New Category")
+        ///     new OleDbCommand("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     New SqlParameter("@CategoryName", "New Category")
+        ///     New OleDbCommand("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -464,7 +470,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(SqlConnection connection, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static int ExecuteNonQuery(OleDbConnection connection, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, commandType, parameters);
         }
@@ -472,17 +478,17 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
@@ -490,7 +496,7 @@ namespace WebApplicationDAO
         ///     "INSERT INTO Categories (CategoryName) VALUES ('New Category')"
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
@@ -503,7 +509,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(SqlConnection connection, string database, string commandText)
+        public static int ExecuteNonQuery(OleDbConnection connection, string database, string commandText)
         {
             return ExecuteNonQuery(connection, database, commandText, defaultCommandType, null);
         }
@@ -511,18 +517,18 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
@@ -530,7 +536,7 @@ namespace WebApplicationDAO
         ///     "INSERT INTO Categories (CategoryName) VALUES ('New Category')"
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
@@ -543,7 +549,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(SqlConnection connection, string database, string commandText, CommandType commandType)
+        public static int ExecuteNonQuery(OleDbConnection connection, string database, string commandText, CommandType commandType)
         {
             return ExecuteNonQuery(connection, database, commandText, commandType, null);
         }
@@ -551,33 +557,33 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new SqlParameter("@CategoryName", "New Category")
+        ///     new OleDbCommand("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     New SqlParameter("@CategoryName", "New Category")
+        ///     New OleDbCommand("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -585,7 +591,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(SqlConnection connection, string database, string commandText, params SqlParameter[] parameters)
+        public static int ExecuteNonQuery(OleDbConnection connection, string database, string commandText, params OleDbParameter[] parameters)
         {
             return ExecuteNonQuery(connection, database, commandText, defaultCommandType, parameters);
         }
@@ -593,36 +599,36 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CategoryName", "New Category")
+        ///     new OleDbCommand("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     New SqlParameter("@CategoryName", "New Category")
+        ///     New OleDbCommand("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -630,14 +636,14 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static int ExecuteNonQuery(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             int value = -1;
 
             // Build Command
-            SqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            OleDbCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -657,20 +663,20 @@ namespace WebApplicationDAO
         #endregion
 
         #region - ExecuteReader -
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// The text of the query.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -678,8 +684,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -692,26 +698,26 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(string commandText)
+        public static OleDbDataReader ExecuteReader(string commandText)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text);
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -719,8 +725,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text)
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -733,29 +739,29 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(string commandText, CommandType commandType)
+        public static OleDbDataReader ExecuteReader(string commandText, CommandType commandType)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -764,11 +770,11 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -782,31 +788,31 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(string commandText, params SqlParameter[] parameters)
+        public static OleDbDataReader ExecuteReader(string commandText, params OleDbParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -815,12 +821,12 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -834,26 +840,26 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static OleDbDataReader ExecuteReader(string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, commandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -861,8 +867,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -875,27 +881,27 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(string database, string commandText)
+        public static OleDbDataReader ExecuteReader(string database, string commandText)
         {
             return ExecuteReader(defaultConnection, database, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text);
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -903,8 +909,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text)
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -917,31 +923,31 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(string database, string commandText, CommandType commandType)
+        public static OleDbDataReader ExecuteReader(string database, string commandText, CommandType commandType)
         {
             return ExecuteReader(defaultConnection, database, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// 
         /// while (reader.Read()) {
@@ -950,12 +956,12 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// While (reader.Read()) 
@@ -969,33 +975,33 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(string database, string commandText, params SqlParameter[] parameters)
+        public static OleDbDataReader ExecuteReader(string database, string commandText, params OleDbParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// 
         /// while (reader.Read()) {
@@ -1004,13 +1010,13 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// While (reader.Read()) 
@@ -1024,23 +1030,23 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(string database, string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteReader(defaultConnection, database, commandText, commandType, parameters); }
+        public static OleDbDataReader ExecuteReader(string database, string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteReader(defaultConnection, database, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1048,8 +1054,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1062,27 +1068,27 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(SqlConnection connection, string commandText)
+        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string commandText)
         {
             return ExecuteReader(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text);
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1090,8 +1096,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text)
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1104,28 +1110,28 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(SqlConnection connection, string commandText, CommandType commandType) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, null); }
+        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string commandText, CommandType commandType) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1134,12 +1140,12 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1153,34 +1159,34 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(SqlConnection connection, string commandText,
-                                                  params SqlParameter[] parameters)
+        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string commandText,
+                                                  params OleDbParameter[] parameters)
         {
             return ExecuteReader(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1189,13 +1195,13 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1209,25 +1215,25 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(SqlConnection connection, string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, parameters); }
+        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers");
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1235,9 +1241,9 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers")
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1250,26 +1256,26 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(SqlConnection connection, string database, string commandText) { return ExecuteReader(connection, database, commandText, defaultCommandType, null); }
+        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string database, string commandText) { return ExecuteReader(connection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1277,9 +1283,9 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1292,30 +1298,30 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(SqlConnection connection, string database, string commandText, CommandType commandType) { return ExecuteReader(connection, database, commandText, commandType, null); }
+        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string database, string commandText, CommandType commandType) { return ExecuteReader(connection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1324,13 +1330,13 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1344,32 +1350,32 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(SqlConnection connection, string database, string commandText, params SqlParameter[] parameters) { return ExecuteReader(connection, database, commandText, defaultCommandType, parameters); }
+        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string database, string commandText, params OleDbParameter[] parameters) { return ExecuteReader(connection, database, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
-        /// A System.Data.SqlClient.SqlDataReader object.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A System.Data.SqlClient.OleDbDataReader  object.
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1378,14 +1384,14 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1399,12 +1405,12 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static SqlDataReader ExecuteReader(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
 
             // Build Command
-            SqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            OleDbCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (connection.State == ConnectionState.Closed)
@@ -1433,20 +1439,20 @@ namespace WebApplicationDAO
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1464,20 +1470,20 @@ namespace WebApplicationDAO
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1491,31 +1497,31 @@ namespace WebApplicationDAO
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1523,39 +1529,39 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(string commandText, params SqlParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static object ExecuteScalar(string commandText, params OleDbParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1563,29 +1569,29 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
+        public static object ExecuteScalar(string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1598,26 +1604,26 @@ namespace WebApplicationDAO
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1633,35 +1639,35 @@ namespace WebApplicationDAO
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, isual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, isual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "Northwind",
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "Northwind", _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1669,45 +1675,45 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(string database, string commandText, params SqlParameter[] parameters)
+        public static object ExecuteScalar(string database, string commandText, params OleDbParameter[] parameters)
         {
             return ExecuteScalar(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "Northwind",
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "Northwind", _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1715,7 +1721,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static object ExecuteScalar(string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             return ExecuteScalar(defaultConnection, database, commandText, commandType, parameters);
         }
@@ -1727,20 +1733,20 @@ namespace WebApplicationDAO
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1749,7 +1755,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(SqlConnection connection, string commandText)
+        public static object ExecuteScalar(OleDbConnection connection, string commandText)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
@@ -1762,20 +1768,20 @@ namespace WebApplicationDAO
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1784,7 +1790,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(SqlConnection connection, string commandText, CommandType commandType)
+        public static object ExecuteScalar(OleDbConnection connection, string commandText, CommandType commandType)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, commandType, null);
         }
@@ -1793,33 +1799,33 @@ namespace WebApplicationDAO
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     connection,
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     connection, _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1827,7 +1833,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(SqlConnection connection, string commandText, params SqlParameter[] parameters)
+        public static object ExecuteScalar(OleDbConnection connection, string commandText, params OleDbParameter[] parameters)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
@@ -1837,35 +1843,35 @@ namespace WebApplicationDAO
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#,Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#,Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     connection,
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     connection, _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1873,33 +1879,33 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(SqlConnection connection, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static object ExecuteScalar(OleDbConnection connection, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, commandType, parameters);
         }
-         
+
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         //[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1908,7 +1914,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(SqlConnection connection, string database, string commandText)
+        public static object ExecuteScalar(OleDbConnection connection, string database, string commandText)
         {
             return ExecuteScalar(connection, database, commandText, defaultCommandType, null);
         }
@@ -1916,26 +1922,26 @@ namespace WebApplicationDAO
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1944,74 +1950,74 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(SqlConnection connection, string database, string commandText, CommandType commandType) { return ExecuteScalar(connection, database, commandText, commandType, null); }
+        public static object ExecuteScalar(OleDbConnection connection, string database, string commandText, CommandType commandType) { return ExecuteScalar(connection, database, commandText, commandType, null); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new SqlParameter("@CustomerID", "ALFKI"));
+        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new OleDbCommand("@CustomerID", "ALFKI"));
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new SqlParameter("@CustomerID", "ALFKI"))
+        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new OleDbCommand("@CustomerID", "ALFKI"))
         /// 
         /// 
 
         ///
 
         /// 
-        public static object ExecuteScalar(SqlConnection connection, string database, string commandText, params SqlParameter[] parameters) { return ExecuteScalar(connection, database, commandText, defaultCommandType, parameters); }
+        public static object ExecuteScalar(OleDbConnection connection, string database, string commandText, params OleDbParameter[] parameters) { return ExecuteScalar(connection, database, commandText, defaultCommandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a SqlDataReader.
+        /// generate the single value using the data returned by a OleDbDataReader .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new SqlParameter("@CustomerID", "ALFKI"));
+        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new OleDbCommand("@CustomerID", "ALFKI"));
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new SqlParameter("@CustomerID", "ALFKI"))
+        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new OleDbCommand("@CustomerID", "ALFKI"))
         /// 
         /// 
 
         ///
 
         /// 
-        public static object ExecuteScalar(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static object ExecuteScalar(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             object value = null;
@@ -2020,7 +2026,7 @@ namespace WebApplicationDAO
             ConnectionState state = connection.State;
 
             // Build Command
-            SqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            OleDbCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2039,26 +2045,26 @@ namespace WebApplicationDAO
         #endregion
 
         #region - ExecuteDataTable -
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers")
         /// 
@@ -2072,27 +2078,27 @@ namespace WebApplicationDAO
             return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2106,35 +2112,35 @@ namespace WebApplicationDAO
             return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2142,40 +2148,40 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string database, string commandText, params SqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(string database, string commandText, params OleDbParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2183,29 +2189,29 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers")
         /// 
@@ -2216,28 +2222,28 @@ namespace WebApplicationDAO
         /// 
         public static DataTable ExecuteDataTable(string database, string commandText) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2248,36 +2254,36 @@ namespace WebApplicationDAO
         /// 
         public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "Northwind", 
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2285,41 +2291,41 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string commandText, params SqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(string commandText, params OleDbParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "Northwind", 
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2327,29 +2333,29 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers")
         /// 
@@ -2358,29 +2364,29 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(SqlConnection connection, string commandText) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, null); }
+        public static DataTable ExecuteDataTable(OleDbConnection connection, string commandText) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
-        /// [C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        /// [C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2389,39 +2395,39 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(SqlConnection connection, string commandText, CommandType commandType) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, null); }
+        public static DataTable ExecuteDataTable(OleDbConnection connection, string commandText, CommandType commandType) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2429,42 +2435,42 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(SqlConnection connection, string commandText, params SqlParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(OleDbConnection connection, string commandText, params OleDbParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
-        ///ends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///ends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2472,30 +2478,30 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(SqlConnection connection, string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(OleDbConnection connection, string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers")
         /// 
@@ -2504,31 +2510,31 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(SqlConnection connection, string database, string commandText) { return ExecuteDataTable(connection, database, commandText, defaultCommandType, null); }
+        public static DataTable ExecuteDataTable(OleDbConnection connection, string database, string commandText) { return ExecuteDataTable(connection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2537,42 +2543,42 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(SqlConnection connection, string database, CommandType commandType, string commandText) { return ExecuteDataTable(connection, database, commandText, commandType, null); }
+        public static DataTable ExecuteDataTable(OleDbConnection connection, string database, CommandType commandType, string commandText) { return ExecuteDataTable(connection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2580,48 +2586,48 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(SqlConnection connection, string database, string commandText, params SqlParameter[] parameters)
+        public static DataTable ExecuteDataTable(OleDbConnection connection, string database, string commandText, params OleDbParameter[] parameters)
         {
             return ExecuteDataTable(connection, database, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a SqlDataAdapter.
+        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a OleDbDataAdapter .
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
+        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new SqlParameter("@CustomerID", "ALFKI")
+        ///     new OleDbCommand("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new SqlParameter("@CustomerID", "ALFKI") _
+        ///     new OleDbCommand("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2629,14 +2635,14 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static DataTable ExecuteDataTable(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             DataTable value = new DataTable();
 
             // Build Adapter
-            SqlDataAdapter adapter = new SqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
+            OleDbDataAdapter adapter = new OleDbDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2652,14 +2658,14 @@ namespace WebApplicationDAO
 
             return value;
         }
-        public static DataSet ExecuteDataSet(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
+        public static DataSet ExecuteDataSet(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             var value = new DataSet();
 
             // Build Adapter
-            var adapter = new SqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
+            var adapter = new OleDbDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2677,85 +2683,83 @@ namespace WebApplicationDAO
         }
         #endregion
 
-        public static DataSet ExecuteDataSet(SqlConnection sqlConnection, string commandText, CommandType commandType, SqlParameter[] sqlParameter)
+        public static DataSet ExecuteDataSet(OleDbConnection OleDbConnection, string commandText, CommandType commandType, OleDbParameter[] OleDbCommand)
         {
-            return ExecuteDataSet(sqlConnection, defaultDatabase, commandText, commandType, sqlParameter);
+            return ExecuteDataSet(OleDbConnection, defaultDatabase, commandText, commandType, OleDbCommand);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         //// PRIVATE METHODS ///
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private static SqlCommand BuildCommand(string commandText, SqlConnection connection, CommandType commandType, params SqlParameter[] parameters)
+        private static OleDbCommand BuildCommand(string commandText, OleDbConnection connection, CommandType commandType, params OleDbParameter[] parameters)
         {
-            SqlCommand command = new SqlCommand(commandText, connection);
+            commandText = Regex.Replace(commandText, @"\t|\n|\r", " ");
+            OleDbCommand command = new OleDbCommand(commandText, connection);
             command.CommandType = commandType;
-
+            command.CommandTimeout = SqlCommandTimeout;
             if (parameters != null)
             {
-                foreach (SqlParameter parameter in parameters)
+                foreach (OleDbParameter parameter in parameters)
                 {
-                    command.Parameters.Add(parameter);
+                    //  command.Parameters.Add(parameter);
+                    // command.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
+                    command.Parameters.Add(parameter.ParameterName, parameter.OleDbType).Value = parameter.Value;
                 }
-            }
 
+            }
+            //    ConvertNamedParametersToPositionalParameters(command);
             return command;
         }
-        public static SqlParameter GetSqlParameter(String parameterName, object value, SqlDbType sqlDbType)
+        /// <summary>
+        /// Remarks
+        /// The OLE DB.NET Provider does not support named parameters for passing parameters to an 
+        /// SQL statement or a stored procedure called by an OleDbCommand when 
+        /// CommandType is set to Text.In this case, the question mark (?) placeholder must be used. For example:
+        /// SELECT * FROM Customers WHERE CustomerID = ?
+        /// Therefore, the order in which OleDbParameter objects are added to the OleDbParameterCollection 
+        /// must directly correspond to the position of the question mark placeholder for the parameter in the command text.
+        /// https://msdn.microsoft.com/en-us/library/system.data.oledb.oledbcommand.parameters(v=vs.110).aspx#Anchor_1
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static OleDbParameter GetSqlParameter(String parameterName, object value, OleDbType type)
         {
-            var t = new SqlParameter();
-            t.SqlDbType = sqlDbType;
-            t.ParameterName = parameterName;
-            t.Value = value;
-             
+            var t = new OleDbParameter(parameterName, value);
+            t.OleDbType = type;
             return t;
         }
-        private static SqlDbType GetDBType(System.Type type)
+        public static void ConvertNamedParametersToPositionalParameters(OleDbCommand command)
         {
-            SqlParameter param;
-            System.ComponentModel.TypeConverter tc;
-            param = new SqlParameter();
-            tc = System.ComponentModel.TypeDescriptor.GetConverter(param.DbType);
-            if (tc.CanConvertFrom(type))
-            {
-                param.DbType = (DbType)tc.ConvertFrom(type.Name);
-            }
-            else
-            {
-                switch (type.Name)
-                {
-                    case "Char":
-                        param.SqlDbType = SqlDbType.Char;
-                        break;
-                    case "SByte":
-                        param.SqlDbType = SqlDbType.SmallInt;
-                        break;
-                    case "UInt16":
-                        param.SqlDbType = SqlDbType.SmallInt;
-                        break;
-                    case "UInt32":
-                        param.SqlDbType = SqlDbType.Int;
-                        break;
-                    case "UInt64":
-                        param.SqlDbType = SqlDbType.Decimal;
-                        break;
-                    case "Byte[]":
-                        param.SqlDbType = SqlDbType.Binary;
-                        break;
+            //1. Find all occurrences of parameter references in the SQL statement (such as @MyParameter).
+            //2. Find the corresponding parameter in the commands parameters list.
+            //3. Add the found parameter to the newParameters list and replace the parameter reference in the SQL with a question mark (?).
+            //4. Replace the commands parameters list with the newParameters list.
 
-                    default:
-                        try
-                        {
-                            param.DbType = (DbType)tc.ConvertFrom(type.Name);
-                        }
-                        catch
-                        {
-                            // Some error handling
-                        }
-                        break;
+            var newParameters = new List<OleDbParameter>();
+
+            command.CommandText = Regex.Replace(command.CommandText, "(@\\w*)", match =>
+            {
+                var parameter = command.Parameters.OfType<OleDbParameter>().FirstOrDefault(a => a.ParameterName == match.Groups[1].Value);
+                if (parameter != null)
+                {
+                    var parameterIndex = newParameters.Count;
+
+                    var newParameter = command.CreateParameter();
+                    newParameter.OleDbType = parameter.OleDbType;
+                    newParameter.ParameterName = "@parameter" + parameterIndex.ToString();
+                    newParameter.Value = parameter.Value;
+
+                    newParameters.Add(newParameter);
                 }
-            }
-            return param.SqlDbType;
+
+                return "?";
+            });
+
+            command.Parameters.Clear();
+            command.Parameters.AddRange(newParameters.ToArray());
         }
     }
 

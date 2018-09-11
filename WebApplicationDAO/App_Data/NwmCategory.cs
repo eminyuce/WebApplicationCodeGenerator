@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace DirectoryMTD.Domain.Entities
+namespace WebApplicationDAO
 {
     public class NwmCategory
     {

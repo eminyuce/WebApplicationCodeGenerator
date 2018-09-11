@@ -1,14 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MagazineStoriesCalaisItems.Domain.Helpers
+namespace WebApplicationDAO
 {
     public class GeneralHelper
     {
+
+        public static string ToTitleCase(string s)
+        {
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());
+        }
+
+        public static readonly Regex CarriageRegex = new Regex(@"(\r\n|\r|\n)+");
+        //remove carriage returns from the header name
+        public static string RemoveCarriage(string text)
+        {
+            if (String.IsNullOrEmpty(text))
+            {
+                return "";
+            }
+            return CarriageRegex.Replace(text, string.Empty).Trim();
+        }
+
+
+       
         public static string GetUrlString(string strIn)
         {
             if (String.IsNullOrEmpty(strIn))

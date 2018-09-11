@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace DirectoryMTD.Domain.Helpers
+namespace WebApplicationDAO
 {
     public static class Convert
     {

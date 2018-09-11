@@ -6,10 +6,6 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DirectoryMTD.Domain.DB;
-using DirectoryMTD.Domain.Entities;
-using DirectoryMTD.Domain.Helpers;
-using MagazineStoriesCalaisItems.Domain.Helpers;
 using System.Configuration;
 using System.Data.SqlClient;
 

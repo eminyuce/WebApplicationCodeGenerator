@@ -1,41 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
-using System.Data.Common;
-using System.Data.Odbc;
-using System.Data.OleDb;
-using System.Text.RegularExpressions;
-using System.Linq;
 
-namespace HelpersProject
+namespace WebApplicationDAO
 {
 
-    public class OleDbDatabaseUtility
+    public class MySqlDatabaseUtility
     {
-        private OleDbDatabaseUtility() { } // This class is non-creatable.
+        private MySqlDatabaseUtility() { } // This class is non-creatable.
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         //// PUBLIC PROPERTIES ////
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        static OleDbConnection defaultConnection;
+        static MySqlConnection defaultConnection;
         static string defaultDatabase;
-        static System.Data.CommandType defaultCommandType = System.Data.CommandType.Text;
-        public static int SqlCommandTimeout { get; set; }
+        static System.Data.CommandType defaultCommandType = CommandType.Text;
+
         ///An open connection to a SQL Server database.
 
-        ///Set this property to omit passing a OleDbConnection  object into each query method. If this property is unset,
-        /// the OleDbConnection  object MUST be passed into each query method.
+        ///Set this property to omit passing a MySqlConnection object into each query method. If this property is unset,
+        /// the MySqlConnection object MUST be passed into each query method.
 
 
-        ///The OleDbConnection  can be either opened or closed. If the OleDbConnection  is closed, after the query is run, 
-        /// it will be closed again. The OleDbConnection  will remain open if it is open prior to the query running.
+        ///The MySqlConnection can be either opened or closed. If the MySqlConnection is closed, after the query is run, 
+        /// it will be closed again. The MySqlConnection will remain open if it is open prior to the query running.
 
 
         /// 
-        public static OleDbConnection Connection
+        public static MySqlConnection Connection
         {
             get { return defaultConnection; }
             set { defaultConnection = value; }
@@ -43,8 +37,8 @@ namespace HelpersProject
 
         ///Changes the default database.
 
-        /// Set this property to change the database from the default database specified in the OleDbConnection .
-        /// Set the value to null (Nothing in Visual Basic) to use the default database specified in the OleDbConnection .
+        /// Set this property to change the database from the default database specified in the MySqlConnection.
+        /// Set the value to null (Nothing in Visual Basic) to use the default database specified in the MySqlConnection.
         public static string DefaultDatabase
         {
             get { return defaultDatabase; }
@@ -72,17 +66,17 @@ namespace HelpersProject
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -99,17 +93,17 @@ namespace HelpersProject
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -123,27 +117,27 @@ namespace HelpersProject
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new OleDbCommand("@CategoryName", "New Category")
+        ///     new MySqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new OleDbCommand("@CategoryName", "New Category") _
+        ///     new MySqlParameter("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -151,35 +145,35 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(string commandText, params OleDbParameter[] parameters) { return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static int ExecuteNonQuery(string commandText, params MySqlParameter[] parameters) { return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CategoryName", "New Category")
+        ///     new MySqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CategoryName", "New Category") _
+        ///     new MySqlParameter("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -187,28 +181,28 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static int ExecuteNonQuery(string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, commandType, parameters);
         }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -224,22 +218,22 @@ namespace HelpersProject
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -255,32 +249,32 @@ namespace HelpersProject
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new OleDbCommand("@CategoryName", "New Category")
+        ///     new MySqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new OleDbCommand("@CategoryName", "New Category") _
+        ///     new MySqlParameter("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -288,39 +282,39 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(string database, string commandText, params OleDbParameter[] parameters)
+        public static int ExecuteNonQuery(string database, string commandText, params MySqlParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new OleDbCommand("@CategoryName", "New Category")
+        ///     new MySqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new OleDbCommand("@CategoryName", "New Category") _
+        ///     new MySqlParameter("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -328,7 +322,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static int ExecuteNonQuery(string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, database, commandText, commandType, parameters);
         }
@@ -339,17 +333,17 @@ namespace HelpersProject
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -358,7 +352,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(OleDbConnection connection, string commandText)
+        public static int ExecuteNonQuery(MySqlConnection connection, string commandText)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
@@ -370,17 +364,17 @@ namespace HelpersProject
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -389,7 +383,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(OleDbConnection connection, string commandText, CommandType commandType)
+        public static int ExecuteNonQuery(MySqlConnection connection, string commandText, CommandType commandType)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, commandType, null);
         }
@@ -398,29 +392,29 @@ namespace HelpersProject
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new OleDbCommand("@CategoryName", "New Category")
+        ///     new MySqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     New OleDbCommand("@CategoryName", "New Category")
+        ///     New MySqlParameter("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -428,7 +422,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(OleDbConnection connection, string commandText, params OleDbParameter[] parameters)
+        public static int ExecuteNonQuery(MySqlConnection connection, string commandText, params MySqlParameter[] parameters)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
@@ -438,31 +432,31 @@ namespace HelpersProject
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CategoryName", "New Category")
+        ///     new MySqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     New OleDbCommand("@CategoryName", "New Category")
+        ///     New MySqlParameter("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -470,7 +464,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(OleDbConnection connection, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static int ExecuteNonQuery(MySqlConnection connection, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, commandType, parameters);
         }
@@ -478,17 +472,17 @@ namespace HelpersProject
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
@@ -496,7 +490,7 @@ namespace HelpersProject
         ///     "INSERT INTO Categories (CategoryName) VALUES ('New Category')"
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
@@ -509,7 +503,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(OleDbConnection connection, string database, string commandText)
+        public static int ExecuteNonQuery(MySqlConnection connection, string database, string commandText)
         {
             return ExecuteNonQuery(connection, database, commandText, defaultCommandType, null);
         }
@@ -517,18 +511,18 @@ namespace HelpersProject
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
@@ -536,7 +530,7 @@ namespace HelpersProject
         ///     "INSERT INTO Categories (CategoryName) VALUES ('New Category')"
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
@@ -549,7 +543,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(OleDbConnection connection, string database, string commandText, CommandType commandType)
+        public static int ExecuteNonQuery(MySqlConnection connection, string database, string commandText, CommandType commandType)
         {
             return ExecuteNonQuery(connection, database, commandText, commandType, null);
         }
@@ -557,33 +551,33 @@ namespace HelpersProject
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new OleDbCommand("@CategoryName", "New Category")
+        ///     new MySqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     New OleDbCommand("@CategoryName", "New Category")
+        ///     New MySqlParameter("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -591,7 +585,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(OleDbConnection connection, string database, string commandText, params OleDbParameter[] parameters)
+        public static int ExecuteNonQuery(MySqlConnection connection, string database, string commandText, params MySqlParameter[] parameters)
         {
             return ExecuteNonQuery(connection, database, commandText, defaultCommandType, parameters);
         }
@@ -599,36 +593,36 @@ namespace HelpersProject
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CategoryName", "New Category")
+        ///     new MySqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     New OleDbCommand("@CategoryName", "New Category")
+        ///     New MySqlParameter("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -636,14 +630,14 @@ namespace HelpersProject
         ///
 
         /// 
-        public static int ExecuteNonQuery(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static int ExecuteNonQuery(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             int value = -1;
 
             // Build Command
-            OleDbCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            MySqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -663,20 +657,20 @@ namespace HelpersProject
         #endregion
 
         #region - ExecuteReader -
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// The text of the query.
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -684,8 +678,8 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -698,26 +692,26 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(string commandText)
+        public static MySqlDataReader ExecuteReader(string commandText)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text);
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -725,8 +719,8 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text)
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -739,29 +733,29 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(string commandText, CommandType commandType)
+        public static MySqlDataReader ExecuteReader(string commandText, CommandType commandType)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -770,11 +764,11 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -788,31 +782,31 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(string commandText, params OleDbParameter[] parameters)
+        public static MySqlDataReader ExecuteReader(string commandText, params MySqlParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -821,12 +815,12 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -840,26 +834,26 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static MySqlDataReader ExecuteReader(string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, commandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -867,8 +861,8 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -881,27 +875,27 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(string database, string commandText)
+        public static MySqlDataReader ExecuteReader(string database, string commandText)
         {
             return ExecuteReader(defaultConnection, database, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text);
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -909,8 +903,8 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text)
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -923,31 +917,31 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(string database, string commandText, CommandType commandType)
+        public static MySqlDataReader ExecuteReader(string database, string commandText, CommandType commandType)
         {
             return ExecuteReader(defaultConnection, database, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// while (reader.Read()) {
@@ -956,12 +950,12 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// While (reader.Read()) 
@@ -975,33 +969,33 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(string database, string commandText, params OleDbParameter[] parameters)
+        public static MySqlDataReader ExecuteReader(string database, string commandText, params MySqlParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// while (reader.Read()) {
@@ -1010,13 +1004,13 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// While (reader.Read()) 
@@ -1030,23 +1024,23 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(string database, string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteReader(defaultConnection, database, commandText, commandType, parameters); }
+        public static MySqlDataReader ExecuteReader(string database, string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteReader(defaultConnection, database, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1054,8 +1048,8 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1068,27 +1062,27 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string commandText)
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText)
         {
             return ExecuteReader(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text);
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1096,8 +1090,8 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text)
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1110,28 +1104,28 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string commandText, CommandType commandType) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, null); }
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText, CommandType commandType) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1140,12 +1134,12 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1159,34 +1153,34 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string commandText,
-                                                  params OleDbParameter[] parameters)
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText,
+                                                  params MySqlParameter[] parameters)
         {
             return ExecuteReader(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1195,13 +1189,13 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1215,25 +1209,25 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, parameters); }
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers");
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1241,9 +1235,9 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers")
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1256,26 +1250,26 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string database, string commandText) { return ExecuteReader(connection, database, commandText, defaultCommandType, null); }
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string database, string commandText) { return ExecuteReader(connection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1283,9 +1277,9 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1298,30 +1292,30 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string database, string commandText, CommandType commandType) { return ExecuteReader(connection, database, commandText, commandType, null); }
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string database, string commandText, CommandType commandType) { return ExecuteReader(connection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1330,13 +1324,13 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1350,32 +1344,32 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string database, string commandText, params OleDbParameter[] parameters) { return ExecuteReader(connection, database, commandText, defaultCommandType, parameters); }
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string database, string commandText, params MySqlParameter[] parameters) { return ExecuteReader(connection, database, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.SqlClient.OleDbDataReader .
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
-        /// A System.Data.SqlClient.OleDbDataReader  object.
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A System.Data.SqlClient.MySqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand , then executes it by 
+        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader(
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1384,14 +1378,14 @@ namespace HelpersProject
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// OleDbDataReader  reader = DatabaseUtility.ExecuteReader( _
+        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1405,12 +1399,12 @@ namespace HelpersProject
         ///
 
         /// 
-        public static OleDbDataReader ExecuteReader(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
 
             // Build Command
-            OleDbCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            MySqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (connection.State == ConnectionState.Closed)
@@ -1439,20 +1433,20 @@ namespace HelpersProject
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1470,20 +1464,20 @@ namespace HelpersProject
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1497,31 +1491,31 @@ namespace HelpersProject
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1529,39 +1523,39 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(string commandText, params OleDbParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static object ExecuteScalar(string commandText, params MySqlParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1569,29 +1563,29 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
+        public static object ExecuteScalar(string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1604,26 +1598,26 @@ namespace HelpersProject
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1639,35 +1633,35 @@ namespace HelpersProject
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, isual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, isual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "Northwind",
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "Northwind", _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1675,45 +1669,45 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(string database, string commandText, params OleDbParameter[] parameters)
+        public static object ExecuteScalar(string database, string commandText, params MySqlParameter[] parameters)
         {
             return ExecuteScalar(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "Northwind",
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "Northwind", _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1721,7 +1715,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static object ExecuteScalar(string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             return ExecuteScalar(defaultConnection, database, commandText, commandType, parameters);
         }
@@ -1733,20 +1727,20 @@ namespace HelpersProject
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1755,7 +1749,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(OleDbConnection connection, string commandText)
+        public static object ExecuteScalar(MySqlConnection connection, string commandText)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
@@ -1768,20 +1762,20 @@ namespace HelpersProject
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1790,7 +1784,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(OleDbConnection connection, string commandText, CommandType commandType)
+        public static object ExecuteScalar(MySqlConnection connection, string commandText, CommandType commandType)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, commandType, null);
         }
@@ -1799,33 +1793,33 @@ namespace HelpersProject
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     connection,
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     connection, _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1833,7 +1827,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(OleDbConnection connection, string commandText, params OleDbParameter[] parameters)
+        public static object ExecuteScalar(MySqlConnection connection, string commandText, params MySqlParameter[] parameters)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
@@ -1843,35 +1837,35 @@ namespace HelpersProject
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#,Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#,Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     connection,
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     connection, _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1879,33 +1873,33 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(OleDbConnection connection, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static object ExecuteScalar(MySqlConnection connection, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, commandType, parameters);
         }
-
+         
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         //[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1914,7 +1908,7 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(OleDbConnection connection, string database, string commandText)
+        public static object ExecuteScalar(MySqlConnection connection, string database, string commandText)
         {
             return ExecuteScalar(connection, database, commandText, defaultCommandType, null);
         }
@@ -1922,26 +1916,26 @@ namespace HelpersProject
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1950,74 +1944,74 @@ namespace HelpersProject
         ///
 
         /// 
-        public static object ExecuteScalar(OleDbConnection connection, string database, string commandText, CommandType commandType) { return ExecuteScalar(connection, database, commandText, commandType, null); }
+        public static object ExecuteScalar(MySqlConnection connection, string database, string commandText, CommandType commandType) { return ExecuteScalar(connection, database, commandText, commandType, null); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new OleDbCommand("@CustomerID", "ALFKI"));
+        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new MySqlParameter("@CustomerID", "ALFKI"));
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new OleDbCommand("@CustomerID", "ALFKI"))
+        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new MySqlParameter("@CustomerID", "ALFKI"))
         /// 
         /// 
 
         ///
 
         /// 
-        public static object ExecuteScalar(OleDbConnection connection, string database, string commandText, params OleDbParameter[] parameters) { return ExecuteScalar(connection, database, commandText, defaultCommandType, parameters); }
+        public static object ExecuteScalar(MySqlConnection connection, string database, string commandText, params MySqlParameter[] parameters) { return ExecuteScalar(connection, database, commandText, defaultCommandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a OleDbDataReader .
+        /// generate the single value using the data returned by a MySqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbCommand  and then executes it using
+        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new OleDbCommand("@CustomerID", "ALFKI"));
+        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new MySqlParameter("@CustomerID", "ALFKI"));
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new OleDbCommand("@CustomerID", "ALFKI"))
+        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new MySqlParameter("@CustomerID", "ALFKI"))
         /// 
         /// 
 
         ///
 
         /// 
-        public static object ExecuteScalar(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static object ExecuteScalar(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             object value = null;
@@ -2026,7 +2020,7 @@ namespace HelpersProject
             ConnectionState state = connection.State;
 
             // Build Command
-            OleDbCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            MySqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2045,26 +2039,26 @@ namespace HelpersProject
         #endregion
 
         #region - ExecuteDataTable -
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers")
         /// 
@@ -2078,27 +2072,27 @@ namespace HelpersProject
             return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2112,35 +2106,35 @@ namespace HelpersProject
             return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2148,40 +2142,40 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string database, string commandText, params OleDbParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(string database, string commandText, params MySqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2189,29 +2183,29 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers")
         /// 
@@ -2222,28 +2216,28 @@ namespace HelpersProject
         /// 
         public static DataTable ExecuteDataTable(string database, string commandText) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2254,36 +2248,36 @@ namespace HelpersProject
         /// 
         public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "Northwind", 
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2291,41 +2285,41 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string commandText, params OleDbParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(string commandText, params MySqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "Northwind", 
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2333,29 +2327,29 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers")
         /// 
@@ -2364,29 +2358,29 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(OleDbConnection connection, string commandText) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, null); }
+        public static DataTable ExecuteDataTable(MySqlConnection connection, string commandText) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
-        /// [C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        /// [C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2395,39 +2389,39 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(OleDbConnection connection, string commandText, CommandType commandType) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, null); }
+        public static DataTable ExecuteDataTable(MySqlConnection connection, string commandText, CommandType commandType) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2435,42 +2429,42 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(OleDbConnection connection, string commandText, params OleDbParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(MySqlConnection connection, string commandText, params MySqlParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
-        ///ends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///ends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2478,30 +2472,30 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(OleDbConnection connection, string commandText, CommandType commandType, params OleDbParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(MySqlConnection connection, string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers")
         /// 
@@ -2510,31 +2504,31 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(OleDbConnection connection, string database, string commandText) { return ExecuteDataTable(connection, database, commandText, defaultCommandType, null); }
+        public static DataTable ExecuteDataTable(MySqlConnection connection, string database, string commandText) { return ExecuteDataTable(connection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2543,42 +2537,42 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(OleDbConnection connection, string database, CommandType commandType, string commandText) { return ExecuteDataTable(connection, database, commandText, commandType, null); }
+        public static DataTable ExecuteDataTable(MySqlConnection connection, string database, CommandType commandType, string commandText) { return ExecuteDataTable(connection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2586,48 +2580,48 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(OleDbConnection connection, string database, string commandText, params OleDbParameter[] parameters)
+        public static DataTable ExecuteDataTable(MySqlConnection connection, string database, string commandText, params MySqlParameter[] parameters)
         {
             return ExecuteDataTable(connection, database, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.OleDbCommand .CommandText to the System.Data.SqlClient.OleDbCommand .Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.OleDbConnection .
+        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.OleDbCommand that maps to the System.Data.SqlClient.OleDbCommand .
+        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
-        /// This requires less code than using the OleDbDataAdapter .Fill method, performing the operations necessary to
-        /// generate the table of in-memory data returned by a OleDbDataAdapter .
+        /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
+        /// generate the table of in-memory data returned by a SqlDataAdapter.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a OleDbDataAdapter  and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlDataAdapter and then executes it using
         /// the Fill method. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// OleDbConnection  connection = new OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new OleDbCommand("@CustomerID", "ALFKI")
+        ///     new MySqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New OleDbConnection ("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new OleDbCommand("@CustomerID", "ALFKI") _
+        ///     new MySqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2635,14 +2629,14 @@ namespace HelpersProject
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static DataTable ExecuteDataTable(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             DataTable value = new DataTable();
 
             // Build Adapter
-            OleDbDataAdapter adapter = new OleDbDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
+            MySqlDataAdapter adapter = new MySqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2658,14 +2652,14 @@ namespace HelpersProject
 
             return value;
         }
-        public static DataSet ExecuteDataSet(OleDbConnection connection, string database, string commandText, CommandType commandType, params OleDbParameter[] parameters)
+        public static DataSet ExecuteDataSet(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             var value = new DataSet();
 
             // Build Adapter
-            var adapter = new OleDbDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
+            var adapter = new MySqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2683,84 +2677,40 @@ namespace HelpersProject
         }
         #endregion
 
-        public static DataSet ExecuteDataSet(OleDbConnection OleDbConnection, string commandText, CommandType commandType, OleDbParameter[] OleDbCommand)
+        public static DataSet ExecuteDataSet(MySqlConnection MySqlConnection, string commandText, CommandType commandType, MySqlParameter[] MySqlParameter)
         {
-            return ExecuteDataSet(OleDbConnection, defaultDatabase, commandText, commandType, OleDbCommand);
+            return ExecuteDataSet(MySqlConnection, defaultDatabase, commandText, commandType, MySqlParameter);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         //// PRIVATE METHODS ///
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private static OleDbCommand BuildCommand(string commandText, OleDbConnection connection, CommandType commandType, params OleDbParameter[] parameters)
+        private static MySqlCommand BuildCommand(string commandText, MySqlConnection connection, CommandType commandType, params MySqlParameter[] parameters)
         {
-            commandText = Regex.Replace(commandText, @"\t|\n|\r", " ");
-            OleDbCommand command = new OleDbCommand(commandText, connection);
+            MySqlCommand command = new MySqlCommand(commandText, connection);
             command.CommandType = commandType;
-            command.CommandTimeout = SqlCommandTimeout;
+
             if (parameters != null)
             {
-                foreach (OleDbParameter parameter in parameters)
+                foreach (MySqlParameter parameter in parameters)
                 {
-                    //  command.Parameters.Add(parameter);
-                    // command.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
-                    command.Parameters.Add(parameter.ParameterName, parameter.OleDbType).Value = parameter.Value;
+                    command.Parameters.Add(parameter);
                 }
-
             }
-            //    ConvertNamedParametersToPositionalParameters(command);
+
             return command;
         }
-        /// <summary>
-        /// Remarks
-        /// The OLE DB.NET Provider does not support named parameters for passing parameters to an 
-        /// SQL statement or a stored procedure called by an OleDbCommand when 
-        /// CommandType is set to Text.In this case, the question mark (?) placeholder must be used. For example:
-        /// SELECT * FROM Customers WHERE CustomerID = ?
-        /// Therefore, the order in which OleDbParameter objects are added to the OleDbParameterCollection 
-        /// must directly correspond to the position of the question mark placeholder for the parameter in the command text.
-        /// https://msdn.microsoft.com/en-us/library/system.data.oledb.oledbcommand.parameters(v=vs.110).aspx#Anchor_1
-        /// </summary>
-        /// <param name="parameterName"></param>
-        /// <param name="value"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static OleDbParameter GetSqlParameter(String parameterName, object value, OleDbType type)
+        public static MySqlParameter GetSqlParameter(String parameterName, object value, MySqlDbType sqlDbType)
         {
-            var t = new OleDbParameter(parameterName, value);
-            t.OleDbType = type;
+            var t = new MySqlParameter();
+            t.MySqlDbType = sqlDbType;
+            t.ParameterName = parameterName;
+            t.Value = value;
+             
             return t;
         }
-        public static void ConvertNamedParametersToPositionalParameters(OleDbCommand command)
-        {
-            //1. Find all occurrences of parameter references in the SQL statement (such as @MyParameter).
-            //2. Find the corresponding parameter in the commands parameters list.
-            //3. Add the found parameter to the newParameters list and replace the parameter reference in the SQL with a question mark (?).
-            //4. Replace the commands parameters list with the newParameters list.
-
-            var newParameters = new List<OleDbParameter>();
-
-            command.CommandText = Regex.Replace(command.CommandText, "(@\\w*)", match =>
-            {
-                var parameter = command.Parameters.OfType<OleDbParameter>().FirstOrDefault(a => a.ParameterName == match.Groups[1].Value);
-                if (parameter != null)
-                {
-                    var parameterIndex = newParameters.Count;
-
-                    var newParameter = command.CreateParameter();
-                    newParameter.OleDbType = parameter.OleDbType;
-                    newParameter.ParameterName = "@parameter" + parameterIndex.ToString();
-                    newParameter.Value = parameter.Value;
-
-                    newParameters.Add(newParameter);
-                }
-
-                return "?";
-            });
-
-            command.Parameters.Clear();
-            command.Parameters.AddRange(newParameters.ToArray());
-        }
+        
     }
 
 }

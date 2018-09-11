@@ -470,7 +470,7 @@
                         <td>
                             <asp:TextBox ID="TextBox_ConnectionString" runat="server" Width="698px"></asp:TextBox>
                         </td>
-                        <td></td>
+                        <td><asp:CheckBox ID="CheckBox_MySql" Font-Bold="True" ForeColor="Blue" Text="Is MySql" runat="server" /></td>
                         <td></td>
                     </tr>
                     <tr>
@@ -525,6 +525,7 @@
 
                         <td>
                             <a target="_blank" href="DatabaseUtility.txt">DatabaseUtility Code</a>
+                            <a target="_blank" href="MySqlDatabaseUtility.txt">MySqlDatabaseUtility Code</a>
                         </td>
                     </tr>
                     <tr>
@@ -553,22 +554,7 @@
                         </td>
 
                     </tr>
-                    <asp:Panel ID="Panel_Unused_Functions" Visible="false" runat="server">
-                        <asp:Button CssClass="button" ID="Button_BackUp" runat="server" Text="Back Up Database"
-                            OnClick="Button_BackUp_Click" />
-                        <asp:Label ID="Label17" runat="server" Text="DAO daki Item lar"></asp:Label>
-                        <asp:TextBox ID="TextBox_Item" runat="server"></asp:TextBox>
-                        <asp:CheckBox ID="CheckBox_Dil" Text="Dil" runat="server" />
-                        <asp:DropDownList CssClass="dropdownlist" ID="DropDownList_Resource_File" ToolTip="Xml formatına çevirmek resource dosyası seçin.."
-                            runat="server">
-                        </asp:DropDownList>
-                        <asp:Button CssClass="button" ID="Button_Resource_XML" runat="server" Text="Resource to XML"
-                            ToolTip="Xml formatına çevirildi." OnClick="Button_Resource_XML_Click" />
-                        <asp:Button CssClass="button" ID="Button_State" runat="server" Text="Gridview Durumunu Geri Getir"
-                            OnClick="Button_State_Click" />
-                        <asp:CheckBox ID="CheckBox_All_DAO" Text="Bütün DAO ve Itemları Kodlarını Dosyaya Yaz"
-                            runat="server" />
-                    </asp:Panel>
+                     
 
                 </table>
                 <%--<asp:CheckBox ID="CheckBox_Ajax" Text="Ajax" runat="server" />--%>
