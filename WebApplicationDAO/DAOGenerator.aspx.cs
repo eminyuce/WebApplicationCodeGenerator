@@ -1150,7 +1150,7 @@ namespace WebApplicationDAO
         {
             if (Kontroller != null && Kontroller.Any())
             {
-                
+
                 GridViewRowCollection Rows = GridView1.Rows;
                 foreach (GridViewRow row in Rows)
                 {
@@ -1537,7 +1537,8 @@ namespace WebApplicationDAO
                     databaseOperationStr = databaseOperationStr.Replace("SqlDataReader", "MySqlDataReader");
                     databaseOperationStr = databaseOperationStr.Replace("SqlConnection", "MySqlConnection");
                     databaseOperationStr = databaseOperationStr.Replace("SqlParameter", "MySqlParameter");
-                    databaseOperationStr = databaseOperationStr.Replace("DatabaseUtility", "MysqlDatabaseUtility");
+                    databaseOperationStr = databaseOperationStr.Replace("DatabaseUtility", "MySqlDatabaseUtility");
+                    databaseOperationStr = databaseOperationStr.Replace("SqlDbType.Int", "MySqlDbType.Int32");
                     databaseOperationStr = databaseOperationStr.Replace("SqlDbType", "MySqlDbType");
                     String realEntityName = GetRealEntityName();
                     String modifiedTableName = GetEntityName();
@@ -1549,7 +1550,7 @@ namespace WebApplicationDAO
                         String.Join(",",
                         lists.Select(t =>
                         String.Format("@{0}", t.ColumnNameInput))), mySqlspName);
-                    databaseOperationStr = databaseOperationStr.Replace(spName, "CALL "+ mySqlspName);
+                    databaseOperationStr = databaseOperationStr.Replace(spName, "CALL " + mySqlspName);
                 }
 
                 TextBox_IReader.Text = databaseOperationStr;
@@ -1993,8 +1994,15 @@ namespace WebApplicationDAO
                         {
                             //    parameterName2 = parameterName2;
                         }
+                        if (CheckBox_MySql.Checked)
+                        {
+                            method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + paramterName + "\", " + parameterName2 + "));");
+                        }
+                        else
+                        {
+                            method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + paramterName + "\", " + parameterName2 + "," + sqlDbType + "));");
+                        }
 
-                        method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + paramterName + "\", " + parameterName2 + "," + sqlDbType + "));");
 
                     }
                     catch (Exception)
@@ -2430,47 +2438,68 @@ namespace WebApplicationDAO
             method.AppendLine(" var parameterList = new List<SqlParameter>();");
             method.AppendLine(!isSp ? "var commandType = CommandType.Text;" : "var commandType = CommandType.StoredProcedure;");
 
-
-            foreach (Kontrol_Icerik item in kontrolList)
+            if (CheckBox_MySql.Checked)
             {
-                var sqlParameter = GeneralHelper.GetUrlString(item.columnName);
-                if (item.dataType.IndexOf("xml") > -1)
+                foreach (Kontrol_Icerik item in kontrolList)
                 {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
-                                      item.columnName + ".ToStr(),SqlDbType.Xml));");
+                    var sqlParameter = GeneralHelper.GetUrlString(item.columnName);
+                    if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("text") > -1)
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." + item.columnName + ".ToStr()));");
+                    }
+                    else
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." + item.columnName + "));");
+                    }
+                     
                 }
-                else if (item.dataType.IndexOf("varchar") > -1)
-                {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
-                                      item.columnName + ".ToStr(),SqlDbType.NVarChar));");
-                }
-                else if (item.dataType.IndexOf("int") > -1)
-                {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
-                                      item.columnName + ",SqlDbType.Int));");
-                }
-                else if (item.dataType.IndexOf("date") > -1)
-                {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
-                                      item.columnName + ",SqlDbType.DateTime));");
-                }
-                else if (item.dataType.IndexOf("bit") > -1)
-                {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
-                                      item.columnName + ",SqlDbType.Bit));");
-                }
-                else if (item.dataType.IndexOf("float") > -1)
-                {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
-                                      item.columnName + ",SqlDbType.Float));");
-                }
-                else
-                {
-                    method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
-                                      item.columnName + ",SqlDbType.NVarChar));");
-                }
-
             }
+            else
+            {
+
+
+                foreach (Kontrol_Icerik item in kontrolList)
+                {
+                    var sqlParameter = GeneralHelper.GetUrlString(item.columnName);
+                    if (item.dataType.IndexOf("xml") > -1)
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
+                                          item.columnName + ".ToStr(),SqlDbType.Xml));");
+                    }
+                    else if (item.dataType.IndexOf("varchar") > -1)
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
+                                          item.columnName + ".ToStr(),SqlDbType.NVarChar));");
+                    }
+                    else if (item.dataType.IndexOf("int") > -1)
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
+                                          item.columnName + ",SqlDbType.Int));");
+                    }
+                    else if (item.dataType.IndexOf("date") > -1)
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
+                                          item.columnName + ",SqlDbType.DateTime));");
+                    }
+                    else if (item.dataType.IndexOf("bit") > -1)
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
+                                          item.columnName + ",SqlDbType.Bit));");
+                    }
+                    else if (item.dataType.IndexOf("float") > -1)
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
+                                          item.columnName + ",SqlDbType.Float));");
+                    }
+                    else
+                    {
+                        method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." +
+                                          item.columnName + ",SqlDbType.NVarChar));");
+                    }
+
+                }
+            }
+
         }
 
         private void Kontrolleri_Goster(String built)
@@ -2527,7 +2556,7 @@ namespace WebApplicationDAO
                 {
                     //   if (CheckBox_Dil.Checked)
                     if (false)
-                    { 
+                    {
 
                         GirdView_Cok_Dil(boundField, item);
                     }
@@ -3300,7 +3329,7 @@ namespace WebApplicationDAO
             }
             //  TextBox_List_XML.Text = xmlfields.ToString();
         }
-         
+
         protected void ClearButton_Click(object sender, EventArgs e)
         {
 
@@ -3603,8 +3632,8 @@ namespace WebApplicationDAO
 
 
 
-               
-                built.AppendLine("CREATE PROCEDURE "+ entityPrefix + "SaveOrUpdate" + modifiedTableName + "(");
+
+                built.AppendLine("CREATE PROCEDURE " + entityPrefix + "SaveOrUpdate" + modifiedTableName + "(");
                 for (int i = 0; i < list.Count; i++)
                 {
                     var item = list[i];
@@ -3674,7 +3703,7 @@ namespace WebApplicationDAO
                 built.AppendLine("COMMIT;");
                 built.AppendLine(" SELECT MyId;");
                 built.AppendLine("END");
-               return built.ToString();
+                return built.ToString();
 
             }
             catch (Exception ex)
@@ -4723,7 +4752,7 @@ namespace WebApplicationDAO
 
 
 
- 
+
 
         protected void Button_Connect_Click(object sender, EventArgs e)
         {
@@ -4861,8 +4890,15 @@ namespace WebApplicationDAO
             {
 
                 String m = "";
-
-                if (dataType.IndexOf("varchar") > -1)
+                if (dataType.IndexOf("text") > -1)
+                {
+                    m = "''";
+                }
+                else if (dataType.IndexOf("varchar") > -1)
+                {
+                    m = "''";
+                }
+                else if (dataType.IndexOf("char") > -1)
                 {
                     m = "''";
                 }

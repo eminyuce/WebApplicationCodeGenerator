@@ -369,6 +369,10 @@
             function getFormattedSql(sql) {
                 // var link = "http://www.format-sql.com/Share?sql="+ encodeURI(sql);
                 var link = "http://www.format-sql.com";
+                var isMySql = $('#CheckBox_MySql').prop('checked');
+                if (isMySql) {
+                    link = 'https://www.cleancss.com/sql-beautify/';
+                }
                 window.open("", "_blank").location = link;
             }
 
