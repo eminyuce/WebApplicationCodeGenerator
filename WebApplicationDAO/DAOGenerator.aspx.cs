@@ -2451,7 +2451,7 @@ namespace WebApplicationDAO
                     {
                         method.AppendLine("parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + sqlParameter + "\", item." + item.columnName + "));");
                     }
-                     
+
                 }
             }
             else
@@ -4204,7 +4204,7 @@ namespace WebApplicationDAO
                 String patternOriginal = String.Format("{0}", TextBox_StringPattern.Text);
                 foreach (Kontrol_Icerik item in linkedList)
                 {
-                    var pattern = patternOriginal.Replace("{1}", convertSqlDataTypeToCSharp(item.dataType));
+                    var pattern = patternOriginal.Replace("{1}", GeneralHelper.convertSqlDataTypeToCSharp(item.dataType));
                     pattern = pattern.Replace("{0}", item.columnName);
                     method.AppendLine(pattern);
                 }
@@ -4462,7 +4462,10 @@ namespace WebApplicationDAO
                 }
             }
 
-            method.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{1}(item);", primaryKey.ToLower(), modelName));
+            // method.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{1}(item);", primaryKey.ToLower(), modelName));
+
+            method.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{2}(item);", primaryKey.ToLower(), modelName.Replace(ClassNameConvention, ""), modelName));
+
             method.AppendLine("");
             method.AppendLine("");
             method.AppendLine("");
@@ -4576,18 +4579,18 @@ namespace WebApplicationDAO
             method.AppendLine("");
             foreach (Kontrol_Icerik item in kontrolList)
             {
-
-                if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("xml") > -1)
+                var p = GeneralHelper.convertSqlDataTypeToCSharp(item.dataType);
+                if (p.ToLower().IndexOf("string") > -1)
                 {
                     // method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? \"\" : read[\"" + item.columnName + "\"].ToString();");
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToStr();");
                 }
-                else if (item.dataType.IndexOf("int") > -1)
+                else if (p.ToLower().IndexOf("int") > -1)
                 {
                     //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : System.Convert.ToInt32(read[\"" + item.columnName + "\"].ToString());");
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToInt();");
                 }
-                else if (item.dataType.IndexOf("date") > -1)
+                else if (p.ToLower().IndexOf("date") > -1)
                 {
                     if (item.isNull.Equals("YES", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -4613,6 +4616,10 @@ namespace WebApplicationDAO
                 {
                     //method.AppendLine("item." + item.columnName + " = (read[\"" + item.columnName + "\"] is DBNull) ? -1 : float.Parse(read[\"" + item.columnName + "\"].ToString());");
                     method.AppendLine("item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToFloat();");
+                }
+                else
+                {
+                    method.AppendLine("//item." + item.columnName + " = dr[\"" + item.columnName + "\"].ToStr();");
                 }
 
 
@@ -4793,47 +4800,7 @@ namespace WebApplicationDAO
 
         }
 
-        private String convertSqlDataTypeToCSharp(String key)
-        {
-            String result = "";
-
-            StringDictionary map = new StringDictionary();
-            map.Add("binary", "Byte[]");
-            map.Add("varbinary", "Byte[]");
-            map.Add("image", "None");
-            map.Add("varchar", "None");
-            map.Add("char", "None");
-            map.Add("nvarchar", "String");
-            map.Add("nchar", "String");
-            map.Add("text", "String");
-            map.Add("ntext", "String");
-            map.Add("uniqueidentifier", "Guid");
-            map.Add("rowversion", "Byte[]");
-            map.Add("bit", "Boolean");
-            map.Add("tinyint", "Byte");
-            map.Add("smallint", "int");
-            map.Add("int", "int");
-            map.Add("bigint", "int");
-            map.Add("smallmoney", "Decimal");
-            map.Add("money", "Decimal");
-            map.Add("numeric", "Decimal");
-            map.Add("decimal", "Decimal");
-            map.Add("real", "Single");
-            map.Add("float", "double");
-            map.Add("smalldatetime", "DateTime");
-            map.Add("datetime", "DateTime");
-            map.Add("datetime2", "DateTime");
-            map.Add("timestamp", "DateTime");
-            map.Add("xml", "String");
-
-            if (map.ContainsKey(key))
-            {
-                return map[key.ToLower()];
-            }
-
-            return result;
-
-        }
+       
 
         private String GetEntityName()
         {

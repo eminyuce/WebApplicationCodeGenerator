@@ -1,16 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace WebApplicationDAO
 {
     public class GeneralHelper
     {
+        public static String convertSqlDataTypeToCSharp(String key)
+        {
+            String result = "";
 
+            StringDictionary map = new StringDictionary();
+            map.Add("binary", "Byte[]");
+            map.Add("varbinary", "Byte[]");
+            map.Add("image", "None");
+            map.Add("varchar", "String");
+            map.Add("char", "String");
+            map.Add("nvarchar", "String");
+            map.Add("nchar", "String");
+            map.Add("text", "String");
+            map.Add("ntext", "String");
+            map.Add("uniqueidentifier", "Guid");
+            map.Add("rowversion", "Byte[]");
+            map.Add("bit", "Boolean");
+            map.Add("tinyint", "Byte");
+            map.Add("smallint", "int");
+            map.Add("int", "int");
+            map.Add("bigint", "int");
+            map.Add("smallmoney", "Decimal");
+            map.Add("money", "Decimal");
+            map.Add("numeric", "Decimal");
+            map.Add("decimal", "Decimal");
+            map.Add("real", "Single");
+            map.Add("float", "double");
+            map.Add("smalldatetime", "DateTime");
+            map.Add("datetime", "DateTime");
+            map.Add("datetime2", "DateTime");
+            map.Add("timestamp", "DateTime");
+            map.Add("xml", "String");
+
+            var lines = File.ReadAllLines(HttpContext.Current.Server.MapPath(@"~\dataTypes.txt"));
+            for (var i = 0; i < lines.Length; i += 1)
+            {
+                try
+                {
+                    var line = lines[i].ToStr();
+                    if (!String.IsNullOrEmpty(line))
+                    {
+                        if (!map.ContainsKey(key))
+                        {
+                            var parts = line.Split("-".ToCharArray());
+                            map[parts[0]] = parts[1];
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+
+                }
+
+
+                // Process line
+            }
+
+            if (map.ContainsKey(key))
+            {
+                return map[key.ToLower()];
+            }
+            else
+            {
+                result = "UNDEFINED_DATA_TYPE";
+            }
+
+            return result;
+
+        }
         public static string ToTitleCase(string s)
         {
             return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());
