@@ -5,7 +5,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Web;
 
-namespace WebApplicationDAO
+namespace Helpers
 {
     public class DbOleDbTest
     {

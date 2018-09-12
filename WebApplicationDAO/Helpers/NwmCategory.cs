@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace WebApplicationDAO
+namespace Helpers
 {
     public class NwmCategory
     {

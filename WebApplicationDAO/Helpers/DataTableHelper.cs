@@ -5,10 +5,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApplicationDAO
+namespace Helpers
 {
     public class DataTableHelper
     {
+
+        //public static string GetPrimaryKeys(DataTable myTable)
+        //{
+        //    // Create the array for the columns.
+        //    DataColumn[] colArr;
+        //    colArr = myTable.PrimaryKey;
+        //    // Get the number of elements in the array.
+        //    //Response.Write("Column Count: " + colArr.Length + "<br>");
+        //    string primaryKey = "";
+        //    for (int i = 0; i < colArr.Length; i++)
+        //    {
+        //        //Response.Write(colArr[i].ColumnName + "<br>" + colArr[i].DataType + "<br>");
+        //        primaryKey = colArr[i].ColumnName;
+        //    }
+        //    return primaryKey;
+        //}
+
         public static bool GetValueBoolean(DataRow row, string column, bool defaultValue)
         {
             return GetValue(row, column, defaultValue).ToBool();

@@ -8,7 +8,7 @@ using System.Data.OleDb;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-namespace WebApplicationDAO
+namespace Helpers
 {
 
     public class OleDbDatabaseUtility

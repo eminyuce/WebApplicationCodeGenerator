@@ -1,35 +1,35 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 
-namespace WebApplicationDAO
+namespace Helpers
 {
 
-    public class MySqlDatabaseUtility
+    public class DatabaseUtility
     {
-        private MySqlDatabaseUtility() { } // This class is non-creatable.
+        private DatabaseUtility() { } // This class is non-creatable.
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         //// PUBLIC PROPERTIES ////
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        static MySqlConnection defaultConnection;
+        static SqlConnection defaultConnection;
         static string defaultDatabase;
-        static System.Data.CommandType defaultCommandType = CommandType.Text;
+        static System.Data.CommandType defaultCommandType = System.Data.CommandType.Text;
 
         ///An open connection to a SQL Server database.
 
-        ///Set this property to omit passing a MySqlConnection object into each query method. If this property is unset,
-        /// the MySqlConnection object MUST be passed into each query method.
+        ///Set this property to omit passing a SqlConnection object into each query method. If this property is unset,
+        /// the SqlConnection object MUST be passed into each query method.
 
 
-        ///The MySqlConnection can be either opened or closed. If the MySqlConnection is closed, after the query is run, 
-        /// it will be closed again. The MySqlConnection will remain open if it is open prior to the query running.
+        ///The SqlConnection can be either opened or closed. If the SqlConnection is closed, after the query is run, 
+        /// it will be closed again. The SqlConnection will remain open if it is open prior to the query running.
 
 
         /// 
-        public static MySqlConnection Connection
+        public static SqlConnection Connection
         {
             get { return defaultConnection; }
             set { defaultConnection = value; }
@@ -37,8 +37,8 @@ namespace WebApplicationDAO
 
         ///Changes the default database.
 
-        /// Set this property to change the database from the default database specified in the MySqlConnection.
-        /// Set the value to null (Nothing in Visual Basic) to use the default database specified in the MySqlConnection.
+        /// Set this property to change the database from the default database specified in the SqlConnection.
+        /// Set the value to null (Nothing in Visual Basic) to use the default database specified in the SqlConnection.
         public static string DefaultDatabase
         {
             get { return defaultDatabase; }
@@ -66,17 +66,17 @@ namespace WebApplicationDAO
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -93,17 +93,17 @@ namespace WebApplicationDAO
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -117,27 +117,27 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new MySqlParameter("@CategoryName", "New Category")
+        ///     new SqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new MySqlParameter("@CategoryName", "New Category") _
+        ///     new SqlParameter("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -145,35 +145,35 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(string commandText, params MySqlParameter[] parameters) { return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static int ExecuteNonQuery(string commandText, params SqlParameter[] parameters) { return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CategoryName", "New Category")
+        ///     new SqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CategoryName", "New Category") _
+        ///     new SqlParameter("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -181,28 +181,28 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, defaultDatabase, commandText, commandType, parameters);
         }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -218,22 +218,22 @@ namespace WebApplicationDAO
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery("Northwind", "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -249,32 +249,32 @@ namespace WebApplicationDAO
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new MySqlParameter("@CategoryName", "New Category")
+        ///     new SqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new MySqlParameter("@CategoryName", "New Category") _
+        ///     new SqlParameter("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -282,39 +282,39 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(string database, string commandText, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(string database, string commandText, params SqlParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new MySqlParameter("@CategoryName", "New Category")
+        ///     new SqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     new MySqlParameter("@CategoryName", "New Category") _
+        ///     new SqlParameter("@CategoryName", "New Category") _
         /// )
         /// 
         /// 
@@ -322,7 +322,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             return ExecuteNonQuery(defaultConnection, database, commandText, commandType, parameters);
         }
@@ -333,17 +333,17 @@ namespace WebApplicationDAO
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')");
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')")
         /// 
@@ -352,7 +352,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(MySqlConnection connection, string commandText)
+        public static int ExecuteNonQuery(SqlConnection connection, string commandText)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
@@ -364,17 +364,17 @@ namespace WebApplicationDAO
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery(connection, "INSERT INTO Categories (CategoryName) VALUES ('New Category')", CommandType.Text)
         /// 
@@ -383,7 +383,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(MySqlConnection connection, string commandText, CommandType commandType)
+        public static int ExecuteNonQuery(SqlConnection connection, string commandText, CommandType commandType)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, commandType, null);
         }
@@ -392,29 +392,29 @@ namespace WebApplicationDAO
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new MySqlParameter("@CategoryName", "New Category")
+        ///     new SqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     New MySqlParameter("@CategoryName", "New Category")
+        ///     New SqlParameter("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -422,7 +422,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(MySqlConnection connection, string commandText, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(SqlConnection connection, string commandText, params SqlParameter[] parameters)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
@@ -432,31 +432,31 @@ namespace WebApplicationDAO
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CategoryName", "New Category")
+        ///     new SqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     New MySqlParameter("@CategoryName", "New Category")
+        ///     New SqlParameter("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -464,7 +464,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(MySqlConnection connection, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(SqlConnection connection, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             return ExecuteNonQuery(connection, defaultDatabase, commandText, commandType, parameters);
         }
@@ -472,17 +472,17 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
@@ -490,7 +490,7 @@ namespace WebApplicationDAO
         ///     "INSERT INTO Categories (CategoryName) VALUES ('New Category')"
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
@@ -503,7 +503,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(MySqlConnection connection, string database, string commandText)
+        public static int ExecuteNonQuery(SqlConnection connection, string database, string commandText)
         {
             return ExecuteNonQuery(connection, database, commandText, defaultCommandType, null);
         }
@@ -511,18 +511,18 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
@@ -530,7 +530,7 @@ namespace WebApplicationDAO
         ///     "INSERT INTO Categories (CategoryName) VALUES ('New Category')"
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
@@ -543,7 +543,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(MySqlConnection connection, string database, string commandText, CommandType commandType)
+        public static int ExecuteNonQuery(SqlConnection connection, string database, string commandText, CommandType commandType)
         {
             return ExecuteNonQuery(connection, database, commandText, commandType, null);
         }
@@ -551,33 +551,33 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
-        ///     new MySqlParameter("@CategoryName", "New Category")
+        ///     new SqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
-        ///     New MySqlParameter("@CategoryName", "New Category")
+        ///     New SqlParameter("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -585,7 +585,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(MySqlConnection connection, string database, string commandText, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(SqlConnection connection, string database, string commandText, params SqlParameter[] parameters)
         {
             return ExecuteNonQuery(connection, database, commandText, defaultCommandType, parameters);
         }
@@ -593,36 +593,36 @@ namespace WebApplicationDAO
         ///Executes a Transact-SQL statement against the connection and returns the number of rows affected.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The number of rows affected.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using ExecuteNonQuery.
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using ExecuteNonQuery.
         /// The example is passed a string that is a Transact-SQL statement (such as UPDATE, INSERT, or DELETE) and a string to use to connect to the data source.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DatabaseUtility.ExecuteNonQuery(
         ///     connection,
         ///     "Northwind",
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CategoryName", "New Category")
+        ///     new SqlParameter("@CategoryName", "New Category")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DatabaseUtility.ExecuteNonQuery( _
         ///     connection, _
         ///     "Northwind", _
         ///     "INSERT INTO Categories (CategoryName) VALUES (@CategoryName)", _
         ///     CommandType.Text, _
-        ///     New MySqlParameter("@CategoryName", "New Category")
+        ///     New SqlParameter("@CategoryName", "New Category")
         /// )
         /// 
         /// 
@@ -630,14 +630,14 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static int ExecuteNonQuery(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             int value = -1;
 
             // Build Command
-            MySqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            SqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -657,20 +657,20 @@ namespace WebApplicationDAO
         #endregion
 
         #region - ExecuteReader -
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// The text of the query.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -678,8 +678,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -692,26 +692,26 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(string commandText)
+        public static SqlDataReader ExecuteReader(string commandText)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text);
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -719,8 +719,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text)
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -733,29 +733,29 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(string commandText, CommandType commandType)
+        public static SqlDataReader ExecuteReader(string commandText, CommandType commandType)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -764,11 +764,11 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -782,31 +782,31 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(string commandText, params MySqlParameter[] parameters)
+        public static SqlDataReader ExecuteReader(string commandText, params SqlParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -815,12 +815,12 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -834,26 +834,26 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static SqlDataReader ExecuteReader(string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, defaultDatabase, commandText, commandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -861,8 +861,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -875,27 +875,27 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(string database, string commandText)
+        public static SqlDataReader ExecuteReader(string database, string commandText)
         {
             return ExecuteReader(defaultConnection, database, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text);
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -903,8 +903,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text)
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader("Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -917,31 +917,31 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(string database, string commandText, CommandType commandType)
+        public static SqlDataReader ExecuteReader(string database, string commandText, CommandType commandType)
         {
             return ExecuteReader(defaultConnection, database, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// while (reader.Read()) {
@@ -950,12 +950,12 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// While (reader.Read()) 
@@ -969,33 +969,33 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(string database, string commandText, params MySqlParameter[] parameters)
+        public static SqlDataReader ExecuteReader(string database, string commandText, params SqlParameter[] parameters)
         {
             return ExecuteReader(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// while (reader.Read()) {
@@ -1004,13 +1004,13 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// While (reader.Read()) 
@@ -1024,23 +1024,23 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(string database, string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteReader(defaultConnection, database, commandText, commandType, parameters); }
+        public static SqlDataReader ExecuteReader(string database, string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteReader(defaultConnection, database, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1048,8 +1048,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1062,27 +1062,27 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText)
+        public static SqlDataReader ExecuteReader(SqlConnection connection, string commandText)
         {
             return ExecuteReader(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text);
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1090,8 +1090,8 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text)
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1104,28 +1104,28 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText, CommandType commandType) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, null); }
+        public static SqlDataReader ExecuteReader(SqlConnection connection, string commandText, CommandType commandType) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1134,12 +1134,12 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1153,34 +1153,34 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText,
-                                                  params MySqlParameter[] parameters)
+        public static SqlDataReader ExecuteReader(SqlConnection connection, string commandText,
+                                                  params SqlParameter[] parameters)
         {
             return ExecuteReader(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1189,13 +1189,13 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1209,25 +1209,25 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, parameters); }
+        public static SqlDataReader ExecuteReader(SqlConnection connection, string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteReader(connection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers");
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers");
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1235,9 +1235,9 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers")
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers")
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1250,26 +1250,26 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string database, string commandText) { return ExecuteReader(connection, database, commandText, defaultCommandType, null); }
+        public static SqlDataReader ExecuteReader(SqlConnection connection, string database, string commandText) { return ExecuteReader(connection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// 
         /// while (reader.Read()) {
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"]);
@@ -1277,9 +1277,9 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
         /// While (reader.Read()) 
         ///     Console.WriteLine("ExecuteReader: {0}, {1}, {2}", reader["CustomerID"], reader["CompanyName"], reader["ContactName"])
@@ -1292,30 +1292,30 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string database, string commandText, CommandType commandType) { return ExecuteReader(connection, database, commandText, commandType, null); }
+        public static SqlDataReader ExecuteReader(SqlConnection connection, string database, string commandText, CommandType commandType) { return ExecuteReader(connection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1324,13 +1324,13 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1344,32 +1344,32 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string database, string commandText, params MySqlParameter[] parameters) { return ExecuteReader(connection, database, commandText, defaultCommandType, parameters); }
+        public static SqlDataReader ExecuteReader(SqlConnection connection, string database, string commandText, params SqlParameter[] parameters) { return ExecuteReader(connection, database, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.SqlClient.MySqlDataReader.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.SqlClient.SqlDataReader.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
-        /// A System.Data.SqlClient.MySqlDataReader object.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
+        /// A System.Data.SqlClient.SqlDataReader object.
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand, then executes it by 
+        ///[C#, Visual Basic] The following example creates a SqlCommand, then executes it by 
         /// passing a string that is a Transact-SQL SELECT statement, and a string to use to connect to the data source.
         /// CommandBehavior is set to CloseConnection.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader(
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// 
         /// if (reader.Read()) {
@@ -1378,14 +1378,14 @@ namespace WebApplicationDAO
         /// 
         /// reader.Close(); // this will close the connection (only if connection was not opened before ExecuteReader)
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// MySqlDataReader reader = DatabaseUtility.ExecuteReader( _
+        /// SqlDataReader reader = DatabaseUtility.ExecuteReader( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// If (reader.Read()) Then
@@ -1399,12 +1399,12 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static SqlDataReader ExecuteReader(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
 
             // Build Command
-            MySqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            SqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (connection.State == ConnectionState.Closed)
@@ -1433,20 +1433,20 @@ namespace WebApplicationDAO
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1464,20 +1464,20 @@ namespace WebApplicationDAO
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1491,31 +1491,31 @@ namespace WebApplicationDAO
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1523,39 +1523,39 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(string commandText, params MySqlParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static object ExecuteScalar(string commandText, params SqlParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1563,29 +1563,29 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
+        public static object ExecuteScalar(string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteScalar(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1598,26 +1598,26 @@ namespace WebApplicationDAO
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Northwind", "Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar("SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1633,35 +1633,35 @@ namespace WebApplicationDAO
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, isual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, isual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "Northwind",
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "Northwind", _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1669,45 +1669,45 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(string database, string commandText, params MySqlParameter[] parameters)
+        public static object ExecuteScalar(string database, string commandText, params SqlParameter[] parameters)
         {
             return ExecuteScalar(defaultConnection, database, commandText, defaultCommandType, parameters);
         }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     "Northwind",
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     "Northwind", _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1715,7 +1715,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static object ExecuteScalar(string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             return ExecuteScalar(defaultConnection, database, commandText, commandType, parameters);
         }
@@ -1727,20 +1727,20 @@ namespace WebApplicationDAO
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1749,7 +1749,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(MySqlConnection connection, string commandText)
+        public static object ExecuteScalar(SqlConnection connection, string commandText)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, defaultCommandType, null);
         }
@@ -1762,20 +1762,20 @@ namespace WebApplicationDAO
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1784,7 +1784,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(MySqlConnection connection, string commandText, CommandType commandType)
+        public static object ExecuteScalar(SqlConnection connection, string commandText, CommandType commandType)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, commandType, null);
         }
@@ -1793,33 +1793,33 @@ namespace WebApplicationDAO
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     connection,
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     connection, _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1827,7 +1827,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(MySqlConnection connection, string commandText, params MySqlParameter[] parameters)
+        public static object ExecuteScalar(SqlConnection connection, string commandText, params SqlParameter[] parameters)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, defaultCommandType, parameters);
         }
@@ -1837,35 +1837,35 @@ namespace WebApplicationDAO
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#,Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#,Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(
         ///     connection,
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar( _
         ///     connection, _
         ///     "SELECT CustomerName FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -1873,7 +1873,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(MySqlConnection connection, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static object ExecuteScalar(SqlConnection connection, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             return ExecuteScalar(connection, defaultDatabase, commandText, commandType, parameters);
         }
@@ -1881,25 +1881,25 @@ namespace WebApplicationDAO
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         //[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'");
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'")
         /// 
@@ -1908,7 +1908,7 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(MySqlConnection connection, string database, string commandText)
+        public static object ExecuteScalar(SqlConnection connection, string database, string commandText)
         {
             return ExecuteScalar(connection, database, commandText, defaultCommandType, null);
         }
@@ -1916,26 +1916,26 @@ namespace WebApplicationDAO
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = 'ALFKI'", CommandType.Text)
         /// 
@@ -1944,74 +1944,74 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static object ExecuteScalar(MySqlConnection connection, string database, string commandText, CommandType commandType) { return ExecuteScalar(connection, database, commandText, commandType, null); }
+        public static object ExecuteScalar(SqlConnection connection, string database, string commandText, CommandType commandType) { return ExecuteScalar(connection, database, commandText, commandType, null); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new MySqlParameter("@CustomerID", "ALFKI"));
+        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new SqlParameter("@CustomerID", "ALFKI"));
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new MySqlParameter("@CustomerID", "ALFKI"))
+        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", new SqlParameter("@CustomerID", "ALFKI"))
         /// 
         /// 
 
         ///
 
         /// 
-        public static object ExecuteScalar(MySqlConnection connection, string database, string commandText, params MySqlParameter[] parameters) { return ExecuteScalar(connection, database, commandText, defaultCommandType, parameters); }
+        public static object ExecuteScalar(SqlConnection connection, string database, string commandText, params SqlParameter[] parameters) { return ExecuteScalar(connection, database, commandText, defaultCommandType, parameters); }
 
         ///Executes the query, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// The first column of the first row in the result set, or a null reference if the result set is empty.
         /// Use the ExecuteScalar method to retrieve a single value (for example, an aggregate value) from a database.
         /// This requires less code than using the ExecuteReader method, and then performing the operations necessary to
-        /// generate the single value using the data returned by a MySqlDataReader.
+        /// generate the single value using the data returned by a SqlDataReader.
         /// 
         /// 
-        ///[C#, Visual Basic] The following example creates a MySqlCommand and then executes it using
+        ///[C#, Visual Basic] The following example creates a SqlCommand and then executes it using
         /// ExecuteScalar. The example is passed a string that is a Transact-SQL statement that returns an aggregate result.
         ///
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
-        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new MySqlParameter("@CustomerID", "ALFKI"));
+        /// string customerName = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new SqlParameter("@CustomerID", "ALFKI"));
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
-        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new MySqlParameter("@CustomerID", "ALFKI"))
+        /// Dim customerName As String = DatabaseUtility.ExecuteScalar(connection, "Northwind", "SELECT CustomerName FROM Customers WHERE CustomerID = @CustomerID", CommandType.Text, new SqlParameter("@CustomerID", "ALFKI"))
         /// 
         /// 
 
         ///
 
         /// 
-        public static object ExecuteScalar(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static object ExecuteScalar(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             object value = null;
@@ -2020,7 +2020,7 @@ namespace WebApplicationDAO
             ConnectionState state = connection.State;
 
             // Build Command
-            MySqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
+            SqlCommand command = BuildCommand(commandText, connection, commandType, parameters);
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2039,7 +2039,7 @@ namespace WebApplicationDAO
         #endregion
 
         #region - ExecuteDataTable -
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// A representation of one table of in-memory data.
@@ -2054,11 +2054,11 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers")
         /// 
@@ -2072,7 +2072,7 @@ namespace WebApplicationDAO
             return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
@@ -2088,11 +2088,11 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2106,11 +2106,11 @@ namespace WebApplicationDAO
             return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, null);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
         /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
@@ -2123,18 +2123,18 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2142,14 +2142,14 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string database, string commandText, params MySqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(string database, string commandText, params SqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
         /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
@@ -2162,20 +2162,20 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2183,11 +2183,11 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
@@ -2201,11 +2201,11 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers")
         /// 
@@ -2216,9 +2216,9 @@ namespace WebApplicationDAO
         /// 
         public static DataTable ExecuteDataTable(string database, string commandText) { return ExecuteDataTable(defaultConnection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
@@ -2233,11 +2233,11 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable("Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2248,10 +2248,10 @@ namespace WebApplicationDAO
         /// 
         public static DataTable ExecuteDataTable(string database, string commandText, CommandType commandType) { return ExecuteDataTable(defaultConnection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
         /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
@@ -2264,20 +2264,20 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "Northwind", 
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2285,13 +2285,13 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string commandText, params MySqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(string commandText, params SqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
         /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
@@ -2304,22 +2304,22 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// DatabaseUtility.Connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// DatabaseUtility.Connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     "Northwind", 
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// DatabaseUtility.Connection = New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// DatabaseUtility.Connection = New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = '@CustomerID'", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2327,9 +2327,9 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteDataTable(defaultConnection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
@@ -2345,11 +2345,11 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers")
         /// 
@@ -2358,9 +2358,9 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(MySqlConnection connection, string commandText) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, null); }
+        public static DataTable ExecuteDataTable(SqlConnection connection, string commandText) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
@@ -2376,11 +2376,11 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2389,13 +2389,13 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(MySqlConnection connection, string commandText, CommandType commandType) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, null); }
+        public static DataTable ExecuteDataTable(SqlConnection connection, string commandText, CommandType commandType) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
         /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
@@ -2408,20 +2408,20 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2429,14 +2429,14 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(MySqlConnection connection, string commandText, params MySqlParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, parameters); }
+        public static DataTable ExecuteDataTable(SqlConnection connection, string commandText, params SqlParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, defaultCommandType, parameters); }
 
-        ///ends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///ends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
         /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
@@ -2449,22 +2449,22 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2472,12 +2472,12 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(MySqlConnection connection, string commandText, CommandType commandType, params MySqlParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, parameters); }
+        public static DataTable ExecuteDataTable(SqlConnection connection, string commandText, CommandType commandType, params SqlParameter[] parameters) { return ExecuteDataTable(connection, defaultDatabase, commandText, commandType, parameters); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
@@ -2491,11 +2491,11 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers");
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers")
         /// 
@@ -2504,12 +2504,12 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(MySqlConnection connection, string database, string commandText) { return ExecuteDataTable(connection, database, commandText, defaultCommandType, null); }
+        public static DataTable ExecuteDataTable(SqlConnection connection, string database, string commandText) { return ExecuteDataTable(connection, database, commandText, defaultCommandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
         /// A representation of one table of in-memory data.
@@ -2524,11 +2524,11 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text);
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// Dim customers As DataTable = DatabaseUtility.ExecuteDataTable(connection, "Northwind", "SELECT * FROM Customers", CommandType.Text)
         /// 
@@ -2537,14 +2537,14 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(MySqlConnection connection, string database, CommandType commandType, string commandText) { return ExecuteDataTable(connection, database, commandText, commandType, null); }
+        public static DataTable ExecuteDataTable(SqlConnection connection, string database, CommandType commandType, string commandText) { return ExecuteDataTable(connection, database, commandText, commandType, null); }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
         /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
@@ -2557,22 +2557,22 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2580,18 +2580,18 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(MySqlConnection connection, string database, string commandText, params MySqlParameter[] parameters)
+        public static DataTable ExecuteDataTable(SqlConnection connection, string database, string commandText, params SqlParameter[] parameters)
         {
             return ExecuteDataTable(connection, database, commandText, defaultCommandType, parameters);
         }
 
-        ///Sends the System.Data.SqlClient.MySqlCommand.CommandText to the System.Data.SqlClient.MySqlCommand.Connection, and builds a System.Data.DataTable.
+        ///Sends the System.Data.SqlClient.SqlCommand.CommandText to the System.Data.SqlClient.SqlCommand.Connection, and builds a System.Data.DataTable.
 
         /// Represents an open connection to a SQL Server database.
-        /// Changes the current database for an open System.Data.SqlClient.MySqlConnection.
+        /// Changes the current database for an open System.Data.SqlClient.SqlConnection.
         /// The text of the query.
         /// Specifies how a command string is interpreted.
-        /// A list of type System.Data.SqlClient.MySqlParameter that maps to the System.Data.SqlClient.MySqlCommand.
+        /// A list of type System.Data.SqlClient.SqlParameter that maps to the System.Data.SqlClient.SqlCommand.
         /// A representation of one table of in-memory data.
         /// Use the ExecuteDataTable method to retrieve a System.Data.DataTable from a database.
         /// This requires less code than using the SqlDataAdapter.Fill method, performing the operations necessary to
@@ -2604,24 +2604,24 @@ namespace WebApplicationDAO
 
 
         ///[C#]
-        /// MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
+        /// SqlConnection connection = new SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;");
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable(
         ///     connection,
         ///     "Northwind",
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID",
         ///     CommandType.Text,
-        ///     new MySqlParameter("@CustomerID", "ALFKI")
+        ///     new SqlParameter("@CustomerID", "ALFKI")
         /// );
         /// [Visual Basic]
-        /// Dim connection As New MySqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
+        /// Dim connection As New SqlConnection("Server=127.0.0.1;Database=Northwind;Uid=sa;Pwd=;")
         /// 
         /// DataTable customers = DatabaseUtility.ExecuteDataTable( _
         ///     connection, _
         ///     "Northwind", _
         ///     "SELECT * FROM Customers WHERE CustomerID = @CustomerID", _
         ///     CommandType.Text, _
-        ///     new MySqlParameter("@CustomerID", "ALFKI") _
+        ///     new SqlParameter("@CustomerID", "ALFKI") _
         /// )
         /// 
         /// 
@@ -2629,14 +2629,14 @@ namespace WebApplicationDAO
         ///
 
         /// 
-        public static DataTable ExecuteDataTable(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static DataTable ExecuteDataTable(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             DataTable value = new DataTable();
 
             // Build Adapter
-            MySqlDataAdapter adapter = new MySqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
+            SqlDataAdapter adapter = new SqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2652,14 +2652,14 @@ namespace WebApplicationDAO
 
             return value;
         }
-        public static DataSet ExecuteDataSet(MySqlConnection connection, string database, string commandText, CommandType commandType, params MySqlParameter[] parameters)
+        public static DataSet ExecuteDataSet(SqlConnection connection, string database, string commandText, CommandType commandType, params SqlParameter[] parameters)
         {
             if (connection == null) throw new Exception("Connection must be established before query can be run.");
             ConnectionState state = connection.State;
             var value = new DataSet();
 
             // Build Adapter
-            var adapter = new MySqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
+            var adapter = new SqlDataAdapter(BuildCommand(commandText, connection, commandType, parameters));
 
             // Open the database connection if it isn't already opened
             if (state == ConnectionState.Closed) connection.Open();
@@ -2677,23 +2677,23 @@ namespace WebApplicationDAO
         }
         #endregion
 
-        public static DataSet ExecuteDataSet(MySqlConnection MySqlConnection, string commandText, CommandType commandType, MySqlParameter[] MySqlParameter)
+        public static DataSet ExecuteDataSet(SqlConnection sqlConnection, string commandText, CommandType commandType, SqlParameter[] sqlParameter)
         {
-            return ExecuteDataSet(MySqlConnection, defaultDatabase, commandText, commandType, MySqlParameter);
+            return ExecuteDataSet(sqlConnection, defaultDatabase, commandText, commandType, sqlParameter);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         //// PRIVATE METHODS ///
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private static MySqlCommand BuildCommand(string commandText, MySqlConnection connection, CommandType commandType, params MySqlParameter[] parameters)
+        private static SqlCommand BuildCommand(string commandText, SqlConnection connection, CommandType commandType, params SqlParameter[] parameters)
         {
-            MySqlCommand command = new MySqlCommand(commandText, connection);
+            SqlCommand command = new SqlCommand(commandText, connection);
             command.CommandType = commandType;
 
             if (parameters != null)
             {
-                foreach (MySqlParameter parameter in parameters)
+                foreach (SqlParameter parameter in parameters)
                 {
                     command.Parameters.Add(parameter);
                 }
@@ -2701,16 +2701,62 @@ namespace WebApplicationDAO
 
             return command;
         }
-        public static MySqlParameter GetSqlParameter(String parameterName, object value, MySqlDbType sqlDbType)
+        public static SqlParameter GetSqlParameter(String parameterName, object value, SqlDbType sqlDbType)
         {
-            var t = new MySqlParameter();
-            t.MySqlDbType = sqlDbType;
+            var t = new SqlParameter();
+            t.SqlDbType = sqlDbType;
             t.ParameterName = parameterName;
             t.Value = value;
              
             return t;
         }
-        
+        private static SqlDbType GetDBType(System.Type type)
+        {
+            SqlParameter param;
+            System.ComponentModel.TypeConverter tc;
+            param = new SqlParameter();
+            tc = System.ComponentModel.TypeDescriptor.GetConverter(param.DbType);
+            if (tc.CanConvertFrom(type))
+            {
+                param.DbType = (DbType)tc.ConvertFrom(type.Name);
+            }
+            else
+            {
+                switch (type.Name)
+                {
+                    case "Char":
+                        param.SqlDbType = SqlDbType.Char;
+                        break;
+                    case "SByte":
+                        param.SqlDbType = SqlDbType.SmallInt;
+                        break;
+                    case "UInt16":
+                        param.SqlDbType = SqlDbType.SmallInt;
+                        break;
+                    case "UInt32":
+                        param.SqlDbType = SqlDbType.Int;
+                        break;
+                    case "UInt64":
+                        param.SqlDbType = SqlDbType.Decimal;
+                        break;
+                    case "Byte[]":
+                        param.SqlDbType = SqlDbType.Binary;
+                        break;
+
+                    default:
+                        try
+                        {
+                            param.DbType = (DbType)tc.ConvertFrom(type.Name);
+                        }
+                        catch
+                        {
+                            // Some error handling
+                        }
+                        break;
+                }
+            }
+            return param.SqlDbType;
+        }
     }
 
 }

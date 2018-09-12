@@ -16,6 +16,7 @@ using System.Resources;
 using System.IO;
 using System.Globalization;
 using MySql.Data.MySqlClient;
+using Helpers;
 
 namespace WebApplicationDAO
 {
@@ -154,22 +155,10 @@ namespace WebApplicationDAO
             }
         }
 
+     
+
         #endregion
-        private string GetPrimaryKeys(DataTable myTable)
-        {
-            // Create the array for the columns.
-            DataColumn[] colArr;
-            colArr = myTable.PrimaryKey;
-            // Get the number of elements in the array.
-            //Response.Write("Column Count: " + colArr.Length + "<br>");
-            string primaryKey = "";
-            for (int i = 0; i < colArr.Length; i++)
-            {
-                //Response.Write(colArr[i].ColumnName + "<br>" + colArr[i].DataType + "<br>");
-                primaryKey = colArr[i].ColumnName;
-            }
-            return primaryKey;
-        }
+      
         private string GetPrimaryKeys(List<Kontrol_Icerik> list)
         {
             foreach (Kontrol_Icerik item in list)
@@ -424,7 +413,7 @@ namespace WebApplicationDAO
                 daa.SelectCommand = cmd;
                 //da.Fill(tl);
                 daa.FillSchema(ttt, SchemaType.Mapped);
-                primaryKey = GetPrimaryKeys(ttt);
+                primaryKey = DataTableHelper.GetPrimaryKeys(ttt);
 
                 #endregion
 
@@ -1451,8 +1440,8 @@ namespace WebApplicationDAO
                 #region Insert-Update-Delete-Select Methods
 
 
-                generateSqlIReader(linkedList);
-                generateNewInstance(linkedList);
+               // generateSqlIReader(linkedList);
+              //  generateNewInstance(linkedList);
 
 
 
@@ -1500,7 +1489,7 @@ namespace WebApplicationDAO
                 label_item.AppendLine("}");
 
                 createGridView(linkedList, boundField, selectedTable);
-                Genereate_XML(linkedList);
+               
                 Kontroller = linkedList;
                 TextBox_Veri.Text = generateData();
                 if (!CheckBox_MySql.Checked)
@@ -1578,7 +1567,7 @@ namespace WebApplicationDAO
 
 
 
-                appendGridViewStateToAFile(gridState2);
+            
 
                 generateASpNetMvcList(linkedList);
                 generateASpNetMvcList2(linkedList);
@@ -2166,8 +2155,8 @@ namespace WebApplicationDAO
 
             built.AppendLine(String.Format("public ActionResult Delete{0}(int id)", modelName));
             built.AppendLine("{");
-            built.AppendLine(String.Format("int {0} = id;", FirstCharacterToLower(primaryKey)));
-            built.AppendLine(String.Format("{0}Repository.Delete{2}({1});", modelName.Replace(ClassNameConvention, ""), FirstCharacterToLower(primaryKey), modelName));
+            built.AppendLine(String.Format("int {0} = id;", GeneralHelper. FirstCharacterToLower(primaryKey)));
+            built.AppendLine(String.Format("{0}Repository.Delete{2}({1});", modelName.Replace(ClassNameConvention, ""), GeneralHelper. FirstCharacterToLower(primaryKey), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
@@ -2251,10 +2240,10 @@ namespace WebApplicationDAO
             {
                 if (ki.foreignKey)
                 {
-                    String dataType = GetSqlDataTypeFromColumnDataType(ki);
-                    String cSharpType = GetCSharpDataType(ki);
+                    String dataType = GeneralHelper.GetSqlDataTypeFromColumnDataType(ki);
+                    String cSharpType = GeneralHelper.GetCSharpDataType(ki);
                     method.AppendLine("//" + ki.columnName);
-                    method.AppendLine("public " + staticText + "  List<" + modelName + "> Get" + modelName + "By" + ki.columnName + "(" + cSharpType + " " + FirstCharacterToLower(ki.columnName) + ")");
+                    method.AppendLine("public " + staticText + "  List<" + modelName + "> Get" + modelName + "By" + ki.columnName + "(" + cSharpType + " " + GeneralHelper. FirstCharacterToLower(ki.columnName) + ")");
                     method.AppendLine(" {");
                     method.AppendLine(" var list = new List<" + modelName + ">();");
                     commandText = "SELECT * FROM " + selectedTable + " WHERE " + ki.columnName + "=@" + ki.columnName + " ORDER BY " + primaryKey + " DESC";
@@ -2262,19 +2251,19 @@ namespace WebApplicationDAO
                     method.AppendLine(String.Format(" String commandText = @\"{0}\";", commandText));
                     method.AppendLine(" var parameterList = new List<SqlParameter>();");
                     method.AppendLine(" var commandType = CommandType.Text;");
-                    method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + ki.columnName + "\", " + FirstCharacterToLower(ki.columnName) + "," + dataType + "));");
+                    method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + ki.columnName + "\", " + GeneralHelper. FirstCharacterToLower(ki.columnName) + "," + dataType + "));");
                     GetDataSetCodeText(method);
                     method.AppendLine("");
                 }
             }
-            method.AppendLine("public " + staticText + " void Delete" + modelName + "(int " + FirstCharacterToLower(primaryKey) + ")");
+            method.AppendLine("public " + staticText + " void Delete" + modelName + "(int " + GeneralHelper. FirstCharacterToLower(primaryKey) + ")");
             method.AppendLine(" {");
             commandText = "DELETE FROM " + selectedTable + " WHERE " + primaryKey + "=@" + primaryKey;
             method.AppendLine(" string connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringKey].ConnectionString;");
             method.AppendLine(String.Format(" String commandText = @\"{0}\";", commandText));
             method.AppendLine(" var parameterList = new List<SqlParameter>();");
             method.AppendLine(" var commandType = CommandType.Text;");
-            method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + primaryKey + "\", " + FirstCharacterToLower(primaryKey) + ",SqlDbType.Int));");
+            method.AppendLine(" parameterList.Add(DatabaseUtility.GetSqlParameter(\"" + primaryKey + "\", " + GeneralHelper. FirstCharacterToLower(primaryKey) + ",SqlDbType.Int));");
             method.AppendLine(" DatabaseUtility.ExecuteNonQuery(new SqlConnection(connectionString), commandText, commandType, parameterList.ToArray());");
             method.AppendLine(" }");
 
@@ -2285,72 +2274,7 @@ namespace WebApplicationDAO
             return method.ToString();
         }
 
-        private string GetCSharpDataType(Kontrol_Icerik ki)
-        {
-            var item = ki;
-            String result = "";
-            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
-            {
-                result = "String";
-            }
-            else if (item.dataType.IndexOf("int") > -1)
-            {
-                result = "int";
-            }
-            else if (item.dataType.IndexOf("date") > -1)
-            {
-                result = "DateTime ";
-            }
-            else if (item.dataType.IndexOf("bit") > -1)
-            {
-                result = "Boolean ";
-            }
-            else if (item.dataType.IndexOf("float") > -1)
-            {
-                result = "float ";
-            }
-            else if (item.dataType.IndexOf("char") > -1)
-            {
-                result = "char ";
-            }
-
-            return result.Trim();
-        }
-
-
-        private string GetSqlDataTypeFromColumnDataType(Kontrol_Icerik ki)
-        {
-
-            String result = "SqlDbType.{0}";
-            var item = ki;
-            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
-            {
-                result = String.Format(result, "NVarChar");
-            }
-            else if (item.dataType.IndexOf("int") > -1)
-            {
-                result = String.Format(result, "Int");
-            }
-            else if (item.dataType.IndexOf("date") > -1)
-            {
-                result = String.Format(result, "DateTime");
-            }
-            else if (item.dataType.IndexOf("bit") > -1)
-            {
-                result = String.Format(result, "Bit");
-            }
-            else if (item.dataType.IndexOf("float") > -1)
-            {
-                result = String.Format(result, "Float");
-            }
-            else if (item.dataType.IndexOf("char") > -1)
-            {
-                result = String.Format(result, "NVarChar");
-            }
-
-
-            return result;
-        }
+       
 
         private void GetDataSetCodeText(StringBuilder method)
         {
@@ -2381,7 +2305,7 @@ namespace WebApplicationDAO
             StringBuilder method = new StringBuilder();
             String modelName = getModelName();
             String primaryKey = GetPrimaryKeys(kontrolList);
-            primaryKey = FirstCharacterToLower(primaryKey);
+            primaryKey = GeneralHelper. FirstCharacterToLower(primaryKey);
             String selectedTable = GetRealEntityName();
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
             method.AppendLine(" public " + staticText + " " + modelName + " Get" + modelName + "(int " + primaryKey + ")");
@@ -3311,24 +3235,7 @@ namespace WebApplicationDAO
             return value;
 
         }
-        /// <summary>
-        /// Generate xml structure of our data list...
-        /// </summary>
-        /// <param name="list"></param>
-        private void Genereate_XML(List<Kontrol_Icerik> list)
-        {
-            StringBuilder xmlfields = new StringBuilder();
-            List<String> unUsed = new List<string>();
-            unUsed.Add("ID");
-            foreach (Kontrol_Icerik item in list)
-            {
-                if (!unUsed.Contains(item.columnName))
-                {
-                    xmlfields.AppendLine("<word Keyword=\"" + item.columnName + "\" Translate=\"" + item.columnName + "\"/>");
-                }
-            }
-            //  TextBox_List_XML.Text = xmlfields.ToString();
-        }
+  
 
         protected void ClearButton_Click(object sender, EventArgs e)
         {
@@ -3362,39 +3269,7 @@ namespace WebApplicationDAO
                 Kontrolleri_Goster(Kontrol_Gorunumu);
             }
         }
-        private string Evals_Formats(Kontrol_Icerik item)
-        {
-
-            String result = "<%# Eval(\"" + item.columnName + "\") %>";
-            if (!item.use)
-            {
-                switch (item.func)
-                {
-                    case Function_Adi.BOS_:
-                        result = "<%#  Eval(\"" + item.columnName + "\")  %>";
-                        break;
-                    case Function_Adi.Ei_Function_:
-                        result = "<%#  Ei_Functions.funcName(Eval(\"" + item.columnName + "\").ToString())  %>";
-                        break;
-                    case Function_Adi.HtmlEncode_:
-                        result = "<%#  HttpUtility.HtmlEncode(Convert.ToString(Eval(\"" + item.columnName + "\")))  %>";
-                        break;
-                    case Function_Adi.Replace_:
-                        result = "<%#  Eval(\"" + item.columnName + "\").ToString().Replace(\"~/\",\"\").Replace(\"thb\",\"\")  %>";
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            {
-                result = "<%-- <%# Eval(\"" + item.columnName + "\") %> --%>";
-
-            }
-
-            return result;
-
-        }
+      
 
         private void DownloadGeneratedSourceCode(List<TextBox> textBoxs)
         {
@@ -4051,7 +3926,7 @@ namespace WebApplicationDAO
             String selectedTable = GetRealEntityName();
             String primaryKey = GetPrimaryKeys(linkedList);
             string primaryKeyOrginal = primaryKey;
-            primaryKey = FirstCharacterToLower(primaryKey);
+            primaryKey = GeneralHelper. FirstCharacterToLower(primaryKey);
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
 
 
@@ -4175,11 +4050,11 @@ namespace WebApplicationDAO
                 if (ki.foreignKey)
                 {
                     //String dataType = GetSqlDataTypeFromColumnDataType(ki);
-                    String cSharpType = GetCSharpDataType(ki);
+                    String cSharpType = GeneralHelper.GetCSharpDataType(ki);
                     method.AppendLine("//" + ki.columnName);
-                    method.AppendLine("public " + staticText + "  List<" + modelName + "> Get" + modelName + "By" + ki.columnName + "(" + cSharpType + " " + FirstCharacterToLower(ki.columnName) + ")");
+                    method.AppendLine("public " + staticText + "  List<" + modelName + "> Get" + modelName + "By" + ki.columnName + "(" + cSharpType + " " + GeneralHelper.FirstCharacterToLower(ki.columnName) + ")");
                     method.AppendLine("{");
-                    method.AppendLine("   return  DBDirectory.Get" + modelName + "By" + ki.columnName + "(" + FirstCharacterToLower(ki.columnName) + ");");
+                    method.AppendLine("   return  DBDirectory.Get" + modelName + "By" + ki.columnName + "(" + GeneralHelper. FirstCharacterToLower(ki.columnName) + ");");
                     method.AppendLine("}");
                 }
             }
@@ -4341,27 +4216,27 @@ namespace WebApplicationDAO
             {
                 if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
                 {
-                    method555.Append("string " + FirstCharacterToLower(item.columnName) + ",");
+                    method555.Append("string " + GeneralHelper. FirstCharacterToLower(item.columnName) + ",");
                 }
                 else if (item.dataType.IndexOf("int") > -1)
                 {
-                    method555.Append("int " + FirstCharacterToLower(item.columnName) + ",");
+                    method555.Append("int " + GeneralHelper. FirstCharacterToLower(item.columnName) + ",");
                 }
                 else if (item.dataType.IndexOf("date") > -1)
                 {
-                    method555.Append("DateTime " + FirstCharacterToLower(item.columnName) + ",");
+                    method555.Append("DateTime " + GeneralHelper. FirstCharacterToLower(item.columnName) + ",");
                 }
                 else if (item.dataType.IndexOf("bit") > -1)
                 {
-                    method555.Append("Boolean " + FirstCharacterToLower(item.columnName) + ",");
+                    method555.Append("Boolean " + GeneralHelper. FirstCharacterToLower(item.columnName) + ",");
                 }
                 else if (item.dataType.IndexOf("float") > -1)
                 {
-                    method555.Append("float " + FirstCharacterToLower(item.columnName) + ",");
+                    method555.Append("float " + GeneralHelper. FirstCharacterToLower(item.columnName) + ",");
                 }
                 else if (item.dataType.IndexOf("char") > -1)
                 {
-                    method555.Append("char " + FirstCharacterToLower(item.columnName) + ",");
+                    method555.Append("char " + GeneralHelper. FirstCharacterToLower(item.columnName) + ",");
                 }
             }
             string m = String.Format("public {0} ({1})", modelName, method555.ToString().Trim().TrimEnd(','));
@@ -4369,7 +4244,7 @@ namespace WebApplicationDAO
             method2.AppendLine("");
             foreach (Kontrol_Icerik item in linkedList)
             {
-                method2.AppendLine("this." + item.columnName + "=" + FirstCharacterToLower(item.columnName) + ";");
+                method2.AppendLine("this." + item.columnName + "=" + GeneralHelper. FirstCharacterToLower(item.columnName) + ";");
             }
             method2.AppendLine("");
             method2.AppendLine("}");
@@ -4523,14 +4398,6 @@ namespace WebApplicationDAO
             }
 
 
-            // createFile(method, String.Format("{0}Repository", modelName));
-
-            //method.AppendLine(method11.ToString());
-            //method.AppendLine(method12.ToString());
-
-            //DownloadText(method11, String.Format("I{0}Repository.cs", modelName));
-            //DownloadText(method12, String.Format("{0}Repository.cs", modelName));
-
             TextBox_AspMvcAction2.Text = method.ToString();
 
             return method.ToString();
@@ -4644,48 +4511,7 @@ namespace WebApplicationDAO
 
 
         }
-        private void appendGridViewStateToAFile(StringBuilder gridState)
-        {
-            string fname = Server.MapPath("GridView_State.txt");
-            FileInfo file1 = new FileInfo(fname);
-            StreamWriter sw = File.AppendText(file1.FullName);
-            sw.WriteLine("**************************************************************************");
-            sw.WriteLine("TABLO ADI = " + GetEntityName());
-            sw.WriteLine("TARİH = " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString());
-            sw.WriteLine("");
-            sw.WriteLine("");
-            sw.WriteLine(gridState.ToString());
-            sw.WriteLine("");
-            sw.WriteLine("");
-            Label_Gorunum.Text = "";
-            WizardStepCollection steps = Wizard1.WizardSteps;
-            foreach (WizardStep item in steps)
-            {
-                ControlCollection controls = item.Controls;
-                foreach (Control i in controls)
-                {
-                    if (i is TextBox)
-                    {
-                        TextBox t = i as TextBox;
-                        if (t.TextMode == TextBoxMode.MultiLine)
-                        {
-                            if (t.ID.Equals("TextBox_State"))
-                            {
-                                sw.WriteLine(GetEntityName() + "  ------------------>  " + t.ID + " <----------------");
-                                sw.WriteLine("");
-                                // Writing a string directly to the file
-                                sw.WriteLine(t.Text);		 // Writing content read from the textbox in the form
-                                sw.WriteLine("");
-                                sw.WriteLine("");
-                            }
-                        }
-                    }
-                }
-            }
-            sw.WriteLine("*************************************FINISH***********************************************");
-            sw.Flush();
-            sw.Close();
-        }
+      
 
 
         private void createCSFile(String textBoxIDName, String fileName, Boolean dao)
@@ -4819,133 +4645,10 @@ namespace WebApplicationDAO
 
             return entityName;
         }
-        public static string FirstCharacterToLower(string str)
-        {
-            if (String.IsNullOrEmpty(str) || Char.IsLower(str, 0))
-                return str;
-
-            return Char.ToLowerInvariant(str[0]).ToString() + str.Substring(1);
-        }
+     
 
     }
 
-    public class Kontrol_Icerik
-    {
-        public String columnName { set; get; }
-        public String isNull { set; get; }
-        public String dataType { set; get; }
-        public String maxChar { set; get; }
-        public String dataType_MaxChar { set; get; }
-        public String ColumnNameInput { get { return String.Format("p_{0}", columnName); } }
-        public String cssClass { set; get; }
-        public Control_Adi control { set; get; }
-        public Validator_Adi valid { set; get; }
-        public Function_Adi func { set; get; }
-        public Ajax_Adi ajaxControl { set; get; }
-        public int order { set; get; }
-        public bool use { set; get; }
-        public int ID { set; get; }
-        public bool primaryKey { set; get; }
-        public bool gridViewFields { set; get; }
-        public bool sql { set; get; }
-        public bool if_Statement { set; get; }
-        public String controlID { set; get; }
-        public bool foreignKey { get; set; }
-        public string columnDefaultValue
-        {
-            get
-            {
-
-                String m = "";
-                if (dataType.IndexOf("text") > -1)
-                {
-                    m = "''";
-                }
-                else if (dataType.IndexOf("varchar") > -1)
-                {
-                    m = "''";
-                }
-                else if (dataType.IndexOf("char") > -1)
-                {
-                    m = "''";
-                }
-                else if (dataType.IndexOf("int") > -1)
-                {
-                    m = "0";
-                }
-                else if (dataType.IndexOf("date") > -1)
-                {
-                    m = "null";
-                }
-                else if (dataType.IndexOf("bit") > -1)
-                {
-                    m = "true";
-                }
-                else if (dataType.IndexOf("float") > -1)
-                {
-                    m = "0";
-                }
-
-                return m;
-
-            }
-        }
-        public override string ToString()
-        {
-            return columnName + ";" + isNull + ";" + dataType + ";"
-                + maxChar + ";" + dataType_MaxChar + ";" + cssClass
-                + ";" + control.ToString() + ";" + valid.ToString() + ";" + func.ToString() + ";"
-                + ajaxControl.ToString() + ";" + order + ";" + use + ";"
-                + ID + ";" + primaryKey + ";" + gridViewFields + ";" + sql + ";"
-                + if_Statement + ";" + controlID;
-        }
-
-
-    }
-    public enum Control_Adi
-    {
-        BOS,
-        Label_,
-        Button_,
-        CheckBox_,
-        RadioButton_,
-        TextBoxMax_,
-        TextBox_MultiLine,
-        LinkButton_,
-        ImageButton_,
-        FileUpload_,
-        DropDownList_,
-        CheckBoxList_,
-        RadioButtonList_,
-        ListBox_,
-        TextBox_Password_
-
-    }
-    public enum Validator_Adi
-    {
-        BOS_,
-        RequiredFieldValidator_,
-        RangeValidator_,
-        RegularExpressionValidator_,
-        CompareValidator_,
-        CustomValidator_
-    }
-    public enum Function_Adi
-    {
-        BOS_,
-        Ei_Function_,
-        HtmlEncode_,
-        Replace_
-    }
-    public enum Ajax_Adi
-    {
-        BOS_,
-        Calendar_,
-        List_Search_,
-        Filter_,
-        Masked_
-    }
-
-
+  
 }
 

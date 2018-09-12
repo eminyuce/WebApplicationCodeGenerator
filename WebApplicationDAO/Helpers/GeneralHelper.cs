@@ -9,10 +9,85 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace WebApplicationDAO
+namespace Helpers
 {
     public class GeneralHelper
     {
+        public static string GetSqlDataTypeFromColumnDataType(Kontrol_Icerik ki)
+        {
+
+            String result = "SqlDbType.{0}";
+            var item = ki;
+            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
+            {
+                result = String.Format(result, "NVarChar");
+            }
+            else if (item.dataType.IndexOf("int") > -1)
+            {
+                result = String.Format(result, "Int");
+            }
+            else if (item.dataType.IndexOf("date") > -1)
+            {
+                result = String.Format(result, "DateTime");
+            }
+            else if (item.dataType.IndexOf("bit") > -1)
+            {
+                result = String.Format(result, "Bit");
+            }
+            else if (item.dataType.IndexOf("float") > -1)
+            {
+                result = String.Format(result, "Float");
+            }
+            else if (item.dataType.IndexOf("char") > -1)
+            {
+                result = String.Format(result, "NVarChar");
+            }
+
+
+            return result;
+        }
+
+        public static string GetCSharpDataType(Helpers.Kontrol_Icerik ki)
+        {
+            var item = ki;
+            String result = "";
+            if (item.dataType.IndexOf("varchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("nchar") > -1 || item.dataType.IndexOf("text") > -1 || item.dataType.IndexOf("xml") > -1)
+            {
+                result = "String";
+            }
+            else if (item.dataType.IndexOf("int") > -1)
+            {
+                result = "int";
+            }
+            else if (item.dataType.IndexOf("date") > -1)
+            {
+                result = "DateTime ";
+            }
+            else if (item.dataType.IndexOf("bit") > -1)
+            {
+                result = "Boolean ";
+            }
+            else if (item.dataType.IndexOf("float") > -1)
+            {
+                result = "float ";
+            }
+            else if (item.dataType.IndexOf("char") > -1)
+            {
+                result = "char ";
+            }
+
+            return result.Trim();
+        }
+
+
+      
+        public static string FirstCharacterToLower(string str)
+        {
+            if (String.IsNullOrEmpty(str) || Char.IsLower(str, 0))
+                return str;
+
+            return Char.ToLowerInvariant(str[0]).ToString() + str.Substring(1);
+        }
         public static String convertSqlDataTypeToCSharp(String key)
         {
             String result = "";
