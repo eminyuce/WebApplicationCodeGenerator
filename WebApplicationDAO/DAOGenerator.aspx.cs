@@ -31,7 +31,7 @@ namespace WebApplicationDAO
     public partial class DAOGenerator : Page
     {
         private String tableItemName = "";
-        private static String ClassNameConvention = "Nwm";
+     
         //private static String databaseName = "";
         public string NameSpace
         {
@@ -159,21 +159,7 @@ namespace WebApplicationDAO
 
         #endregion
       
-        private string GetPrimaryKeys(List<Kontrol_Icerik> list)
-        {
-            foreach (Kontrol_Icerik item in list)
-            {
-                if (item.primaryKey)
-                {
-                    return item.columnName;
-                }
-            }
-            var firstOrDefault = list.FirstOrDefault();
-            if (firstOrDefault != null)
-                return firstOrDefault.columnName;
-            else
-                return "";
-        }
+    
 
         private Kontrol_Icerik GetPrimaryKeysItem()
         {
@@ -312,7 +298,7 @@ namespace WebApplicationDAO
             {
                 var selectedTableWithDatabase = selectedTableValue.Split("-".ToCharArray()).FirstOrDefault().ToStr();
                 String m = DropDownList_Tables.SelectedItem.Text;
-                m = GetCleanEntityName(m);
+                m = GeneralHelper.GetCleanEntityName(m);
                 TextBox_EntityName.Text = m.Trim();
                 var con = new MySqlConnection(connectionString);
                 con.Open();
@@ -400,7 +386,7 @@ namespace WebApplicationDAO
                 SqlDataAdapter da = new SqlDataAdapter();
 
                 String m = DropDownList_Tables.SelectedItem.Text;
-                m = GetCleanEntityName(m);
+                m = GeneralHelper.GetCleanEntityName(m);
                 TextBox_EntityName.Text = m.Trim();
                 #region Get Primary Key
                 String primaryKey = "";
@@ -463,49 +449,8 @@ namespace WebApplicationDAO
             Label_ERROR.Text = GetEntityName() + " table metadata is populated to GridView. You are so close, Do not give up until you make it, dude :)";
 
         }
-        static string UppercaseFirst(string s)
-        {
-            // Check for empty string.
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-            // Return char and concat substring.
-            return char.ToUpper(s[0]) + s.Substring(1);
-        }
-        private string GetCleanEntityName(string m)
-        {
-            if (m.Contains("."))
-            {
-                m = m.Split(new string[] { "." }, StringSplitOptions.None).Skip(1).FirstOrDefault();
-            }
-            if (!String.IsNullOrEmpty(m))
-            {
-                var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
-                if (parts.Length > 1)
-                {
-                    m = ClassNameConvention + UppercaseFirst(parts[1].Replace("ies", "y").TrimEnd('s'));
-                }
-                else
-                {
-                    m = ClassNameConvention + parts[0].ToStr().TrimEnd('s');
-                }
-            }
-            return m;
-        }
-        private string GetEntityPrefixName(string m)
-        {
-            String k = "";
-            if (!String.IsNullOrEmpty(m))
-            {
-                var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
-                if (parts.Length > 1)
-                {
-                    k = parts[0].Trim();
-                }
-            }
-            return k;
-        }
+      
+        
         public void selectDropDown_Text(DropDownList drop, string selectedText)
         {
             if (String.IsNullOrEmpty(selectedText))
@@ -1500,7 +1445,7 @@ namespace WebApplicationDAO
 
                 StringBuilder built222 = new StringBuilder();
                 String modelName = getModelName();
-                string dbDirectory = String.Format("Db{0}", modelName.Replace(ClassNameConvention, ""));
+                string dbDirectory = String.Format("Db{0}", modelName.Replace(ProjectConstants.ClassNameConvention, ""));
                 built222.AppendLine("using NLog;");
                 built222.AppendLine("using System;");
                 built222.AppendLine("using System.Collections.Generic;");
@@ -1531,7 +1476,7 @@ namespace WebApplicationDAO
                     databaseOperationStr = databaseOperationStr.Replace("SqlDbType", "MySqlDbType");
                     String realEntityName = GetRealEntityName();
                     String modifiedTableName = GetEntityName();
-                    String entityPrefix = GetEntityPrefixName(realEntityName);
+                    String entityPrefix = GeneralHelper.GetCleanEntityName(realEntityName);
                     entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
                     string spName = entityPrefix + "SaveOrUpdate" + modifiedTableName;
                     string mySqlspName = entityPrefix + "SaveOrUpdate" + modifiedTableName;
@@ -2082,10 +2027,10 @@ namespace WebApplicationDAO
         {
             String selectedTable = GetRealEntityName();
             String modifiedTableName = GetEntityName();
-            String entityPrefix = GetEntityPrefixName(selectedTable);
+            String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
             entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
             String modelName = getModelName();
-            String primaryKey = GetPrimaryKeys(kontrolList);
+            String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
             var built = new StringBuilder();
             var tables = TableNames.OrderBy(x => x).ToList();
             Kontrol_Icerik prKey = GetPrimaryKeysItem();
@@ -2111,7 +2056,7 @@ namespace WebApplicationDAO
             built.AppendLine("//[OutputCache(CacheProfile = \"Cache1Hour\")]");
             built.AppendLine("public ActionResult Index()");
             built.AppendLine("{");
-            built.AppendLine(String.Format("var items = {0}Repository.Get{1}s();", modelName.Replace(ClassNameConvention, ""), modelName));
+            built.AppendLine(String.Format("var items = {0}Repository.Get{1}s();", modelName.Replace(ProjectConstants.ClassNameConvention, ""), modelName));
             built.AppendLine("return View(items);");
             built.AppendLine("}");
 
@@ -2119,7 +2064,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("public ActionResult {0}Detail(String id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id.Split('-').Last().ToInt();", primaryKey.ToLower()));
-            built.AppendLine(String.Format("var {0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace(ClassNameConvention, ""), primaryKey.ToLower(), modelName));
+            built.AppendLine(String.Format("var {0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace(ProjectConstants.ClassNameConvention, ""), primaryKey.ToLower(), modelName));
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
             built.AppendLine("}");
 
@@ -2131,7 +2076,7 @@ namespace WebApplicationDAO
             built.AppendLine(String.Format("if({0} == 0)", primaryKey.ToLower()));
             built.AppendLine("{");
             built.AppendLine("}else{");
-            built.AppendLine(String.Format("{0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace(ClassNameConvention, ""),
+            built.AppendLine(String.Format("{0} = {1}Repository.Get{3}({2});", modelName.ToLower(), modelName.Replace(ProjectConstants.ClassNameConvention, ""),
                 primaryKey.ToLower(), modelName));
             built.AppendLine("}");
             built.AppendLine(String.Format("return View({0});", modelName.ToLower()));
@@ -2149,14 +2094,14 @@ namespace WebApplicationDAO
             built.AppendLine("//}");
 
 
-            built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{3}({2});", primaryKey.ToLower(), modelName.Replace(ClassNameConvention, ""), modelName.ToLower(), modelName));
+            built.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{3}({2});", primaryKey.ToLower(), modelName.Replace(ProjectConstants.ClassNameConvention, ""), modelName.ToLower(), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
             built.AppendLine(String.Format("public ActionResult Delete{0}(int id)", modelName));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id;", GeneralHelper. FirstCharacterToLower(primaryKey)));
-            built.AppendLine(String.Format("{0}Repository.Delete{2}({1});", modelName.Replace(ClassNameConvention, ""), GeneralHelper. FirstCharacterToLower(primaryKey), modelName));
+            built.AppendLine(String.Format("{0}Repository.Delete{2}({1});", modelName.Replace(ProjectConstants.ClassNameConvention, ""), GeneralHelper. FirstCharacterToLower(primaryKey), modelName));
             built.AppendLine(String.Format("return RedirectToAction(\"Index\");"));
             built.AppendLine("}");
 
@@ -2170,7 +2115,7 @@ namespace WebApplicationDAO
             try
             {
 
-                String primaryKey = GetPrimaryKeys(kontrolList);
+                String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
                 String modelName = getModelName();
                 var method = new StringBuilder();
                 method.AppendLine(String.Format("@model List<{0}>", modelName));
@@ -2222,7 +2167,7 @@ namespace WebApplicationDAO
             StringBuilder method = new StringBuilder();
             String modelName = getModelName();
             String selectedTable = GetRealEntityName();
-            String primaryKey = GetPrimaryKeys(kontrolList);
+            String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
             method.AppendLine("public " + staticText + " List<" + modelName + "> Get" + modelName + "s()");
             method.AppendLine(" {");
@@ -2304,7 +2249,7 @@ namespace WebApplicationDAO
         {
             StringBuilder method = new StringBuilder();
             String modelName = getModelName();
-            String primaryKey = GetPrimaryKeys(kontrolList);
+            String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
             primaryKey = GeneralHelper. FirstCharacterToLower(primaryKey);
             String selectedTable = GetRealEntityName();
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
@@ -2338,9 +2283,9 @@ namespace WebApplicationDAO
             String realEntityName = GetRealEntityName();
             String modelName = getModelName();
             String modifiedTableName = GetEntityName();
-            String entityPrefix = GetEntityPrefixName(realEntityName);
+            String entityPrefix = GeneralHelper.GetCleanEntityName(realEntityName);
             entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
-            String primaryKey = GetPrimaryKeys(kontrolList);
+            String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
 
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
 
@@ -2442,7 +2387,7 @@ namespace WebApplicationDAO
         #region GridView Fonksiyonları....
         private void createGridView(List<Kontrol_Icerik> list, StringBuilder boundField, String tableName)
         {
-            String primaryKey = GetPrimaryKeys(list);
+            String primaryKey = GeneralHelper.GetPrimaryKeys(list);
             string temp;
             temp = "1"; //Gridview'in methodlarını kopyala yapıştır daha kolay olması için hep aynı ismi veriyoruz.
             boundField.AppendLine("<asp:Panel ID=\"Panel_GridView_" + tableName + "\" CssClass=\"Ei_Grid\" runat=\"server\">");
@@ -2764,370 +2709,6 @@ namespace WebApplicationDAO
             }
             return enter;
         }
-        private Boolean yasakli_Controls(Kontrol_Icerik item, Validator_Adi validator)
-        {
-            bool result = false;
-            switch (item.control)
-            {
-                case Control_Adi.Label_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.Button_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.CheckBox_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.RadioButton_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.TextBoxMax_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = true;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.TextBox_MultiLine:
-
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = true;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    break;
-                case Control_Adi.LinkButton_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.ImageButton_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.FileUpload_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.DropDownList_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.CheckBoxList_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.RadioButtonList_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.ListBox_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = false;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = false;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case Control_Adi.TextBox_Password_:
-                    switch (validator)
-                    {
-                        case Validator_Adi.BOS_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RequiredFieldValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RangeValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.RegularExpressionValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.CompareValidator_:
-                            result = true;
-                            break;
-                        case Validator_Adi.CustomValidator_:
-                            result = true;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-
-            return result;
-        }
         private void Kullanilmayanlar(Kontrol_Icerik i, StringBuilder a)
         {
 
@@ -3381,7 +2962,7 @@ namespace WebApplicationDAO
                 List<Kontrol_Icerik> list = Kontroller;
                 String selectedTable = GetRealEntityName();
                 String modifiedTableName = GetEntityName();
-                String entityPrefix = GetEntityPrefixName(selectedTable);
+                String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
 
                 Kontrol_Icerik prKey = GetPrimaryKeysItem();
                 entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
@@ -3494,14 +3075,14 @@ namespace WebApplicationDAO
             String selectedTable = GetRealEntityName();
             String modelName = getModelName();
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
-            String primaryKey = GetPrimaryKeys(list);
+            String primaryKey = GeneralHelper.GetPrimaryKeys(list);
             var built = new StringBuilder();
             Kontrol_Icerik prKey = GetPrimaryKeysItem();
             try
             {
                 String realEntityName = GetRealEntityName();
                 String modifiedTableName = GetEntityName();
-                String entityPrefix = GetEntityPrefixName(selectedTable);
+                String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
 
                 entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
 
@@ -3592,7 +3173,7 @@ namespace WebApplicationDAO
             StringBuilder built = new StringBuilder();
             String selectedTable = GetRealEntityName();
             String modifiedTableName = GetEntityName();
-            String entityPrefix = GetEntityPrefixName(selectedTable);
+            String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
 
             List<Kontrol_Icerik> list = Kontroller;
             Kontrol_Icerik prKey = GetPrimaryKeysItem();
@@ -3658,7 +3239,7 @@ namespace WebApplicationDAO
             try
             {
 
-                String primaryKey = GetPrimaryKeys(kontrolList);
+                String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
                 String modelName = getModelName();
                 var method = new StringBuilder();
                 method.AppendLine(String.Format("@model List<{0}>", modelName));
@@ -3924,7 +3505,7 @@ namespace WebApplicationDAO
             StringBuilder method = new StringBuilder();
             String modelName = getModelName();
             String selectedTable = GetRealEntityName();
-            String primaryKey = GetPrimaryKeys(linkedList);
+            String primaryKey = GeneralHelper.GetPrimaryKeys(linkedList);
             string primaryKeyOrginal = primaryKey;
             primaryKey = GeneralHelper. FirstCharacterToLower(primaryKey);
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
@@ -3958,8 +3539,8 @@ namespace WebApplicationDAO
             method.AppendLine("");
             method.AppendLine("namespace " + NameSpace + ".Domain.Repositories {");
             //return surveys;
-            string dbDirectory = String.Format("Db{0}", modelName.Replace(ClassNameConvention, ""));
-            method.AppendLine(String.Format("public class {0}Repository", modelName.Replace(ClassNameConvention, "")));
+            string dbDirectory = String.Format("Db{0}", modelName.Replace(ProjectConstants.ClassNameConvention, ""));
+            method.AppendLine(String.Format("public class {0}Repository", modelName.Replace(ProjectConstants.ClassNameConvention, "")));
             method.AppendLine("{");
             method.AppendLine("private static readonly Logger Logger = LogManager.GetCurrentClassLogger();");
             method.AppendLine("private static string CacheKeyAllItems = \"" + modelName + "Cache\";");
@@ -4298,7 +3879,7 @@ namespace WebApplicationDAO
             String selectedTable = GetRealEntityName();
             String modelName = getModelName();
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
-            String primaryKey = GetPrimaryKeys(kontrolList);
+            String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
 
             method.AppendLine("var item = new " + modelName + "();");
             method.AppendLine("");
@@ -4339,7 +3920,7 @@ namespace WebApplicationDAO
 
             // method.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{1}(item);", primaryKey.ToLower(), modelName));
 
-            method.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{2}(item);", primaryKey.ToLower(), modelName.Replace(ClassNameConvention, ""), modelName));
+            method.AppendLine(String.Format("int {0} = {1}Repository.SaveOrUpdate{2}(item);", primaryKey.ToLower(), modelName.Replace(ProjectConstants.ClassNameConvention, ""), modelName));
 
             method.AppendLine("");
             method.AppendLine("");
@@ -4514,68 +4095,7 @@ namespace WebApplicationDAO
       
 
 
-        private void createCSFile(String textBoxIDName, String fileName, Boolean dao)
-        {
-            string fname = Server.MapPath(GetEntityName() + fileName + ".cs");
-
-            FileInfo file1 = new FileInfo(fname);
-            if (file1.Exists)
-            {
-                file1.Delete();
-                file1 = new FileInfo(fname);
-
-            }
-            StreamWriter sw = File.AppendText(file1.FullName);
-
-            sw.WriteLine("using System;");
-            sw.WriteLine("using System.Collections.Generic;");
-            sw.WriteLine("using System.Linq;");
-            sw.WriteLine("using System.Web;");
-            sw.WriteLine("using System.ComponentModel;");
-            sw.WriteLine("using System.Data;");
-            sw.WriteLine("using System.Data.OleDb;");
-            sw.WriteLine("using System.Configuration;");
-            sw.WriteLine("using System.Data.SqlClient;");
-            sw.WriteLine("");
-            sw.WriteLine("");
-            if (dao)
-            {
-                sw.WriteLine("[DataObject]");
-            }
-            sw.WriteLine("public class " + GetEntityName() + fileName + "");
-            sw.WriteLine("{");
-
-            WizardStepCollection steps = Wizard1.WizardSteps;
-            foreach (WizardStep item in steps)
-            {
-                ControlCollection controls = item.Controls;
-                foreach (Control i in controls)
-                {
-                    if (i is TextBox)
-                    {
-                        TextBox t = i as TextBox;
-                        if (t.TextMode == TextBoxMode.MultiLine)
-                        {
-
-                            if (t.ID.Contains(textBoxIDName))
-                            {
-                                sw.WriteLine("");
-                                sw.WriteLine(t.Text);
-                            }
-                            else if (t.ID.Contains("TextBox_IReader") && dao)
-                            {
-                                sw.WriteLine("");
-                                sw.WriteLine(t.Text);
-                            }
-
-                        }
-                    }
-                }
-            }
-            sw.WriteLine("}");
-            sw.Flush();
-            sw.Close();
-        }
+       
 
         private String getModelName()
         {

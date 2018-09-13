@@ -13,6 +13,65 @@ namespace Helpers
 {
     public class GeneralHelper
     {
+        public static string GetCleanEntityName(string m)
+        {
+            if (m.Contains("."))
+            {
+                m = m.Split(new string[] { "." }, StringSplitOptions.None).Skip(1).FirstOrDefault();
+            }
+            if (!String.IsNullOrEmpty(m))
+            {
+                var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
+                if (parts.Length > 1)
+                {
+                    m = ProjectConstants.ClassNameConvention + GeneralHelper.UppercaseFirst(parts[1].Replace("ies", "y").TrimEnd('s'));
+                }
+                else
+                {
+                    m = ProjectConstants.ClassNameConvention + parts[0].ToStr().TrimEnd('s');
+                }
+            }
+            return m;
+        }
+        public static string GetEntityPrefixName(string m)
+        {
+            String k = "";
+            if (!String.IsNullOrEmpty(m))
+            {
+                var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
+                if (parts.Length > 1)
+                {
+                    k = parts[0].Trim();
+                }
+            }
+            return k;
+        }
+        public static string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
+
+        public static string GetPrimaryKeys(List<Kontrol_Icerik> list)
+        {
+            foreach (Kontrol_Icerik item in list)
+            {
+                if (item.primaryKey)
+                {
+                    return item.columnName;
+                }
+            }
+            var firstOrDefault = list.FirstOrDefault();
+            if (firstOrDefault != null)
+                return firstOrDefault.columnName;
+            else
+                return "";
+        }
         public static string GetSqlDataTypeFromColumnDataType(Kontrol_Icerik ki)
         {
 
