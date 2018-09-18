@@ -13,6 +13,27 @@ namespace Helpers
 {
     public class GeneralHelper
     {
+        public static Kontrol_Icerik GetPrimaryKeysItem(List<Kontrol_Icerik> list)
+        {
+            Kontrol_Icerik result = null;
+            foreach (Kontrol_Icerik item in list)
+            {
+                if (item.primaryKey)
+                {
+                    result = item;
+                }
+            }
+            if (result == null)
+                result = list.FirstOrDefault();
+            return result;
+        }
+        public static bool isInteger(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return false;
+            Regex r = new Regex(@"^-{0,1}\d+$");
+            return r.IsMatch(text);
+        }
         public static string GetCleanEntityName(string m)
         {
             if (m.Contains("."))

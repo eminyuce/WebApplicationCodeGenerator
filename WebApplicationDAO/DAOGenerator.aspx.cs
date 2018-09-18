@@ -17,6 +17,7 @@ using System.IO;
 using System.Globalization;
 using MySql.Data.MySqlClient;
 using Helpers;
+using NLog;
 
 namespace WebApplicationDAO
 {
@@ -155,34 +156,14 @@ namespace WebApplicationDAO
             }
         }
 
-     
+
 
         #endregion
-      
-    
 
-        private Kontrol_Icerik GetPrimaryKeysItem()
-        {
-            Kontrol_Icerik result = null;
-            List<Kontrol_Icerik> list = Kontroller;
-            foreach (Kontrol_Icerik item in list)
-            {
-                if (item.primaryKey)
-                {
-                    result = item;
-                }
-            }
-            if (result == null)
-                result = list.FirstOrDefault();
-            return result;
-        }
-        private bool isInteger(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return false;
-            Regex r = new Regex(@"^-{0,1}\d+$");
-            return r.IsMatch(text);
-        }
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+     
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -281,8 +262,8 @@ namespace WebApplicationDAO
             }
             catch (Exception e)
             {
-
                 Label_ERROR.Text = e.Message;
+                Logger.Error(e);
             }
         }
         private void LoadGridView()
@@ -568,8 +549,9 @@ namespace WebApplicationDAO
                                     this.selectDropDown_Text(drop, "TextBox_MultiLine");
                                 }
                             }
-                            catch (Exception)
+                            catch (Exception exxx)
                             {
+                                Logger.Error(exxx);
                                 throw;
                             }
                             row.CssClass = "varcharCss";
@@ -1133,7 +1115,7 @@ namespace WebApplicationDAO
                     {
                         grid_BoundFields = gridFields.Checked;
                     }
-                    if (txtOrder != null && this.isInteger(txtOrder.Text))
+                    if (txtOrder != null && GeneralHelper.isInteger(txtOrder.Text))
                     {
                         order = System.Convert.ToInt32(txtOrder.Text);
                     }
@@ -1674,7 +1656,7 @@ namespace WebApplicationDAO
 
                 TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
 
-
+                Logger.Error(ex);
             }
             if (ds == null)
             {
@@ -1715,7 +1697,7 @@ namespace WebApplicationDAO
                         }
                         catch (Exception ee)
                         {
-
+                            Logger.Error(ee);
                         }
 
                     }
@@ -1746,6 +1728,7 @@ namespace WebApplicationDAO
             catch (Exception ex)
             {
                 TextBox_StoredProc_Exec_Model.Text = ex.StackTrace;
+                Logger.Error(ex);
 
             }
             #endregion
@@ -1828,6 +1811,7 @@ namespace WebApplicationDAO
             catch (Exception ex)
             {
                 TextBox_StoredProc_Exec_Model_DataReader.Text = ex.StackTrace;
+                Logger.Error(ex);
 
             }
             #endregion
@@ -1885,9 +1869,9 @@ namespace WebApplicationDAO
 
 
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         {
-
+                            Logger.Error(e);
 
                         }
 
@@ -1939,10 +1923,10 @@ namespace WebApplicationDAO
 
 
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
 
-
+                        Logger.Error(e);
                     }
 
                 }
@@ -1988,9 +1972,9 @@ namespace WebApplicationDAO
                         method.AppendLine(" ");
                         method.AppendLine(" ");
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-
+                        Logger.Error(e);
 
                     }
 
@@ -2018,6 +2002,7 @@ namespace WebApplicationDAO
             catch (Exception ex)
             {
                 TextBox_StoredProc_Exec.Text = ex.StackTrace;
+                Logger.Error(ex);
             }
             #endregion
 
@@ -2033,7 +2018,7 @@ namespace WebApplicationDAO
             String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
             var built = new StringBuilder();
             var tables = TableNames.OrderBy(x => x).ToList();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
+            Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(kontrolList);
 
             built.AppendLine("using HelpersProject;");
             built.AppendLine("using " + NameSpace + ".Domain.Entities;");
@@ -2157,7 +2142,7 @@ namespace WebApplicationDAO
             catch (Exception ex)
             {
                 TextBox_AspMvcList.Text = ex.Message;
-
+                Logger.Error(ex);
             }
         }
 
@@ -2964,7 +2949,7 @@ namespace WebApplicationDAO
                 String modifiedTableName = GetEntityName();
                 String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
 
-                Kontrol_Icerik prKey = GetPrimaryKeysItem();
+                Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(list);
                 entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
 
 
@@ -3057,6 +3042,7 @@ namespace WebApplicationDAO
             catch (Exception ex)
             {
                 TextBox_MergeSqlStatement.Text = ex.Message;
+                Logger.Error(ex);
             }
         }
         //microsoft.data.schema.scriptdom.sql.dll
@@ -3077,7 +3063,7 @@ namespace WebApplicationDAO
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
             String primaryKey = GeneralHelper.GetPrimaryKeys(list);
             var built = new StringBuilder();
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
+            Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(list);
             try
             {
                 String realEntityName = GetRealEntityName();
@@ -3164,6 +3150,7 @@ namespace WebApplicationDAO
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
                 return ex.Message;
             }
         }
@@ -3176,7 +3163,7 @@ namespace WebApplicationDAO
             String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
 
             List<Kontrol_Icerik> list = Kontroller;
-            Kontrol_Icerik prKey = GetPrimaryKeysItem();
+            Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(list);
             entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
 
 
@@ -3290,6 +3277,7 @@ namespace WebApplicationDAO
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
                 TextBox_AspMvcList.Text = ex.Message;
 
             }
@@ -3302,7 +3290,7 @@ namespace WebApplicationDAO
 
 
                 var foreignKeys = kontrolList.Where(r => r.foreignKey).ToList();
-                Kontrol_Icerik prKey = GetPrimaryKeysItem();
+                Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(kontrolList);
                 var list = kontrolList.Except(foreignKeys).Where(r => !r.primaryKey).ToList();
                 String modelName = getModelName();
                 var method = new StringBuilder();
@@ -3354,6 +3342,7 @@ namespace WebApplicationDAO
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
                 TextBox_AspMvcCreateOrEdit.Text = ex.Message;
 
             }
@@ -3364,7 +3353,7 @@ namespace WebApplicationDAO
             {
 
                 var foreignKeys = kontrolList.Where(r => r.foreignKey).ToList();
-                Kontrol_Icerik prKey = GetPrimaryKeysItem();
+                Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(kontrolList);
                 var list = kontrolList.Except(foreignKeys).Where(r => !r.primaryKey).ToList();
                 String modelName = getModelName();
                 var method = new StringBuilder();
@@ -3411,6 +3400,7 @@ namespace WebApplicationDAO
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
                 TextBox_AspMvcDetails.Text = ex.Message;
 
             }
@@ -3668,6 +3658,7 @@ namespace WebApplicationDAO
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
                 method.AppendLine(ex.Message);
             }
 
@@ -3784,7 +3775,7 @@ namespace WebApplicationDAO
                 }
                 catch (Exception ex)
                 {
-
+                    Logger.Error(ex);
 
                 }
             }
@@ -3972,9 +3963,9 @@ namespace WebApplicationDAO
                 method11.AppendLine("}");
                 method11.AppendLine("}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Logger.Error(e);
 
             }
 
