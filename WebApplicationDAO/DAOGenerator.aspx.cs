@@ -74,20 +74,7 @@ namespace WebApplicationDAO
                 _kontroller = value;
             }
         }
-        public List<Kontrol_Icerik> KontrollerColumns
-        {
-            get
-            {
-                if (_kontrollerColumnUtility != null)
-                    return _kontrollerColumnUtility;
-                else
-                    return null;
-            }
-            set
-            {
-                _kontrollerColumnUtility = value;
-            }
-        }
+    
 
         public List<String> TableNames
         {
@@ -1419,10 +1406,7 @@ namespace WebApplicationDAO
                
                 Kontroller = linkedList;
                 TextBox_Veri.Text = generateData();
-                if (!CheckBox_MySql.Checked)
-                {
-                    GenerateMergeSqlStoredProcedure();
-                }
+                TextBox_MergeSqlStatement.Text = CheckBox_MySql.Checked ? GenerateMySqlInsertAndDUPLICATEKEYUPDATEStoredProcedure(linkedList) : GenerateMergeSqlStoredProcedure();
                 TextBox_SP.Text = CheckBox_MySql.Checked ? GenerateMySqlSaveOrUpdateStoredProcedure(linkedList) : generate_StoredProcedure();
 
                 StringBuilder built222 = new StringBuilder();
@@ -1501,7 +1485,7 @@ namespace WebApplicationDAO
 
                 generateASpNetMvcEditOrCreate(linkedList);
                 generateASpNetMvcDetails(linkedList);
-
+                generateNewInstance(linkedList);
 
 
                 generateAspMvcActions(linkedList);
@@ -2654,31 +2638,7 @@ namespace WebApplicationDAO
             counter++;
 
         }
-        private String sadeceLabels(List<Kontrol_Icerik> list)
-        {
-            string controlID, columnName;
-            StringBuilder labels = new StringBuilder();
-            foreach (Kontrol_Icerik item in list)
-            {
-                columnName = item.columnName;
-                controlID = "Label_" + columnName;
-
-                if (false)
-                {
-                    labels.AppendLine("<asp:Label ID=\"" + controlID + "\" CssClass=\"db_Name\" runat=\"server\"><%=Ei_Sabit.Get[\"" + columnName + "\"]%></asp:Label>");
-                }
-                else
-                {
-                    labels.AppendLine("<asp:Label ID=\"" + controlID + "\" CssClass=\"db_Name\"  Text=\"" + changeNames(columnName) + "\" runat=\"server\"></asp:Label>");
-                }
-                bool isNull = false;
-                if (item.isNull == "YES")
-                    isNull = true;
-            }
-
-            return labels.ToString();
-
-        }
+     
         private bool OzelTabloIsimleri(String isim)
         {
             bool enter = false;
@@ -2935,7 +2895,7 @@ namespace WebApplicationDAO
         }
 
 
-        public void GenerateMergeSqlStoredProcedure()
+        public string GenerateMergeSqlStoredProcedure()
         {
 
             StringBuilder built = new StringBuilder();
@@ -2966,6 +2926,8 @@ namespace WebApplicationDAO
                     var comma = (i != (list.Count - 1) ? "," : "");
                     built.AppendLine("@" + GeneralHelper.GetUrlString(item.columnName) + " " + item.dataType_MaxChar + " = " + (String.IsNullOrEmpty(item.columnDefaultValue) ? "NULL" : item.columnDefaultValue) + comma);
                 }
+
+
 
                 built.Append(")");
                 built.AppendLine("AS");
@@ -3036,13 +2998,15 @@ namespace WebApplicationDAO
 
                 var resultString = built.ToString();
                 resultString = resultString.Replace("nvarchar(4000)", "nvarchar(max)");
-                TextBox_MergeSqlStatement.Text = FormatSql(resultString);
+                return FormatSql(resultString);
 
             }
             catch (Exception ex)
             {
-                TextBox_MergeSqlStatement.Text = ex.Message;
+             
                 Logger.Error(ex);
+
+                return ex.Message;
             }
         }
         //microsoft.data.schema.scriptdom.sql.dll
@@ -3142,6 +3106,145 @@ namespace WebApplicationDAO
                 built.AppendLine("WHERE " + String.Format("`{0}`", prKey.columnName) + "=MyId;");
 
                 built.AppendLine(" END IF;");
+                built.AppendLine("COMMIT;");
+                built.AppendLine(" SELECT MyId;");
+                built.AppendLine("END");
+                return built.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return ex.Message;
+            }
+        }
+        /*
+         * 
+         * 
+         * 
+         * CREATE DEFINER=`remonty`@`%` PROCEDURE `NwmBook_InsertAndDUPLICATEKEYUPDATENwmBook`(
+IN p_id int,
+IN p_title varchar(45),
+IN p_author varchar(45),
+IN p_year_published int
+)
+BEGIN
+
+  Declare MyId INT DEFAULT NULL;
+  
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+  BEGIN
+  ROLLBACK;
+  RESIGNAL;
+  END;
+
+START TRANSACTION;
+  SET SQL_MODE = '';
+
+INSERT INTO oedigit_cms.test_books(
+`id`,
+`title`,
+`author`,
+`year_published`
+) VALUES (
+p_id,
+COALESCE(p_title,''),
+COALESCE(p_author,''),
+COALESCE(p_year_published,0)
+)
+ON DUPLICATE KEY UPDATE
+`id`=LAST_INSERT_ID(id),
+`title` = COALESCE(p_title,''),
+`author` = COALESCE(p_author,''),
+`year_published` = COALESCE(p_year_published,0);
+
+  SET MyId = LAST_INSERT_ID();
+COMMIT;
+ SELECT MyId;
+END
+         * 
+         * 
+         * 
+         * */
+        public string GenerateMySqlInsertAndDUPLICATEKEYUPDATEStoredProcedure(List<Kontrol_Icerik> list)
+        {
+            //GetBrouwerCollectionFromReader
+            StringBuilder method = new StringBuilder();
+            String selectedTable = GetRealEntityName();
+            String modelName = getModelName();
+            String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
+            String primaryKey = GeneralHelper.GetPrimaryKeys(list);
+            var built = new StringBuilder();
+            Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(list);
+            try
+            {
+                String realEntityName = GetRealEntityName();
+                String modifiedTableName = GetEntityName();
+                String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
+
+                entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
+
+
+
+
+                built.AppendLine("CREATE PROCEDURE " + entityPrefix + "InsertAndDUPLICATEKEYUPDATE" + modifiedTableName + "(");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var comma = (i != (list.Count - 1) ? "," : "");
+                    built.AppendLine("IN " + item.ColumnNameInput + " " + item.dataType_MaxChar + comma);
+                }
+
+                built.Append(")");
+                built.AppendLine("");
+                built.AppendLine("BEGIN");
+                built.AppendLine("  DECLARE MyId INT DEFAULT NULL;");
+                built.AppendLine("  DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING");
+                built.AppendLine("  BEGIN");
+                built.AppendLine("  ROLLBACK;");
+                built.AppendLine("  RESIGNAL;");
+                built.AppendLine("  END;");
+
+                built.AppendLine("");
+                built.AppendLine("START TRANSACTION;");
+                built.AppendLine("  SET SQL_MODE = '';");
+                built.AppendLine("INSERT INTO " + selectedTable + "(");
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+
+                 //   if (!item.primaryKey)
+                        built.AppendLine(String.Format("`{0}`{1}", item.columnName, (i != (list.Count - 1) ? "," : "")));
+                }
+
+                built.AppendLine(") VALUES (");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var comma = (i != (list.Count - 1) ? "," : "");
+                  //  if (!item.primaryKey)
+                        built.AppendLine("COALESCE(" + item.ColumnNameInput + "," + item.columnDefaultValue + ")" + comma);
+                }
+
+                built.AppendLine(")");
+                built.AppendLine("ON DUPLICATE KEY UPDATE");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var comma = (i != (list.Count - 1) ? "," : ";");
+                    if (!item.primaryKey)
+                    {
+                        built.AppendLine(String.Format("`{0}`", item.columnName) + " = COALESCE(" + item.ColumnNameInput + "," + item.columnDefaultValue + ")" + comma);
+                    }
+                    else
+                    {
+                        built.AppendLine(String.Format("`{0}`", item.columnName) + " = LAST_INSERT_ID(" + item.ColumnNameInput+")" + comma);
+                    }
+                }
+             
+                built.AppendLine("");
+                built.AppendLine(" SET MyId = LAST_INSERT_ID();");
                 built.AppendLine("COMMIT;");
                 built.AppendLine(" SELECT MyId;");
                 built.AppendLine("END");
