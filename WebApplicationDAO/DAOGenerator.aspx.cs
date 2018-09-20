@@ -1315,7 +1315,7 @@ namespace WebApplicationDAO
                 {
                     if (item != null)
                     {
-                        TekCekim(labels, item, label_item);
+                        //TekCekim(labels, item, label_item);
                         if (!item.use)
                         {
                             if (counter2 % 2 == 1)
@@ -1335,7 +1335,7 @@ namespace WebApplicationDAO
                             }
                             else
                             {
-                                built.AppendLine("<asp:Label ID=\"Label_" + item.columnName + "\" CssClass=\"Label_Deger\" runat=\"server\" Text=\"" + changeNames(item.columnName) + "\"></asp:Label>");
+                                built.AppendLine("<asp:Label ID=\"Label_" + item.columnName + "\" CssClass=\"Label_Deger\" runat=\"server\" Text=\"" + UnusedHelperFunctions.changeNames(item.columnName) + "\"></asp:Label>");
                             }
                             built.AppendLine("</td>");
                             built.AppendLine("<td class=\"sprt\"> : </td>");
@@ -1402,7 +1402,7 @@ namespace WebApplicationDAO
                 edit.AppendLine("}");
                 label_item.AppendLine("}");
 
-                createGridView(linkedList, boundField, selectedTable);
+                // createGridView(linkedList, boundField, selectedTable);
                
                 Kontroller = linkedList;
                 TextBox_Veri.Text = generateData();
@@ -2353,292 +2353,7 @@ namespace WebApplicationDAO
                 }
             }
         }
-        #region GridView Fonksiyonları....
-        private void createGridView(List<Kontrol_Icerik> list, StringBuilder boundField, String tableName)
-        {
-            String primaryKey = GeneralHelper.GetPrimaryKeys(list);
-            string temp;
-            temp = "1"; //Gridview'in methodlarını kopyala yapıştır daha kolay olması için hep aynı ismi veriyoruz.
-            boundField.AppendLine("<asp:Panel ID=\"Panel_GridView_" + tableName + "\" CssClass=\"Ei_Grid\" runat=\"server\">");
-            boundField.AppendLine("<asp:GridView ID=\"GridView_" + tableName + "\" runat=\"server\" AllowPaging=\"True\" DataKeyNames=\"" + primaryKey + "\"");
-            boundField.AppendLine("OnPageIndexChanging=\"GridView" + temp + "_PageIndexChanging\" ");
-            boundField.AppendLine("ForeColor=\"#333333\" OnRowCommand=\"GridView" + temp + "_RowCommand\"");
-            boundField.AppendLine("DataSourceID=\"SqlDataSource_" + tableName + "\" PageSize=\"20\"");
-            boundField.AppendLine("AutoGenerateColumns=\"False\" AllowSorting=\"True\" ");
-            boundField.AppendLine("OnRowDataBound=\"GridView" + temp + "_RowDataBound\"");
-            boundField.AppendLine("OnPageIndexChanged=\"GridView" + temp + "_PageIndexChanged\">");
-            boundField.AppendLine("<FooterStyle BackColor=\"#5D7B9D\" Font-Bold=\"True\" ForeColor=\"White\" />");
-            boundField.AppendLine("<RowStyle CssClass=\"TrRowBos\" ForeColor=\"#333333\" />");
-            boundField.AppendLine("<AlternatingRowStyle CssClass=\"TrRowDolu\" ForeColor=\"#284775\" />");
-            boundField.AppendLine("<Columns>");
-            boundField.AppendLine(" <asp:TemplateField>");
-            boundField.AppendLine("<HeaderTemplate>");
-            boundField.AppendLine("<input id=\"chkAll\" onclick=\"javascript:HepsiniSec(this);\" type=\"checkbox\" />");
-            boundField.AppendLine("</HeaderTemplate>");
-            boundField.AppendLine("<ItemTemplate>");
-            boundField.AppendLine("<asp:CheckBox ID=\"CheckBox_Grid\" CssClass=\"emo\" runat=\"server\" />");
-            boundField.AppendLine("</ItemTemplate>");
-            boundField.AppendLine("</asp:TemplateField>");
-            boundField.AppendLine("<asp:ButtonField CommandName=\"btnDown\" Text=\"Aşağı\" ControlStyle-CssClass=\"gridMoveDown\">");
-            boundField.AppendLine("<ControlStyle CssClass=\"gridMoveDown\"></ControlStyle>");
-            boundField.AppendLine("</asp:ButtonField>");
-            boundField.AppendLine("<asp:ButtonField CommandName=\"btnUp\"  Text=\"Yukarı\"  ControlStyle-CssClass=\"gridMoveUp\">");
-            boundField.AppendLine("<ControlStyle CssClass=\"gridMoveUp\"></ControlStyle>");
-            boundField.AppendLine("</asp:ButtonField>");
-            boundField.AppendLine("<asp:ButtonField  CommandName=\"btnUpdate\" Text=\"Güncelle\" ControlStyle-CssClass=\"gridEdit\">");
-            boundField.AppendLine("<ControlStyle CssClass=\"gridEdit\"></ControlStyle>");
-            boundField.AppendLine("</asp:ButtonField>");
-            foreach (Kontrol_Icerik item in list)
-            {
-                if (item.gridViewFields)
-                {
-                    //   if (CheckBox_Dil.Checked)
-                    if (false)
-                    {
 
-                        GirdView_Cok_Dil(boundField, item);
-                    }
-                    else
-                    {
-                        GirdView_Tek_Dil(boundField, item);
-                    }
-                }
-            }
-            boundField.AppendLine("</Columns>");
-            //boundField.AppendLine("<PagerStyle BackColor=\"#284775\" ForeColor=\"White\" HorizontalAlign=\"Center\"  />");
-            boundField.AppendLine("<PagerStyle CssClass=\"GridPagerStyle\" HorizontalAlign=\"Center\" />");
-            boundField.AppendLine("<SelectedRowStyle BackColor=\"#E2DED6\" Font-Bold=\"True\" ForeColor=\"#333333\" />");
-            boundField.AppendLine("<HeaderStyle BackColor=\"#5D7B9D\" Font-Bold=\"True\" ForeColor=\"White\" />");
-            boundField.AppendLine("<EditRowStyle BackColor=\"#999999\" />");
-            boundField.AppendLine("<PagerSettings Position=\"TopAndBottom\"  PageButtonCount=\"15\" Mode=\"NumericFirstLast\"");
-            boundField.AppendLine("FirstPageText=\"<<\" LastPageText=\">>\" />");
-            boundField.AppendLine("</asp:GridView>");
-            GridView_SqlDataSource(boundField, list, temp);
-            boundField.AppendLine("</asp:Panel>");
-        }
-        private void GridView_SqlDataSource(StringBuilder evalsfields, List<Kontrol_Icerik> list, string temp)
-        {
-            String attribute = "";
-
-            String tableName = GetEntityName();
-            IEnumerable<Kontrol_Icerik> kontrols = list.Where(r => r.gridViewFields == true);
-            list = kontrols.ToList<Kontrol_Icerik>();
-            String sql = "";
-            if (list.Count > 0)
-            {
-                foreach (var item in list)
-                {
-                    attribute += item.columnName + ",";
-                }
-
-                if (attribute.Length > 1)
-                {
-                    attribute = attribute.Remove(attribute.Length - 1, 1);
-                    sql = "SELECT " + attribute + " FROM " + GetEntityName() + "  ORDER BY Ordering";
-                }
-                else
-                {
-                    sql = "SELECT * FROM " + GetEntityName() + "  ORDER BY Ordering";
-                }
-            }
-            else
-            {
-                sql = "SELECT * FROM " + GetEntityName() + "  ORDER BY Ordering";
-            }
-            evalsfields.AppendLine("<asp:SqlDataSource ID=\"SqlDataSource_" + tableName + "\" runat=\"server\" ConnectionString=\"<%$ ConnectionStrings:ConnectionString %>\" ");
-            evalsfields.AppendLine("   SelectCommand=\"" + sql + "\">");
-            evalsfields.AppendLine(" </asp:SqlDataSource>");
-        }
-
-        /// <summary>
-        /// Gridview'in tek dilli versiyonu...
-        /// </summary>
-        /// <param name="boundField"></param>
-        /// <param name="item"></param>
-        private void GirdView_Tek_Dil(StringBuilder boundField, Kontrol_Icerik item)
-        {
-            //<asp:BoundField DataField="Hit" HeaderText="Hit" SortExpression="Hit" />
-            //<asp:CheckBoxField DataField="MainPage" HeaderText="Ana Sayfa" SortExpression="MainPage" />
-            if (item.control != Control_Adi.CheckBox_)
-            {
-                if (item.dataType.IndexOf("date") == -1)
-                {
-                    if (item.columnName.IndexOf("ID") != -1)
-                    {
-                        boundField.AppendLine("<asp:BoundField DataField=\"" + item.columnName + "\"  InsertVisible=\"False\" Visible=\"False\"  HeaderText=\"" + changeNames(item.columnName) + "\" SortExpression=\"" + item.columnName + "\" /> ");
-
-                    }
-                    else if (item.columnName.Contains("Order"))
-                    {
-                        boundField.AppendLine(" <asp:TemplateField HeaderText=\"" + changeNames(item.columnName) + "\" SortExpression=\"Ordering\">");
-                        boundField.AppendLine("<ItemTemplate>");
-                        boundField.AppendLine("<asp:TextBox ID=\"TextBox_Order\" CssClass=\"siraNo\" runat=\"server\" Text='<%# Bind(\"" + item.columnName + "\") %>'></asp:TextBox>");
-                        boundField.AppendLine("</ItemTemplate>");
-                        boundField.AppendLine("</asp:TemplateField>");
-                    }
-                    else
-                    {
-                        boundField.AppendLine("<asp:BoundField DataField=\"" + item.columnName + "\" HeaderText=\"" + changeNames(item.columnName) + "\" SortExpression=\"" + item.columnName + "\" /> ");
-                    }
-                }
-                else
-                {
-                    boundField.AppendLine("<asp:BoundField DataField=\"" + item.columnName + "\" DataFormatString=\"{0:d}\" HeaderText=\"" + changeNames(item.columnName) + "\" SortExpression=\"" + item.columnName + "\" /> ");
-                }
-            }
-            else if (item.control == Control_Adi.CheckBox_)
-            {
-                boundField.AppendLine("<asp:CheckBoxField DataField=\"" + item.columnName + "\" HeaderText=\"" + changeNames(item.columnName) + "\" SortExpression=\"" + item.columnName + "\" /> ");
-            }
-        }
-        /// <summary>
-        /// Gridview'in cok dilli versiyonu...
-        /// </summary>
-        /// <param name="boundField"></param>
-        /// <param name="item"></param>
-        private void GirdView_Cok_Dil(StringBuilder boundField, Kontrol_Icerik item)
-        {
-            //<asp:TemplateField HeaderText="Campaign" SortExpression="Campaign">
-            //       <HeaderTemplate>
-            //           <%=Ei_Sabit.Get["Date"]%>
-            //       </HeaderTemplate>
-            //       <ItemTemplate>
-            //           <asp:CheckBox ID="CheckBox2" runat="server" Checked='<%# Bind("Campaign") %>' Enabled="false" />
-            //       </ItemTemplate>
-            //</asp:TemplateField>
-            if (item.control != Control_Adi.CheckBox_)
-            {
-
-
-                if (item.dataType.IndexOf("date") == -1)
-                {
-
-                    if (item.columnName.IndexOf("ID") != -1)
-                    {
-                        boundField.AppendLine("<asp:TemplateField HeaderText=\"" + item.columnName + "\" SortExpression=\"" + item.columnName + "\">");
-                        boundField.AppendLine("<HeaderTemplate>");
-                        boundField.AppendLine(" <%=Ei_Sabit.Get[\"" + item.columnName + "\"]%>");
-                        boundField.AppendLine("</HeaderTemplate>");
-                        boundField.AppendLine(" <ItemTemplate>");
-                        boundField.AppendLine(" <asp:Label ID=\"Label_" + item.columnName + " runat=\"server\"  Visible=\"False\" Text='<%# Bind(\"" + item.columnName + "\") %>'></asp:Label>");
-                        boundField.AppendLine("</ItemTemplate>  ");
-                        boundField.AppendLine("</asp:TemplateField>");
-
-                    }
-                    else if (item.columnName.Contains("Order"))
-                    {
-                        boundField.AppendLine("<asp:TemplateField HeaderText=\"" + changeNames(item.columnName) + "\" SortExpression=\"Ordering\">");
-                        boundField.AppendLine("<HeaderTemplate>");
-                        boundField.AppendLine(" <%=Ei_Sabit.Get[\"" + item.columnName + "\"]%>");
-                        boundField.AppendLine("</HeaderTemplate>");
-                        boundField.AppendLine("<ItemTemplate>");
-                        boundField.AppendLine("<asp:TextBox ID=\"TextBox_Order\" CssClass=\"siraNo\" runat=\"server\" Text='<%# Bind(\"" + item.columnName + "\") %>'></asp:TextBox>");
-                        boundField.AppendLine("</ItemTemplate>");
-                        boundField.AppendLine("</asp:TemplateField>");
-                    }
-                    else
-                    {
-
-                        boundField.AppendLine("<asp:TemplateField HeaderText=\"" + item.columnName + "\" SortExpression=\"" + item.columnName + "\">");
-                        boundField.AppendLine("<HeaderTemplate>");
-                        boundField.AppendLine(" <%=Ei_Sabit.Get[\"" + item.columnName + "\"]%>");
-                        boundField.AppendLine("</HeaderTemplate>");
-                        boundField.AppendLine(" <ItemTemplate>");
-                        boundField.AppendLine(" <asp:Label ID=\"Label_" + item.columnName + " runat=\"server\" Text='<%# Bind(\"" + item.columnName + "\") %>'></asp:Label>");
-                        boundField.AppendLine("</ItemTemplate>  ");
-                        boundField.AppendLine("</asp:TemplateField>");
-
-                    }
-                }
-                else
-                {
-                    boundField.AppendLine("<asp:BoundField DataField=\"" + item.columnName + "\" HeaderText=\"" + changeNames(item.columnName) + "\" SortExpression=\"" + item.columnName + "\" /> ");
-                    boundField.AppendLine("<asp:TemplateField HeaderText=\"" + item.columnName + "\" SortExpression=\"" + item.columnName + "\">");
-                    boundField.AppendLine("<HeaderTemplate>");
-                    boundField.AppendLine(" <%=Ei_Sabit.Get[\"" + item.columnName + "\"]%>");
-                    boundField.AppendLine("</HeaderTemplate>");
-                    boundField.AppendLine(" <ItemTemplate>");
-                    boundField.AppendLine(" <asp:Label ID=\"Label_" + item.columnName + " runat=\"server\"  Text='<%# Bind(\"" + item.columnName + "\") %>'></asp:Label>");
-                    boundField.AppendLine("</ItemTemplate>  ");
-                    boundField.AppendLine("</asp:TemplateField>");
-                }
-            }
-            else if (item.control == Control_Adi.CheckBox_)
-            {
-                boundField.AppendLine("<asp:TemplateField HeaderText=\"" + item.columnName + "\" SortExpression=\"" + item.columnName + "\">");
-                boundField.AppendLine("<HeaderTemplate>");
-                boundField.AppendLine(" <%=Ei_Sabit.Get[\"" + item.columnName + "\"]%>");
-                boundField.AppendLine("</HeaderTemplate>");
-                boundField.AppendLine(" <ItemTemplate>");
-                boundField.AppendLine("<asp:CheckBox ID=\"CheckBox_" + item.columnName + " runat=\"server\" Checked='<%# Bind(\"" + item.columnName + "\") %>' Enabled=\"false\" />");
-                boundField.AppendLine("</ItemTemplate>  ");
-                boundField.AppendLine("</asp:TemplateField>");
-
-            }
-        }
-        #endregion
-        public int counter = 0;
-        private void TekCekim(StringBuilder labels, Kontrol_Icerik item, StringBuilder label_item)
-        {
-            string controlID, columnName;
-            columnName = item.columnName;
-            controlID = "Label_" + columnName;
-            if (counter % 2 == 1)
-            {
-                labels.AppendLine("<tr class=\"alt\">");
-            }
-            else
-            {
-                labels.AppendLine("<tr>");
-            }
-
-
-            labels.AppendLine("<td class=\"name\">");
-            if (false)
-            {
-                labels.AppendLine("<asp:Label ID=\"" + controlID + "_1\" CssClass=\"db_Name\" runat=\"server\"><%=Ei_Sabit.Get[\"" + columnName + "\"]%></asp:Label>");
-            }
-            else
-            {
-                labels.AppendLine("<asp:Label ID=\"" + controlID + "_1\" CssClass=\"db_Name\"  Text=\"" + changeNames(columnName) + "\" runat=\"server\"></asp:Label>");
-            }
-            labels.AppendLine("</td>");
-            labels.AppendLine("<td class=\"sprt\"> : </td>");
-            labels.AppendLine("<td  class=\"value\">");
-            labels.AppendLine("<asp:Label ID=\"" + controlID + "\" CssClass=\"db_Value\" runat=\"server\"></asp:Label>");
-            labels.AppendLine("</td>");
-
-            labels.AppendLine("</tr>");
-            bool isNull = false;
-            if (item.isNull == "YES")
-                isNull = true;
-
-            if (isNull)
-            {
-                if ((item.dataType.Trim().IndexOf("varchar") == -1) || (item.dataType.Trim().IndexOf("text") == -1))
-                {
-                    label_item.AppendLine(controlID + ".Text = item." + columnName + ".HasValue ?  item." + columnName + ".Value.ToString() : String.Empty;");
-                }
-                else
-                {
-                    label_item.AppendLine(controlID + ".Text = string.IsNullOrEmpty( item." + columnName + ") ? String.Empty  : item." + columnName + " ;");
-                }
-            }
-            else
-            {
-                if ((item.dataType.Trim().IndexOf("varchar") == -1) || (item.dataType.Trim().IndexOf("text") == -1))
-                {
-                    label_item.AppendLine(controlID + ".Text = item." + columnName + ".ToString();");
-                }
-                else
-                {
-                    label_item.AppendLine(controlID + ".Text = string.IsNullOrEmpty( item." + columnName + ") ? String.Empty  : item." + columnName + " ;");
-                }
-            }
-            counter++;
-
-        }
-     
         private bool OzelTabloIsimleri(String isim)
         {
             bool enter = false;
@@ -2685,84 +2400,7 @@ namespace WebApplicationDAO
 
         }
 
-        /// <summary>
-        /// Bu fonksiyon ile artık veritabanı isimlerini direk türkçe karşılıkları ile değiştireceğiz...
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        private String changeNames(String key)
-        {
-            if (false)
-            {
-                return key;
-            }
-
-            String value = key;
-            String tableName = GetEntityName();
-            StringDictionary map = new StringDictionary();
-            map.Add("Name", "İsim");
-            map.Add("Description", "Açıklama");
-            map.Add("State", "Durum");
-            map.Add("Ordering", "Sırası");
-            map.Add("ImagePath", "Resim");
-            map.Add("ImageState", "Resim Durumu");
-            map.Add("Title", "Başlık");
-            map.Add("Detail", "Detay");
-            map.Add("FirstName", "Adı");
-            map.Add("LastName", "Soy adı");
-            map.Add("Password", "Şifre");
-            map.Add("Email", "E-Posta");
-            map.Add("Gender", "Cinsiyet");
-            map.Add("Age", "Yaş");
-            map.Add("Profile", "Profil");
-            map.Add("Approval", "Onaylı");
-            map.Add("Tel_No", "Telefon Numarası");
-            map.Add("Role", "Sıfatı");
-            map.Add("MainPage", "Ana Sayfa");
-            map.Add("Price", "Fiyat");
-            map.Add("Code", "Kodu");
-            map.Add("CampaignPrice", "Kampanya Fiyatı");
-            map.Add("Mobile", "Cep Telefonu");
-            map.Add("Total", "Toplam");
-            map.Add("ShortExplanation", "Kısa Açıklama");
-            map.Add("Lang", "Dil");
-            map.Add("Label", "Etiket");
-            map.Add("Campaign", "Kampanya");
-            map.Add("PriceType", "Fiyat Tipi");
-            map.Add("City", "Şehir");
-            map.Add("Town", "Kasaba");
-            map.Add("Street", "Sokak");
-            map.Add("Kat_No", "Kat No");
-            map.Add("Postal_Code", "Posta Kodu");
-            map.Add("Type", "Tipi");
-            map.Add("Short_Desc", "Kısa Açıklama");
-            map.Add("Width", "Genişlik");
-            map.Add("Height", "Yükseklik");
-            map.Add("Address", "Adres");
-            map.Add("Created_Date", "Oluşturma Tarihi");
-            map.Add("Article", "Makale");
-            map.Add("Category", "Kategori");
-            map.Add("File", "Dosya");
-            map.Add("File_Type", "Dosya Tipi");
-
-            if (map.ContainsKey(key))
-            {
-                return map[key];
-            }
-
-            foreach (DictionaryEntry item in map)
-            {
-                if (item.Key.ToString().ToLower() == key.ToLower())
-                {
-                    value = item.Value.ToString();
-                }
-            }
-
-            return value;
-
-        }
-  
-
+     
         protected void ClearButton_Click(object sender, EventArgs e)
         {
 
@@ -3119,51 +2757,6 @@ namespace WebApplicationDAO
             }
         }
         /*
-         * 
-         * 
-         * 
-         * CREATE DEFINER=`remonty`@`%` PROCEDURE `NwmBook_InsertAndDUPLICATEKEYUPDATENwmBook`(
-IN p_id int,
-IN p_title varchar(45),
-IN p_author varchar(45),
-IN p_year_published int
-)
-BEGIN
-
-  Declare MyId INT DEFAULT NULL;
-  
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
-  BEGIN
-  ROLLBACK;
-  RESIGNAL;
-  END;
-
-START TRANSACTION;
-  SET SQL_MODE = '';
-
-INSERT INTO oedigit_cms.test_books(
-`id`,
-`title`,
-`author`,
-`year_published`
-) VALUES (
-p_id,
-COALESCE(p_title,''),
-COALESCE(p_author,''),
-COALESCE(p_year_published,0)
-)
-ON DUPLICATE KEY UPDATE
-`id`=LAST_INSERT_ID(id),
-`title` = COALESCE(p_title,''),
-`author` = COALESCE(p_author,''),
-`year_published` = COALESCE(p_year_published,0);
-
-  SET MyId = LAST_INSERT_ID();
-COMMIT;
- SELECT MyId;
-END
-         * 
-         * 
          * 
          * */
         public string GenerateMySqlInsertAndDUPLICATEKEYUPDATEStoredProcedure(List<Kontrol_Icerik> list)
@@ -3522,8 +3115,7 @@ END
             method.AppendLine("} ");
         }
 
-        #region  Connection Methods -->Insert - Update - Delete - Select
-
+      
         private String generateSqlAddWithValue(List<Kontrol_Icerik> kontrolList)
         {
             StringBuilder method = new StringBuilder();
@@ -3569,29 +3161,7 @@ END
             return method.ToString();
         }
 
-        #endregion
-
-        #region Odbc Connection Methods -->Insert - Update - Delete - Select
-        private String generateOdbcAddWithValue(List<Kontrol_Icerik> kontrolList)
-        {
-            StringBuilder method = new StringBuilder();
-            String modelName = getModelName();
-            method.AppendLine("private void setParametersAddWithValue(OdbcCommand command," + modelName + " item)");
-            method.AppendLine(" {");
-            foreach (Kontrol_Icerik item in kontrolList)
-            {
-                if (!item.primaryKey)
-                {
-                    method.AppendLine("command.Parameters.AddWithValue(\"@" + item.columnName + "\", item." + item.columnName + ");");
-                }
-            }
-            method.AppendLine(" }");
-
-
-            return method.ToString();
-        }
-
-
+       
 
         private void GenerateTableRepository(List<Kontrol_Icerik> linkedList)
         {
@@ -3600,7 +3170,7 @@ END
             String selectedTable = GetRealEntityName();
             String primaryKey = GeneralHelper.GetPrimaryKeys(linkedList);
             string primaryKeyOrginal = primaryKey;
-            primaryKey = GeneralHelper. FirstCharacterToLower(primaryKey);
+            primaryKey = GeneralHelper.FirstCharacterToLower(primaryKey);
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
 
 
@@ -3728,7 +3298,7 @@ END
                     method.AppendLine("//" + ki.columnName);
                     method.AppendLine("public " + staticText + "  List<" + modelName + "> Get" + modelName + "By" + ki.columnName + "(" + cSharpType + " " + GeneralHelper.FirstCharacterToLower(ki.columnName) + ")");
                     method.AppendLine("{");
-                    method.AppendLine("   return  DBDirectory.Get" + modelName + "By" + ki.columnName + "(" + GeneralHelper. FirstCharacterToLower(ki.columnName) + ");");
+                    method.AppendLine("   return  DBDirectory.Get" + modelName + "By" + ki.columnName + "(" + GeneralHelper.FirstCharacterToLower(ki.columnName) + ");");
                     method.AppendLine("}");
                 }
             }
@@ -3736,8 +3306,6 @@ END
             method.AppendLine("}");
             TextBox_MyTableItem.Text = method.ToString();
         }
-
-        #endregion
 
 
         private void GenerateStringPatterns(List<Kontrol_Icerik> linkedList)
@@ -4172,34 +3740,11 @@ END
             return method.ToString();
 
         }
-        private void createFile(StringBuilder pageBuilt, String fileName)
-        {
-
-            string path = Server.MapPath(downloadFileName + "/" + fileName);
-            StreamWriter createText = new StreamWriter(new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write), Encoding.GetEncoding("windows-1254"));
-
-            createText.Write(pageBuilt.ToString());
-            createText.Flush();
-            createText.Close();
-
-
-
-
-        }
-      
-
-
-       
 
         private String getModelName()
         {
             return GetEntityName() + tableItemName;
         }
-
-
-
-
-
 
         protected void Button_Connect_Click(object sender, EventArgs e)
         {

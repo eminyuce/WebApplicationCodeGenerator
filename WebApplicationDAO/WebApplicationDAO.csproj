@@ -224,6 +224,17 @@
     <Content Include="Images\orderedList7.png" />
     <Content Include="Images\orderedList8.png" />
     <Content Include="Images\orderedList9.png" />
+    <Content Include="mySql\test_Book_SaveOrUpdateNwmBook.sql" />
+    <Content Include="mySql\test_CursorSample.sql" />
+    <Content Include="mySql\test_CursorSample2.sql" />
+    <Content Include="mySql\test_IF_ELSE_SAMPLE.sql" />
+    <Content Include="mySql\test_InsertAndDuplicateKeyUpdate.sql" />
+    <Content Include="mySql\test_PagingProcedure_Sample2.sql" />
+    <Content Include="mySql\test_PagingProcedure_Sample_Temp_Table.sql" />
+    <Content Include="mySql\test_pRemoveAllForeignKeys.sql" />
+    <Content Include="mySql\test_RowNumber_Search.sql" />
+    <Content Include="mySql\test_Select_Case_Sample.sql" />
+    <Content Include="mySql\test_While_Loop.sql" />
     <Content Include="packages.config" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -331,6 +342,7 @@
     </Compile>
     <Compile Include="Helpers\OleDbDatabaseUtility.cs" />
     <Compile Include="Helpers\ProjectConstants.cs" />
+    <Compile Include="Helpers\UnusedHelperFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadExcelFile.aspx.cs">
       <DependentUpon>ReadExcelFile.aspx</DependentUpon>
