@@ -50,16 +50,8 @@ namespace WebApplicationDAO
                 ViewState["databaseName"] = value;
             }
         }
-
-
-        private static String downloadFileName = "generatedCode";
-        private static String lessonDirectory = "Lesson", codeDirectory = "App_Code";
         public static string connectionString = "";
         private static List<Kontrol_Icerik> _kontroller = new List<Kontrol_Icerik>();
-        private static List<Kontrol_Icerik> _kontrollerColumnUtility;
-        private static bool isDateTime = true;
-        private bool isAjax = false;
-        private String ajaxControls = "<%@ Register Assembly=\"AjaxControlToolkit\" Namespace=\"AjaxControlToolkit\" TagPrefix=\"cc1\" %>";
         public List<Kontrol_Icerik> Kontroller
         {
             get
@@ -74,8 +66,6 @@ namespace WebApplicationDAO
                 _kontroller = value;
             }
         }
-    
-
         public List<String> TableNames
         {
             get { return ViewState["TableNames"] as List<String>; }
@@ -100,50 +90,7 @@ namespace WebApplicationDAO
                 ViewState["Kontrol_Gorunumu"] = value;
             }
         }
-        public String GridView_String
-        {
-            get
-            {
-                if (ViewState["GridView_String"] != null)
-                    return ViewState["GridView_String"] as String;
-                else
-                    return null;
-            }
-            set
-            {
-                ViewState["GridView_String"] = value;
-            }
-        }
-        public String Controls_String
-        {
-            get
-            {
-                if (ViewState["Controls_String"] != null)
-                    return ViewState["Controls_String"] as String;
-                else
-                    return null;
-            }
-            set
-            {
-                ViewState["Controls_String"] = value;
-            }
-        }
-        public String SqlDataSource_String
-        {
-            get
-            {
-                if (ViewState["SqlDataSource_String"] != null)
-                    return ViewState["SqlDataSource_String"] as String;
-                else
-                    return null;
-            }
-            set
-            {
-                ViewState["SqlDataSource_String"] = value;
-            }
-        }
-
-
+         
 
         #endregion
 
@@ -1232,7 +1179,6 @@ namespace WebApplicationDAO
                         {
                             a = Ajax_Adi.Masked_;
                         }
-                        isAjax = true;
                     }
 
                     Kontrol_Icerik www = Kontroller.SingleOrDefault(r => r.ID == int.Parse(id.Text));
@@ -1291,10 +1237,7 @@ namespace WebApplicationDAO
                 String selectedTable = GetEntityName();
 
 
-                if (isAjax)
-                {
-                    built.AppendLine(ajaxControls);
-                }
+               
 
                 built.AppendLine("<asp:Panel ID=\"Panel_TextBox\" Visible=\"true\" CssClass=\"Ei_Add_Table\" runat=\"server\">");
                 built.AppendLine("<table class=\"" + selectedTable + "\">");
@@ -1460,17 +1403,8 @@ namespace WebApplicationDAO
 
                 #region Kontrollerin Görünümü
 
-                if (!isAjax)
-                {
-                    Kontrol_Gorunumu = built.ToString();
-                    Kontrolleri_Goster(Kontrol_Gorunumu);
-                }
-                else
-                {
-                    Kontrol_Gorunumu = built.ToString();
-                    Kontrolleri_Goster(Kontrol_Gorunumu);
-
-                }
+                Kontrol_Gorunumu = built.ToString();
+                Kontrolleri_Goster(Kontrol_Gorunumu);
 
 
 
@@ -1478,7 +1412,7 @@ namespace WebApplicationDAO
 
 
 
-            
+
 
                 generateASpNetMvcList(linkedList);
                 generateASpNetMvcList2(linkedList);
