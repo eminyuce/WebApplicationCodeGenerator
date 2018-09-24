@@ -1256,36 +1256,12 @@ namespace WebApplicationDAO
                 built222.AppendLine(generateSqlIReader(linkedList));
                 built222.AppendLine("}");
                 built222.AppendLine("}");
-                var databaseOperationStr = built222.ToString();
-                if (CheckBox_MySql.Checked)
-                {
-                    databaseOperationStr = databaseOperationStr.Replace("SqlCommand", "MySqlCommand");
-                    databaseOperationStr = databaseOperationStr.Replace("SqlDataReader", "MySqlDataReader");
-                    databaseOperationStr = databaseOperationStr.Replace("SqlConnection", "MySqlConnection");
-                    databaseOperationStr = databaseOperationStr.Replace("SqlParameter", "MySqlParameter");
-                    databaseOperationStr = databaseOperationStr.Replace("DatabaseUtility", "MySqlDatabaseUtility");
-                    databaseOperationStr = databaseOperationStr.Replace("SqlDbType.Int", "MySqlDbType.Int32");
-                    databaseOperationStr = databaseOperationStr.Replace("SqlDbType", "MySqlDbType");
-                    String realEntityName = GetRealEntityName();
-                    String modifiedTableName = GetEntityName();
-                    String entityPrefix = GeneralHelper.GetCleanEntityName(realEntityName);
-                    entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
-                    string spName = entityPrefix + "SaveOrUpdate" + modifiedTableName;
-                    string mySqlspName = entityPrefix + "SaveOrUpdate" + modifiedTableName;
-                    mySqlspName = String.Format("{1}({0})",
-                        String.Join(",",
-                        lists.Select(t =>
-                        String.Format("@{0}", t.ColumnNameInput))), mySqlspName);
-                    databaseOperationStr = databaseOperationStr.Replace(spName, "CALL " + mySqlspName);
-                }
 
+                string databaseOperationStr = GenerateMySqlDatabaseOperation(lists, built222);
                 TextBox_IReader.Text = databaseOperationStr;
-
-
 
                 generateASpNetMvcList(linkedList);
                 generateASpNetMvcList2(linkedList);
-
                 generateASpNetMvcEditOrCreate(linkedList);
                 generateASpNetMvcDetails(linkedList);
                 generateNewInstance(linkedList);
@@ -1301,6 +1277,35 @@ namespace WebApplicationDAO
                 Label_ERROR.Text = "Write the connection string, fill out the gridview and create the codes, bro :)";
             }
         }
+
+        private string GenerateMySqlDatabaseOperation(IOrderedEnumerable<Kontrol_Icerik> lists, StringBuilder built222)
+        {
+            var databaseOperationStr = built222.ToString();
+            if (CheckBox_MySql.Checked)
+            {
+                databaseOperationStr = databaseOperationStr.Replace("SqlCommand", "MySqlCommand");
+                databaseOperationStr = databaseOperationStr.Replace("SqlDataReader", "MySqlDataReader");
+                databaseOperationStr = databaseOperationStr.Replace("SqlConnection", "MySqlConnection");
+                databaseOperationStr = databaseOperationStr.Replace("SqlParameter", "MySqlParameter");
+                databaseOperationStr = databaseOperationStr.Replace("DatabaseUtility", "MySqlDatabaseUtility");
+                databaseOperationStr = databaseOperationStr.Replace("SqlDbType.Int", "MySqlDbType.Int32");
+                databaseOperationStr = databaseOperationStr.Replace("SqlDbType", "MySqlDbType");
+                String realEntityName = GetRealEntityName();
+                String modifiedTableName = GetEntityName();
+                String entityPrefix = GeneralHelper.GetCleanEntityName(realEntityName);
+                entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
+                string spName = entityPrefix + "SaveOrUpdate" + modifiedTableName;
+                string mySqlspName = entityPrefix + "SaveOrUpdate" + modifiedTableName;
+                mySqlspName = String.Format("{1}({0})",
+                    String.Join(",",
+                    lists.Select(t =>
+                    String.Format("@{0}", t.ColumnNameInput))), mySqlspName);
+                databaseOperationStr = databaseOperationStr.Replace(spName, "CALL " + mySqlspName);
+            }
+
+            return databaseOperationStr;
+        }
+
         // se_rss_GetStories @take=1,@AreaID=10, @Search='',@BestForDay=0 - Table1 Table2;
         private DataSet GetDataSet(string sqlCommand, string connectionString)
         {
