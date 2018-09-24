@@ -225,6 +225,9 @@
     <Content Include="Images\orderedList8.png" />
     <Content Include="Images\orderedList9.png" />
     <Content Include="mySql\test_Book_SaveOrUpdateNwmBook.sql" />
+    <Content Include="mySql\test_StringFunctions.sql" />
+    <Content Include="mySql\test_TempTable.sql" />
+    <Content Include="mySql\test_MathFunctions.sql" />
     <Content Include="mySql\test_WriteFile.sql" />
     <Content Include="mySql\test_CursorSample.sql" />
     <Content Include="mySql\test_CursorSample2.sql" />
