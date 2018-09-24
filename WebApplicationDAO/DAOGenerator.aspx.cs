@@ -2970,22 +2970,6 @@ namespace WebApplicationDAO
             String staticText = CheckBox_MethodStatic.Checked ? "static" : "";
 
 
-            //var surveys = new List<NwmSurvey>();
-            //var key = "GetActiveNwmSurveys";
-            //surveys = (List<NwmSurvey>)MemoryCache.Default.Get(key);
-            //if (surveys == null)
-            //{
-            //    surveys = DBDirectory.GetNwmSurveys().Where(r => r.IsActive).OrderBy(r => r.DateSurveyStart).ToList();
-
-            //    CacheItemPolicy policy = null;
-            //    // CacheEntryRemovedCallback callback = null;
-
-            //    policy = new CacheItemPolicy();
-            //    policy.Priority = CacheItemPriority.Default;
-            //    policy.AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(Settings.CacheMediumSeconds);
-
-            //    MemoryCache.Default.Set(key, surveys, policy);
-            //}
             method.AppendLine("using NLog;");
             method.AppendLine("using System;");
             method.AppendLine("using System.Collections.Generic;");
@@ -3094,7 +3078,16 @@ namespace WebApplicationDAO
                     method.AppendLine("//" + ki.columnName);
                     method.AppendLine("public " + staticText + "  List<" + modelName + "> Get" + modelName + "By" + ki.columnName + "(" + cSharpType + " " + GeneralHelper.FirstCharacterToLower(ki.columnName) + ")");
                     method.AppendLine("{");
-                    method.AppendLine("   return  DBDirectory.Get" + modelName + "By" + ki.columnName + "(" + GeneralHelper.FirstCharacterToLower(ki.columnName) + ");");
+                    method.AppendLine("try");
+                    method.AppendLine("{");
+                    method.AppendLine("   return  " + dbDirectory + ".Get" + modelName + "By" + ki.columnName + "(" + GeneralHelper.FirstCharacterToLower(ki.columnName) + ");");
+                    method.AppendLine("}catch(Exception ex)");
+                    method.AppendLine("{");
+                    method.AppendLine("Logger.Error(ex, ex.Message);");
+                    method.AppendLine(" #if DEBUG");
+                    method.AppendLine("             throw ex;");
+                    method.AppendLine(" #endif");
+                    method.AppendLine("}");
                     method.AppendLine("}");
                 }
             }
