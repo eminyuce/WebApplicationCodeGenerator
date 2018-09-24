@@ -1225,128 +1225,11 @@ namespace WebApplicationDAO
                 var lists = from s in Kontroller orderby s.order select s;
                 var linkedList = lists.ToList<Kontrol_Icerik>();
 
-
-                StringBuilder edit = new StringBuilder();
-                StringBuilder insert = new StringBuilder();
-                StringBuilder built = new StringBuilder();
-                StringBuilder labels = new StringBuilder();
-                StringBuilder label_item = new StringBuilder();
-                StringBuilder boundField = new StringBuilder();
-                StringBuilder gridState2 = new StringBuilder();
-
                 String selectedTable = GetEntityName();
-
-
-               
-
-                built.AppendLine("<asp:Panel ID=\"Panel_TextBox\" Visible=\"true\" CssClass=\"Ei_Add_Table\" runat=\"server\">");
-                built.AppendLine("<table class=\"" + selectedTable + "\">");
-
-                insert.AppendLine("protected bool initialize(" + selectedTable + " item,Label mesaj){");
-                insert.AppendLine("if(item != null){");
-                //insert.AppendLine(selectedTable + " item=new  " + selectedTable + "();");
-                insert.AppendLine("try{");
-                edit.AppendLine("protected bool retrieveData( " + selectedTable + " item, Label mesaj){");
-                edit.AppendLine("if(item != null){");
-                edit.AppendLine("try{");
-                label_item.AppendLine("protected void getData( " + selectedTable + " item){");
-                //Label_SingleOrDefault.Text = "" + selectedTable + " item=db." + selectedTable + "s.SingleOrDefault(r=>r.ID == columnID);";
-                labels.AppendLine("<asp:Panel ID=\"Panel_Labels_" + selectedTable + "\"  CssClass=\"Ei_Labels\" runat=\"server\">");
-                labels.AppendLine("<table class=\"" + selectedTable + "\">");
-
-                foreach (Kontrol_Icerik item in lists)
-                {
-                    if (item != null)
-                    {
-                        //TekCekim(labels, item, label_item);
-                        if (!item.use)
-                        {
-                            if (counter2 % 2 == 1)
-                            {
-                                built.AppendLine("<tr class=\"alt\" id=\"tr_" + item.columnName + "\" runat=\"server\">");
-                            }
-                            else
-                            {
-                                built.AppendLine("<tr  id=\"tr_" + item.columnName + "\" runat=\"server\">");
-                            }
-                            counter2++;
-                            built.AppendLine("<td class=\"name\">");
-                            //   if (CheckBox_Dil.Checked)
-                            if (false)
-                            {
-                                built.AppendLine("<asp:Label ID=\"Label_" + item.columnName + "\" CssClass=\"db_Name\" runat=\"server\"><%=Ei_Sabit.Get[\"" + item.columnName + "\"]%></asp:Label>");
-                            }
-                            else
-                            {
-                                built.AppendLine("<asp:Label ID=\"Label_" + item.columnName + "\" CssClass=\"Label_Deger\" runat=\"server\" Text=\"" + UnusedHelperFunctions.changeNames(item.columnName) + "\"></asp:Label>");
-                            }
-                            built.AppendLine("</td>");
-                            built.AppendLine("<td class=\"sprt\"> : </td>");
-                            built.AppendLine("<td  class=\"value\">");
-                            built.AppendLine(generateControl(item, insert, edit, 1));
-                            built.AppendLine("</td>");
-                            built.AppendLine("</tr>");
-                        }
-                        else
-                        {
-                            Kullanilmayanlar(item, insert);
-                        }
-                    }
-                }
-
-                #region Insert-Update-Delete-Select Methods
-
-
-               // generateSqlIReader(linkedList);
-              //  generateNewInstance(linkedList);
-
-
-
-                #endregion
 
                 generateTableItem(linkedList);
                 GenerateTableRepository(linkedList);
                 GenerateStringPatterns(linkedList);
-                ////   GenerateClassStringPatterns(linkedList);
-                ////Eğer istersek DAO dosyalarını oluştursun..
-                //if (CheckBox_All_DAO.Checked)
-                //{
-                //    createCSFile("TextBox_OleDb", "DAO", true);
-                //    createCSFile("TextBox_MyTableItem", tableItemName, false);
-                //}
-
-
-
-                built.AppendLine("</table>");
-                labels.AppendLine("</table>");
-                labels.AppendLine("</asp:Panel>");
-                built.AppendLine("</asp:Panel>");
-                //insert.AppendLine("db." + selectedTable + "s.InsertOnSubmit(item);");
-                //insert.AppendLine("db.SubmitChanges();");
-                insert.AppendLine("mesaj.Text = \"Yüklendi\";");
-                insert.AppendLine("return true;");
-                insert.AppendLine("}catch(Exception ex){");
-                insert.AppendLine("mesaj.Text = ex.Message;");
-                insert.AppendLine("return false;");
-                insert.AppendLine("}");
-                insert.AppendLine("}else{");
-                insert.AppendLine("return false;");
-                insert.AppendLine("}");
-                insert.AppendLine("}");
-
-                edit.AppendLine("return true;");
-                edit.AppendLine("}catch(Exception ex){");
-                edit.AppendLine("mesaj.Text = ex.Message;");
-                edit.AppendLine("return false;");
-                edit.AppendLine("}");
-                edit.AppendLine("}else{");
-                edit.AppendLine("return false;");
-                edit.AppendLine("}");
-                edit.AppendLine("}");
-                label_item.AppendLine("}");
-
-                // createGridView(linkedList, boundField, selectedTable);
-               
                 Kontroller = linkedList;
                 TextBox_Veri.Text = generateData();
                 TextBox_MergeSqlStatement.Text = CheckBox_MySql.Checked ? GenerateMySqlInsertAndDUPLICATEKEYUPDATEStoredProcedure(linkedList) : GenerateMergeSqlStoredProcedure();
@@ -1397,20 +1280,6 @@ namespace WebApplicationDAO
                 }
 
                 TextBox_IReader.Text = databaseOperationStr;
-                //TextBox_Database_Utility_List.Text = "";
-                //Label_Format.Text = "string format = \"MM/dd/yyyy; CultureInfo provider = CultureInfo.InvariantCulture;";
-
-
-                #region Kontrollerin Görünümü
-
-                Kontrol_Gorunumu = built.ToString();
-                Kontrolleri_Goster(Kontrol_Gorunumu);
-
-
-
-                #endregion
-
-
 
 
 
@@ -1485,8 +1354,8 @@ namespace WebApplicationDAO
         private void generateSPModel()
         {
             #region Execute SP to get tables so that we can generate code
-            string StoredProc_Exec = TextBox_StoredProc_Exec.Text;
-
+            string StoredProc_Exec = TextBox_StoredProc_Exec.Text.ToStr();
+            StoredProc_Exec = StoredProc_Exec.ToLower().Replace("exec", "");
             if (String.IsNullOrEmpty(StoredProc_Exec))
             {
                 return;
@@ -2274,19 +2143,7 @@ namespace WebApplicationDAO
 
         }
 
-        private void Kontrolleri_Goster(String built)
-        {
-            if (CheckBox_isControlVisible.Checked)
-            {
-                if (!String.IsNullOrEmpty(built))
-                {
-                    Label_Gorunum.Text = "Kontrollerin Görünümü";
-                    string strCtrlhtml = built;
-                    Control ctrlDynamicallyCreated = Page.ParseControl(strCtrlhtml);
-                    anyPlaceHolder.Controls.Add(ctrlDynamicallyCreated);
-                }
-            }
-        }
+        
 
         private bool OzelTabloIsimleri(String isim)
         {
@@ -2364,7 +2221,7 @@ namespace WebApplicationDAO
         {
             if (Wizard1.ActiveStepIndex == 0)
             {
-                Kontrolleri_Goster(Kontrol_Gorunumu);
+        
             }
         }
       
