@@ -2345,10 +2345,6 @@ namespace WebApplicationDAO
 
                 Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(list);
                 entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
-
-
-
-                entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
                 var primaryKey = prKey.columnName;
 
 
