@@ -34,6 +34,36 @@ namespace Helpers
             Regex r = new Regex(@"^-{0,1}\d+$");
             return r.IsMatch(text);
         }
+        public static string GetEntityPrefixName(string m)
+        {
+            String k = "";
+            if (m.Contains("."))
+            {
+                m = m.Split(new string[] { "." }, StringSplitOptions.None).Skip(1).FirstOrDefault();
+            }
+            if (!String.IsNullOrEmpty(m))
+            {
+                var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
+                if (parts.Length > 1)
+                {
+                    k = parts[0].Trim();
+                }
+            }
+            return k;
+        }
+        //public static string GetEntityPrefixName(string m)
+        //{
+        //    String k = "";
+        //    if (!String.IsNullOrEmpty(m))
+        //    {
+        //        var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
+        //        if (parts.Length > 1)
+        //        {
+        //            k = parts[0].Trim();
+        //        }
+        //    }
+        //    return k;
+        //}
         public static string GetCleanEntityName(string m)
         {
             if (m.Contains("."))
@@ -54,19 +84,7 @@ namespace Helpers
             }
             return m;
         }
-        public static string GetEntityPrefixName(string m)
-        {
-            String k = "";
-            if (!String.IsNullOrEmpty(m))
-            {
-                var parts = m.Split(new string[] { "_" }, StringSplitOptions.None);
-                if (parts.Length > 1)
-                {
-                    k = parts[0].Trim();
-                }
-            }
-            return k;
-        }
+
         public static string UppercaseFirst(string s)
         {
             // Check for empty string.
@@ -155,12 +173,71 @@ namespace Helpers
             {
                 result = "char ";
             }
-
+            else
+            {
+                result = GetCLRType(item.dataType);
+            }
             return result.Trim();
         }
 
+        public static string GetCLRType(string dbType)
+        {
+            switch (dbType)
+            {
+                case "tinyint":
+                case "smallint":
+                case "mediumint":
+                case "int":
+                case "integer":
+                    return "int";
+                case "bigint":
+                    return "long";
+                case "double":
+                    return "double";
+                case "float":
+                    return "float";
+                case "decimal":
+                    return "decimal";
+                case "numeric":
+                case "real":
+                    return "decimal";
+                case "bit":
+                    return "bool";
+                case "date":
+                case "time":
+                case "year":
+                case "datetime":
+                case "timestamp":
+                    return "DateTime";
+                case "tinyblob":
+                case "blob":
+                case "mediumblob":
+                case "longblog":
+                case "binary":
+                case "varbinary":
+                    return "byte[]";
+                case "char":
+                case "varchar":
+                case "tinytext":
+                case "text":
+                case "mediumtext":
+                case "longtext":
+                    return "string";
+                case "point":
+                case "linestring":
+                case "polygon":
+                case "geometry":
+                case "multipoint":
+                case "multilinestring":
+                case "multipolygon":
+                case "geometrycollection":
+                case "enum":
+                case "set":
+                default:
+                    return "";
+            }
+        }
 
-      
         public static string FirstCharacterToLower(string str)
         {
             if (String.IsNullOrEmpty(str) || Char.IsLower(str, 0))
@@ -171,6 +248,11 @@ namespace Helpers
         public static String convertSqlDataTypeToCSharp(String key)
         {
             String result = "";
+            result = GetCLRType(key);
+            if (!String.IsNullOrEmpty(result))
+            {
+                return result;
+            }
 
             StringDictionary map = new StringDictionary();
             map.Add("binary", "Byte[]");
@@ -200,6 +282,7 @@ namespace Helpers
             map.Add("datetime2", "DateTime");
             map.Add("timestamp", "DateTime");
             map.Add("xml", "String");
+       
 
             var lines = File.ReadAllLines(HttpContext.Current.Server.MapPath(@"~\dataTypes.txt"));
             for (var i = 0; i < lines.Length; i += 1)
@@ -232,6 +315,7 @@ namespace Helpers
             }
             else
             {
+               
                 result = "UNDEFINED_DATA_TYPE";
             }
 

@@ -1292,7 +1292,7 @@ namespace WebApplicationDAO
                 databaseOperationStr = databaseOperationStr.Replace("SqlDbType", "MySqlDbType");
                 String realEntityName = GetRealEntityName();
                 String modifiedTableName = GetEntityName();
-                String entityPrefix = GeneralHelper.GetCleanEntityName(realEntityName);
+                String entityPrefix = GeneralHelper.GetEntityPrefixName(realEntityName);
                 entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
                 string spName = entityPrefix + "SaveOrUpdate" + modifiedTableName;
                 string mySqlspName = entityPrefix + "SaveOrUpdate" + modifiedTableName;
@@ -1804,7 +1804,7 @@ namespace WebApplicationDAO
         {
             String selectedTable = GetRealEntityName();
             String modifiedTableName = GetEntityName();
-            String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
+            String entityPrefix = GeneralHelper.GetEntityPrefixName(selectedTable);
             entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
             String modelName = getModelName();
             String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
@@ -2060,7 +2060,7 @@ namespace WebApplicationDAO
             String realEntityName = GetRealEntityName();
             String modelName = getModelName();
             String modifiedTableName = GetEntityName();
-            String entityPrefix = GeneralHelper.GetCleanEntityName(realEntityName);
+            String entityPrefix = GeneralHelper.GetEntityPrefixName(realEntityName);
             entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
             String primaryKey = GeneralHelper.GetPrimaryKeys(kontrolList);
 
@@ -2341,7 +2341,7 @@ namespace WebApplicationDAO
                 List<Kontrol_Icerik> list = Kontroller;
                 String selectedTable = GetRealEntityName();
                 String modifiedTableName = GetEntityName();
-                String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
+                String entityPrefix = GeneralHelper.GetEntityPrefixName(selectedTable);
 
                 Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(list);
                 entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
@@ -2466,7 +2466,7 @@ namespace WebApplicationDAO
             {
                 String realEntityName = GetRealEntityName();
                 String modifiedTableName = GetEntityName();
-                String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
+                String entityPrefix = GeneralHelper.GetEntityPrefixName(selectedTable);
 
                 entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
 
@@ -2569,7 +2569,7 @@ namespace WebApplicationDAO
             {
                 String realEntityName = GetRealEntityName();
                 String modifiedTableName = GetEntityName();
-                String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
+                String entityPrefix = GeneralHelper.GetEntityPrefixName(selectedTable);
 
                 entityPrefix = (String.IsNullOrEmpty(entityPrefix) ? "" : entityPrefix + "_");
 
@@ -2652,7 +2652,7 @@ namespace WebApplicationDAO
             StringBuilder built = new StringBuilder();
             String selectedTable = GetRealEntityName();
             String modifiedTableName = GetEntityName();
-            String entityPrefix = GeneralHelper.GetCleanEntityName(selectedTable);
+            String entityPrefix = GeneralHelper.GetEntityPrefixName(selectedTable);
 
             List<Kontrol_Icerik> list = Kontroller;
             Kontrol_Icerik prKey = GeneralHelper.GetPrimaryKeysItem(list);
