@@ -1846,7 +1846,7 @@ namespace WebApplicationDAO
             built.AppendLine("}");
 
 
-            built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}(int id=0)", modelName));
+            built.AppendLine(String.Format("public ActionResult Edit(int id=0)"));
             built.AppendLine("{");
             built.AppendLine(String.Format("int {0} = id;", primaryKey.ToLower()));
             built.AppendLine(String.Format("var {0} = new {1}();", modelName.ToLower(), modelName));
@@ -1860,7 +1860,7 @@ namespace WebApplicationDAO
             built.AppendLine("}");
 
             built.AppendLine("[HttpPost]");
-            built.AppendLine(String.Format("public ActionResult SaveOrUpdate{0}({0} {1})", modelName, modelName.ToLower()));
+            built.AppendLine(String.Format("public ActionResult Edit({0} {1})", modelName, modelName.ToLower()));
             built.AppendLine("{");
 
 
@@ -1897,7 +1897,7 @@ namespace WebApplicationDAO
                 var method = new StringBuilder();
                 method.AppendLine(String.Format("@model List<{0}>", modelName));
                 method.AppendLine("  <p>");
-                method.AppendLine(String.Format("@Html.ActionLink(\"Create a new {0}\", \"SaveOrUpdate{0}\", new {1}   id=0 {2}, new{3})  ", modelName, "{", "}", "{ @class=\"btn btn-default\"}"));
+                method.AppendLine(String.Format("@Html.ActionLink(\"Create a new {0}\", \"Edit\", new {1}   id=0 {2}, new{3})  ", modelName, "{", "}", "{ @class=\"btn btn-default\"}"));
                 method.AppendLine("       </p>");
                 method.AppendLine(" @foreach (var item in Model) {");
                 method.AppendLine(String.Format("    @Html.DisplayFor(modelItem => item)  "));
