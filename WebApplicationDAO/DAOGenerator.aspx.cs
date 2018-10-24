@@ -1360,7 +1360,7 @@ namespace WebApplicationDAO
         {
             #region Execute SP to get tables so that we can generate code
             string StoredProc_Exec = TextBox_StoredProc_Exec.Text.ToStr();
-            StoredProc_Exec = StoredProc_Exec.ToLower().Replace("exec", "");
+            StoredProc_Exec = StoredProc_Exec.Replace("exec", "");
             if (String.IsNullOrEmpty(StoredProc_Exec))
             {
                 return;
