@@ -1290,6 +1290,7 @@ namespace WebApplicationDAO
                 databaseOperationStr = databaseOperationStr.Replace("DatabaseUtility", "MySqlDatabaseUtility");
                 databaseOperationStr = databaseOperationStr.Replace("SqlDbType.Int", "MySqlDbType.Int32");
                 databaseOperationStr = databaseOperationStr.Replace("SqlDbType", "MySqlDbType");
+                databaseOperationStr = databaseOperationStr.Replace("MyMySqlDbType", "MySqlDbType");
                 String realEntityName = GetRealEntityName();
                 String modifiedTableName = GetEntityName();
                 String entityPrefix = GeneralHelper.GetEntityPrefixName(realEntityName);
