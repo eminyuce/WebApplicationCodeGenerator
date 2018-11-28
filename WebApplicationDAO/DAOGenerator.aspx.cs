@@ -3024,7 +3024,7 @@ namespace WebApplicationDAO
             method.AppendLine("     return  " + dbDirectory + ".SaveOrUpdate" + modelName + "(item);");
             method.AppendLine("}catch(Exception ex)");
             method.AppendLine("{");
-            method.AppendLine("Logger.Error(ex, ex.Message);");
+            method.AppendLine("Logger.Error(ex, ex.Message+\"  " + modelName + ":\"+item);");
             method.AppendLine(" #if DEBUG");
             method.AppendLine("             throw ex;");
             method.AppendLine(" #endif");
