@@ -3075,9 +3075,10 @@ namespace WebApplicationDAO
                     method.AppendLine("//" + ki.columnName);
                     method.AppendLine("public " + staticText + "  List<" + modelName + "> Get" + modelName + "By" + ki.columnName + "(" + cSharpType + " " + GeneralHelper.FirstCharacterToLower(ki.columnName) + ")");
                     method.AppendLine("{");
+                    method.AppendLine("var result = new List<" + modelName + ">();");
                     method.AppendLine("try");
                     method.AppendLine("{");
-                    method.AppendLine("   return  " + dbDirectory + ".Get" + modelName + "By" + ki.columnName + "(" + GeneralHelper.FirstCharacterToLower(ki.columnName) + ");");
+                    method.AppendLine("   result =  " + dbDirectory + ".Get" + modelName + "By" + ki.columnName + "(" + GeneralHelper.FirstCharacterToLower(ki.columnName) + ");");
                     method.AppendLine("}catch(Exception ex)");
                     method.AppendLine("{");
                     method.AppendLine("Logger.Error(ex, ex.Message);");
@@ -3085,6 +3086,7 @@ namespace WebApplicationDAO
                     method.AppendLine("             throw ex;");
                     method.AppendLine(" #endif");
                     method.AppendLine("}");
+                    method.AppendLine(" return result;");
                     method.AppendLine("}");
                 }
             }
