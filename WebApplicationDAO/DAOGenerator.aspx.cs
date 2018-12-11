@@ -2975,6 +2975,8 @@ namespace WebApplicationDAO
             method.AppendLine("using System.Text;");
             method.AppendLine("using System.Threading.Tasks;");
             method.AppendLine("using HelpersProject;");
+            method.AppendLine("using " + NameSpace + ".Domain.Entities;");
+            method.AppendLine("using " + NameSpace + ".Domain.DB;");
             method.AppendLine("");
             method.AppendLine("");
             method.AppendLine("namespace " + NameSpace + ".Domain.Repositories {");
@@ -3137,7 +3139,6 @@ namespace WebApplicationDAO
 
 
             method2.AppendLine("using HelpersProject;");
-            method2.AppendLine("using " + NameSpace + ".Domain.Entities;");
             method2.AppendLine("using " + NameSpace + ".Domain.Repositories;");
             method2.AppendLine("using System;");
             method2.AppendLine("using System.Collections.Generic;");
