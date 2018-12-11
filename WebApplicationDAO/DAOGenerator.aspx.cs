@@ -3314,8 +3314,7 @@ namespace WebApplicationDAO
 
 
             method2.AppendLine("}");
-            // TextBox_MyTableItem.Text = method.ToString();
-            DownloadText(method2, String.Format("{0}.cs", modelName));
+        
             method2.AppendLine("}");
             TextBox_MyTableItem2.Text = method2.ToString();
         }
@@ -3435,35 +3434,7 @@ namespace WebApplicationDAO
             return method.ToString();
 
         }
-        private void DownloadText(StringBuilder method, String fileName = "text.txt")
-        {
-
-            try
-            {
-                string path1 = TextBox_DownloadPath.Text;
-                if (!Directory.Exists(path1))
-                {
-                    Directory.CreateDirectory(path1);
-                }
-
-                string path = path1 + @"\" + fileName;
-                StreamWriter createText = new StreamWriter(new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write), Encoding.GetEncoding("windows-1254"));
-
-                createText.Write(method.ToString());
-                createText.Flush();
-                createText.Close();
-
-            }
-            catch (Exception ex)
-            {
-                Label_ERROR.Text = ex.Message;
-
-            }
-
-
-
-
-        }
+    
 
         private String generateSqlIReader(List<Kontrol_Icerik> kontrolList)
         {

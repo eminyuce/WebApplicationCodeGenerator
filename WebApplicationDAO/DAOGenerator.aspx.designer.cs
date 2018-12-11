@@ -67,24 +67,6 @@ namespace WebApplicationDAO {
         protected global::System.Web.UI.WebControls.CheckBox CheckBox_MySql;
         
         /// <summary>
-        /// Label21 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label21;
-        
-        /// <summary>
-        /// TextBox_StringPattern control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_StringPattern;
-        
-        /// <summary>
         /// Label23 control.
         /// </summary>
         /// <remarks>
@@ -103,22 +85,22 @@ namespace WebApplicationDAO {
         protected global::System.Web.UI.WebControls.TextBox TextBox_NameSpace_Name;
         
         /// <summary>
-        /// Label22 control.
+        /// Label21 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label22;
+        protected global::System.Web.UI.WebControls.Label Label21;
         
         /// <summary>
-        /// TextBox_DownloadPath control.
+        /// TextBox_StringPattern control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_DownloadPath;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_StringPattern;
         
         /// <summary>
         /// Button_Connect control.

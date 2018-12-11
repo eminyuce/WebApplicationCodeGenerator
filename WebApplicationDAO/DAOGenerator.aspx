@@ -474,16 +474,11 @@
                         <td>
                             <asp:TextBox ID="TextBox_ConnectionString" runat="server" Width="698px"></asp:TextBox>
                         </td>
-                        <td><asp:CheckBox ID="CheckBox_MySql" Font-Bold="True" ForeColor="Blue" Text="Is MySql" runat="server" /></td>
+                        <td>
+                            <asp:CheckBox ID="CheckBox_MySql" Font-Bold="True" ForeColor="Blue" Text="Is MySql" runat="server" /></td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>
-                            <asp:Label ID="Label21" CssClass="labelYazi" runat="server" Text="String Pattern"></asp:Label>
-                        </td>
-                        <td>
-                            <asp:TextBox ID="TextBox_StringPattern" Text="public {1} {0}  {get;set}" runat="server" Width="250px"></asp:TextBox>
-                        </td>
                         <td>
                             <asp:Label ID="Label23" CssClass="labelYazi" runat="server" Text="Project NameSpace:"></asp:Label>
                         </td>
@@ -493,10 +488,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <asp:Label ID="Label22" CssClass="labelYazi" runat="server" Text="Download Path"></asp:Label>
+                            <asp:Label ID="Label21" CssClass="labelYazi" runat="server" Text="String Pattern"></asp:Label>
                         </td>
                         <td>
-                            <asp:TextBox ID="TextBox_DownloadPath" Text="C:\ASP_NET_Codes" runat="server" Width="698px"></asp:TextBox>
+                            <asp:TextBox ID="TextBox_StringPattern" Text="public {1} {0} {get; set;}" runat="server" Width="250px"></asp:TextBox>
                         </td>
                     </tr>
 
@@ -558,7 +553,7 @@
                         </td>
 
                     </tr>
-                     
+
 
                 </table>
                 <%--<asp:CheckBox ID="CheckBox_Ajax" Text="Ajax" runat="server" />--%>
@@ -900,8 +895,8 @@
                                         <div>
                                             <asp:TextBox ID="TextBox_StoredProc_Exec" TextMode="MultiLine" CssClass="resultTextBox"
                                                 runat="server"></asp:TextBox>
-                                                 <br />
-                                        <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_StoredProc_Exec" value="Copy" />
+                                            <br />
+                                            <input type="button" class="clipboardButton button" clientidmode="Static" id="CopytoClipboard_StoredProc_Exec" value="Copy" />
 
                                         </div>
                                     </td>
