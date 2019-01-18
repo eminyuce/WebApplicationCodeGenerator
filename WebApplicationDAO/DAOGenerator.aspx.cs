@@ -2583,7 +2583,7 @@ namespace WebApplicationDAO
 
                 built.Append(")");
                 built.AppendLine("");
-                built.AppendLine("BEGIN");
+                built.AppendLine("  BEGIN");
                 built.AppendLine("  DECLARE MyId INT DEFAULT NULL;");
                 built.AppendLine("  DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING");
                 built.AppendLine("  BEGIN");
@@ -3231,6 +3231,11 @@ namespace WebApplicationDAO
                     {
                         method.AppendLine("public char " + item.columnName + " { get; set; }");
                         method2.AppendLine("public char " + item.columnName + " { get; set; }");
+                    }
+                    else
+                    {
+                        method.AppendLine("// public "+item.dataType+" " + item.columnName + " { get; set; }");
+                        method2.AppendLine("// public " + item.dataType + " " + item.columnName + " { get; set; }");
                     }
                 }
                 catch (Exception ex)
