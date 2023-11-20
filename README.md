@@ -1,9 +1,9 @@
-# Web Application Code Generator
-Code Generator is a kind of tool to make my life easier while developing application.
+Web Application Code Generator
 
-Basically it creates some razor engine pages and database related methods in a just a few clicks so that the developer does not have to deal with writting CRUD database methods for every single table.
+The Web Application Code Generator is a sophisticated tool designed to streamline the application development process. Its primary function is to simplify the creation of Razor engine pages and database-related methods, offering developers a more efficient workflow.
 
-It also creates some of Sql query and stored procedures like SaveOrUpdateTableName.
+By utilizing this tool, developers can generate razor engine pages and essential database methods with just a few clicks. This eliminates the need for manually composing CRUD (Create, Read, Update, Delete) database methods for each individual table in the application. The Code Generator automates this process, saving developers valuable time and effort.
 
-It is basically producing code or sql as a text inside textarea so you should copy/paste to your project.
+Furthermore, the Code Generator is equipped to generate SQL queries and stored procedures, such as the "SaveOrUpdateTableName" procedure. These SQL artifacts are provided in a text format within a designated textarea. Developers can conveniently copy and paste this generated code into their projects, enhancing the overall development experience.
 
+In summary, the Web Application Code Generator serves as a powerful ally in the development journey, offering an expedited and efficient means of producing essential code components and SQL artifacts for web applications.
