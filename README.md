@@ -1,9 +1,66 @@
-Web Application Code Generator
+# Web Application Code Generator
 
-The Web Application Code Generator is a sophisticated tool designed to streamline the application development process. Its primary function is to simplify the creation of Razor engine pages and database-related methods, offering developers a more efficient workflow.
+The **Web Application Code Generator** is a sophisticated tool designed to **streamline the application development process**, specifically targeting the generation of Razor engine pages and essential database methods. It helps developers accelerate their workflow and reduce the need for repetitive coding tasks.
 
-By utilizing this tool, developers can generate razor engine pages and essential database methods with just a few clicks. This eliminates the need for manually composing CRUD (Create, Read, Update, Delete) database methods for each individual table in the application. The Code Generator automates this process, saving developers valuable time and effort.
+## 🚀 Features
 
-Furthermore, the Code Generator is equipped to generate SQL queries and stored procedures, such as the "SaveOrUpdateTableName" procedure. These SQL artifacts are provided in a text format within a designated textarea. Developers can conveniently copy and paste this generated code into their projects, enhancing the overall development experience.
+- **Razor Page Generator**  
+  Automatically creates Razor engine pages to help quickly scaffold UI components.
 
-In summary, the Web Application Code Generator serves as a powerful ally in the development journey, offering an expedited and efficient means of producing essential code components and SQL artifacts for web applications.
+- **CRUD Method Generator**  
+  Simplifies the creation of standard Create, Read, Update, and Delete (CRUD) operations for database tables.
+
+- **SQL Code Generation**  
+  Generates SQL queries and stored procedures (e.g., `SaveOrUpdateTableName`) in a clean, copyable format.
+
+- **Text-Based Output**  
+  Outputs generated SQL artifacts and Razor components into a user-friendly textarea for easy copy-paste integration into your project.
+
+## 🛠️ Benefits
+
+- Save time by automating repetitive coding tasks.
+- Avoid human errors in boilerplate SQL and Razor code.
+- Easily integrate generated code into existing projects.
+- Speed up prototyping and development phases.
+
+## 📦 Usage
+
+1. Open the Web Application Code Generator.
+2. Choose the type of code to generate (Razor page, CRUD methods, SQL procedure).
+3. Provide necessary inputs (e.g., table name, column names).
+4. Click "Generate."
+5. Copy the generated code from the output textarea.
+6. Paste the code into your project.
+
+## 📋 Example Output
+
+### Razor Page Example
+```cshtml
+@model YourProject.Models.TableName
+<form method="post">
+    <!-- Input fields for each property -->
+    <button type="submit">Save</button>
+</form>
+```
+
+### SQL Stored Procedure
+```sql
+CREATE PROCEDURE SaveOrUpdateTableName
+    @Id INT,
+    @Name NVARCHAR(100)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM TableName WHERE Id = @Id)
+        UPDATE TableName SET Name = @Name WHERE Id = @Id
+    ELSE
+        INSERT INTO TableName (Name) VALUES (@Name)
+END
+```
+
+## 💡 Tip
+
+You can use the output directly in your ASP.NET MVC projects or any other .NET-based application that uses Razor and SQL Server.
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
