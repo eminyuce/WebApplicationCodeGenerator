@@ -1,4 +1,4 @@
-# **DAO Generator **
+# DAO Generator 
 
 ## **📌 Overview**
 This **DAO (Data Access Object) Generator** is a web-based tool that automates the creation of database-related code for .NET applications. It connects to a database, extracts table schemas, and generates:
@@ -121,11 +121,6 @@ public class ProductController : Controller
 
 ## **📜 License**
 MIT License - Free for personal/commercial use.
-
----
-
-## **📞 Support**
-**Issues?** Open a GitHub ticket or email `support@example.com`.
 
 ---
 
