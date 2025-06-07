@@ -1,66 +1,142 @@
-# Web Application Code Generator
+# **DAO Generator **
 
-The **Web Application Code Generator** is a sophisticated tool designed to **streamline the application development process**, specifically targeting the generation of Razor engine pages and essential database methods. It helps developers accelerate their workflow and reduce the need for repetitive coding tasks.
+## **📌 Overview**
+This **DAO (Data Access Object) Generator** is a web-based tool that automates the creation of database-related code for .NET applications. It connects to a database, extracts table schemas, and generates:
+- **C# Model Classes** (Entities)
+- **Repository Classes** (Data Access Layer)
+- **Stored Procedures** (SQL)
+- **ASP.NET MVC Controllers & Views**
+- **Database Utility Methods**
 
-## 🚀 Features
+Designed to **speed up development** and **reduce manual coding errors**.
 
-- **Razor Page Generator**  
-  Automatically creates Razor engine pages to help quickly scaffold UI components.
+---
 
-- **CRUD Method Generator**  
-  Simplifies the creation of standard Create, Read, Update, and Delete (CRUD) operations for database tables.
+## **🚀 Features**
+✅ **Supports SQL Server & MySQL**  
+✅ **Generates CRUD operations** (Create, Read, Update, Delete)  
+✅ **Automatic detection of primary/foreign keys**  
+✅ **Customizable UI controls per column** (TextBox, DropDown, CheckBox, etc.)  
+✅ **Built-in validation rules** (Required, Range, Regex)  
+✅ **Export generated code as `.txt`**  
 
-- **SQL Code Generation**  
-  Generates SQL queries and stored procedures (e.g., `SaveOrUpdateTableName`) in a clean, copyable format.
+---
 
-- **Text-Based Output**  
-  Outputs generated SQL artifacts and Razor components into a user-friendly textarea for easy copy-paste integration into your project.
+## **🛠 Setup & Usage**
+### **1. Prerequisites**
+- **.NET Framework 4.5+** (for the generator itself)
+- **SQL Server / MySQL Database** (to connect and generate code)
 
-## 🛠️ Benefits
+### **2. Running the Generator**
+1. **Launch the Web Application** (hosted in IIS or run locally).
+2. **Enter Connection String** (e.g., `Server=.;Database=MyDB;Integrated Security=True;`).
+3. **Select a Table** from the dropdown.
+4. **Customize** (optional):
+   - Namespace (`ProjectNameSpace` by default).
+   - Entity name (defaults to table name).
+   - UI controls for each column.
+5. **Click "Generate"** → Code appears in textboxes.
+6. **Download** or copy the generated code.
 
-- Save time by automating repetitive coding tasks.
-- Avoid human errors in boilerplate SQL and Razor code.
-- Easily integrate generated code into existing projects.
-- Speed up prototyping and development phases.
+---
 
-## 📦 Usage
+## **📂 Generated Code Structure**
+### **1. Entity Class (Model)**
+```csharp
+[Table("Products")]
+public class Product
+{
+    [Key]
+    public int ProductId { get; set; }
 
-1. Open the Web Application Code Generator.
-2. Choose the type of code to generate (Razor page, CRUD methods, SQL procedure).
-3. Provide necessary inputs (e.g., table name, column names).
-4. Click "Generate."
-5. Copy the generated code from the output textarea.
-6. Paste the code into your project.
+    [Required]
+    [StringLength(100)]
+    public string Name { get; set; }
 
-## 📋 Example Output
-
-### Razor Page Example
-```cshtml
-@model YourProject.Models.TableName
-<form method="post">
-    <!-- Input fields for each property -->
-    <button type="submit">Save</button>
-</form>
+    public decimal Price { get; set; }
+}
 ```
 
-### SQL Stored Procedure
+### **2. Repository Class (DAL)**
+```csharp
+public class ProductRepository
+{
+    public List<Product> GetProducts() { ... }
+    public int SaveOrUpdateProduct(Product item) { ... }
+    public void DeleteProduct(int id) { ... }
+}
+```
+
+### **3. Stored Procedure (SQL)**
 ```sql
-CREATE PROCEDURE SaveOrUpdateTableName
-    @Id INT,
-    @Name NVARCHAR(100)
+CREATE PROCEDURE SaveOrUpdateProduct(
+    @ProductId INT = NULL,
+    @Name NVARCHAR(100),
+    @Price DECIMAL(18,2)
+)
 AS
 BEGIN
-    IF EXISTS (SELECT 1 FROM TableName WHERE Id = @Id)
-        UPDATE TableName SET Name = @Name WHERE Id = @Id
-    ELSE
-        INSERT INTO TableName (Name) VALUES (@Name)
+    -- MERGE or INSERT/UPDATE logic
 END
 ```
 
-## 💡 Tip
+### **4. ASP.NET MVC Controller**
+```csharp
+public class ProductController : Controller
+{
+    public ActionResult Index() { ... }
+    public ActionResult Edit(int id) { ... }
+    [HttpPost]
+    public ActionResult Edit(Product product) { ... }
+}
+```
 
-You can use the output directly in your ASP.NET MVC projects or any other .NET-based application that uses Razor and SQL Server.
+### **5. Razor Views (`Index.cshtml`, `Edit.cshtml`)**
+```html
+@model List<Product>
+<table>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@Html.ActionLink("Edit", "Edit", new { id = item.ProductId })</td>
+        </tr>
+    }
+</table>
+```
+
+---
+
+## **🔧 Customization**
+### **Modifying Generated Code**
+- **Change UI Controls**: Adjust `DropDownList_Control` in the GridView.
+- **Add Validation**: Use `DropDownList_Validator` (e.g., RequiredFieldValidator).
+- **Edit Stored Procedure Logic**: Modify the generated SQL before execution.
+
+### **Extending Functionality**
+- **Support More Databases**: Extend `GetirTabloları()` for PostgreSQL/Oracle.
+- **Add More Templates**: Modify `generateASpNetMvcEditOrCreate()` for Blazor/Web API.
+
+---
+
+## **📜 License**
+MIT License - Free for personal/commercial use.
+
+---
+
+## **📞 Support**
+**Issues?** Open a GitHub ticket or email `support@example.com`.
+
+---
+
+## **🎯 Why Use This?**
+✔ **Saves hours** of manual coding  
+✔ **Reduces errors** in database operations  
+✔ **Consistent code structure** across projects  
+
+
 
 ## 📄 License
 
 This project is open-source and available under the [MIT License](LICENSE).
+**Happy Coding! 🚀**
