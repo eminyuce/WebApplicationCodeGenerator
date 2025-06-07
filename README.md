@@ -119,17 +119,10 @@ public class ProductController : Controller
 
 ---
 
-## **📜 License**
-MIT License - Free for personal/commercial use.
-
----
-
 ## **🎯 Why Use This?**
 ✔ **Saves hours** of manual coding  
 ✔ **Reduces errors** in database operations  
 ✔ **Consistent code structure** across projects  
-
-
 
 ## 📄 License
 
